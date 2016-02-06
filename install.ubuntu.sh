@@ -11,7 +11,7 @@ home=`pwd`
 echo $home
 lsb_release -a
 
-function install_bash {
+function install_config {
     echo "** Copying common scripts..."
     [ -d ~/scripts ] || mkdir ~/scripts
     [ -L ~/s ] || ln -s ~/scripts ~/s
@@ -23,6 +23,7 @@ function install_bash {
     # Setup bashrc
     echo "** Configuring bash..."
     #[[ -z `grep "LC_COLLATE" /etc/profile` ]] && echo 'export LC_COLLATE=C' | sudo tee -a /etc/profile
+
     touch ~/.bash_aliases
     sed -i /##CUSTOM##/,/####/d ~/.bash_aliases
     cat conf/bash_aliases.txt >> ~/.bash_aliases
@@ -32,6 +33,8 @@ function install_bash {
     [ -f ~/.bashrc ]    || cp conf/ubuntu/bashrc.txt ~/.bashrc
     [ -f ~/.gitconfig ] || cp conf/gitconfig.txt ~/.gitconfig
     [ -f ~/.profile ]   || cp conf/bash.profile.txt ~/.profile
+
+    cp conf/terminator-solarized/config ~/.config/terminator/
 }
 
 function install_base {
@@ -46,6 +49,8 @@ function install_base {
         sudo apt-get -y install terminator
         sudo apt-get -y install vim-gtk
     fi
+
+    
 }
 
 function install_chrome {
@@ -99,18 +104,25 @@ function install_zsh {
     cat conf/debian/bash_aliases.txt >> ~/.oh-my-zsh/custom/techg.zsh
 }
 
+function init {
+    install_base
+    install_zsh
+    install_bash
+}
+
 # PROCESS ARGUMENTS
 
 function showhelp {
     echo "USAGE install.ubuntu [-u] [options]
     Options
     =======
-    bash    : bash configuration
     base    : base packages
     chrome  : configure chrome ppa and install
+    config  : base configuration
     dev     : development packages
+    init    : run base, bash, zsh
     net     : network tools
-    vmware : install vmware tools
+    vmware  : install vmware tools
     zsh     : install oh-my-zsh"
 }
 
@@ -123,8 +135,8 @@ for arg in $@
 do
     case $arg in
         "base")       install_base;;
-        "bash")       install_bash;;
         "chrome")     install_chrome;;
+        "config")     install_config;;
         "dev")        install_dev;;
         "net")        install_net;;
         "vmware")     install_vmware;;
