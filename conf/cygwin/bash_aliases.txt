@@ -1,0 +1,9 @@
+##CYGWIN##
+
+export DISPLAY=:0.0
+
+#VIM
+alias v='vim'
+alias vi='vim'
+
+####

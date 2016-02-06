@@ -1,0 +1,6 @@
+##CUSTOM##
+CLICOLOR=1;export CLICOLOR
+PAGER=less;export PAGER
+EDITOR=vim;export EDITOR
+####
+

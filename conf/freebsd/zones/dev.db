@@ -1,0 +1,12 @@
+$TTL 3h
+
+@	IN	SOA	server.	admin.techg. (
+			1	;serial
+			8H	;refresh
+			2H	;retry
+			4W	;expire
+			1D)	;minimum TTL
+;
+@	IN	NS	server.
+
+*	IN	A	192.168.1.254

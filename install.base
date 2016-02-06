@@ -1,0 +1,115 @@
+#!/bin/bash
+
+#release=`lsb_release -r | egrep -o '[0-9]+.[0-9]+'`
+#major=`echo ${release%.*}`
+#minor=`echo ${release#*.}`
+#echo $release
+#echo $major
+#echo $minor
+
+home=`pwd`
+echo $home
+lsb_release -a
+
+function init {
+	[ -d ~/scripts ] || mkdir ~/scripts
+	[ -L ~/s ] || ln -s ~/scripts ~/s
+	cp scripts/* ~/scripts/
+}
+
+function install_base {
+	echo "*** Installing base software..."
+	sudo apt-get -y install git gitk git-gui 
+	sudo apt-get -y install terminator
+	sudo apt-get -y install vim-gtk vim-gui-common
+}
+
+function install_dev {
+	echo "*** Installing development packages..."
+	sudo apt-get -y install csstidy
+	sudo apt-get -y install exuberant-ctags
+	sudo apt-get -y install tidy
+	sub_boxes
+
+function install_gui {
+	#sudo apt-get -y install docky
+	sudo apt-get -y install gnome-do
+}
+
+function install_net {
+	echo "*** Installing network packages..."
+	sudo apt-get -y install wireshark
+	sudo apt-get -y install kismet
+	sudo apt-get -y install nmap
+	sudo apt-get -y install zenmap
+}
+
+function install_vim {
+	cd apps/vim
+	./install.sh
+	cd $home
+}
+
+function install_settings {
+# Setup bashrc
+	echo "*** Writing general settings..."
+	#[[ -z `grep "LC_COLLATE" /etc/profile` ]] && echo 'export LC_COLLATE=C' | sudo tee -a /etc/profile
+	touch ~/.bash_aliases
+	sed -i /##CUSTOM##/,/####/d ~/.bash_aliases
+	cat conf/bash.aliases.txt >> ~/.bash_aliases
+	sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
+	cat conf/debian.aliases.txt >> ~/.bash_aliases
+
+	[ -f ~/.bashrc ] || cat conf/bashrc.txt > ~/.bashrc
+	[ -f ~/.bash_profile ] || cat conf/bash.profile.txt > ~/.bash_profile
+}
+
+function sub_samba {
+# Samba
+	echo "*** Installing samba..."
+	sudo apt-get install samba
+	sudo apt-get install smbfs
+	sudo apt-get install winbind
+	sudo sed -i.bak 's/files mdns4_minimal/files wins mdns4_minimal/' /etc/nsswitch.conf
+	sudo sed -i.bak 's/workgroup = .*/workgroup = TECHG/' /etc/samba/smb.conf
+}	
+
+function build_virtualbox {
+	sudo apt-get install dkms build-essential
+	install_base
+}
+
+#####################
+# Process Arguments #
+#####################
+
+function showhelp {
+	echo "The following commands are available...
+	base
+	dev
+	net
+	settings
+	vim
+	virtualbox
+	"
+}
+
+if [ "$1" == "-u" ]; then
+	sudo apt-get update
+	sudo apt-get upgrade
+fi
+
+init;
+
+[ $# == 0 ] && showhelp
+for arg in $@
+do
+	case $arg in
+		"base")       install_base;;
+		"dev")        install_dev;;
+		"net")        install_net;;
+		"settings")   install_settings;;
+		"vim")        install_vim;;
+		"virtualbox") build_virtualbox;;
+	esac
+done

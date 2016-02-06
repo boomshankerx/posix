@@ -1,0 +1,11 @@
+##DEBIAN##
+
+#VIM
+#alias vi='vim'
+alias vi='gvim'
+
+#DEBIAN APT
+alias ag='sudo apt-get'
+alias agi='sudo apt-get -y install'
+
+####

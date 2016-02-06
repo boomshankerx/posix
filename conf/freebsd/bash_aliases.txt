@@ -1,0 +1,18 @@
+##FREEBSD##
+
+#VIM
+alias v='vim'
+alias vi='vim'
+
+#PORTMASTER
+alias pm='portmaster'
+alias pml='portmaster -l'
+alias pmn='portmaster -L | grep New'
+
+#PKG
+alias pv='pkg version'
+alias pu='pkg update'
+####
+
+
+
