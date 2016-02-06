@@ -41,6 +41,7 @@ function install_base {
     echo "** Installing base software..."
     sudo apt-get -y install git 
     sudo apt-get -y install exuberant-ctags
+    sudo apt-get -y install tmux
 
     if [[ -z $DISPLAY ]]; then
         sudo apt-get -y install vim-nox
