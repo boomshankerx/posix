@@ -12,7 +12,7 @@ echo $home
 lsb_release -a
 
 function install_config {
-    echo "** Copying common scripts..."
+    echo "** Installing common scripts..."
     [ -d ~/scripts ] || mkdir ~/scripts
     [ -L ~/s ] || ln -s ~/scripts ~/s
     cp -r scripts/ ~/scripts/
@@ -21,7 +21,7 @@ function install_config {
     cp conf/authorized_keys.txt ~/.ssh/authorized_keys
 
     # Setup bashrc
-    echo "** Configuring bash..."
+    echo "** Installing config files"
     #[[ -z `grep "LC_COLLATE" /etc/profile` ]] && echo 'export LC_COLLATE=C' | sudo tee -a /etc/profile
 
     touch ~/.bash_aliases
@@ -67,6 +67,10 @@ function install_dev {
     sudo apt-get -y install tidy
 }
 
+function install_docker {
+   curl -sSL https://get.docker.com/ | sh 
+}
+
 function install_gui {
     sudo apt-get -y install docky
     sudo apt-get -y install gnome-do
@@ -108,7 +112,7 @@ function install_zsh {
 function init {
     install_base
     install_zsh
-    install_bash
+    install_config
 }
 
 # PROCESS ARGUMENTS
@@ -139,6 +143,7 @@ do
         "chrome")     install_chrome;;
         "config")     install_config;;
         "dev")        install_dev;;
+        "init")       init;;
         "net")        install_net;;
         "vmware")     install_vmware;;
         "zsh")        install_zsh;;
