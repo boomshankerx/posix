@@ -106,9 +106,11 @@ function install_zsh {
     sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
     #sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
+    sudo chown -R $USER:$USER ~/.oh-my-zsh
+
     touch ~/.oh-my-zsh/custom/techg.zsh
     sed -i /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
-    cat conf/debian/bash_aliases.txt >> ~/.oh-my-zsh/custom/techg.zsh
+    cat debian/bash_aliases.txt >> ~/.oh-my-zsh/custom/techg.zsh
 }
 
 function init {
