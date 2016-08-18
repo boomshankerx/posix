@@ -12,6 +12,11 @@ alias pmn='portmaster -L | grep New'
 #PKG
 alias pv='pkg version'
 alias pu='pkg update'
+
+#ZFS
+alias zls='zfs list -t snapshot'
+alias zla='zfs list -t all'
+
 ####
 
 

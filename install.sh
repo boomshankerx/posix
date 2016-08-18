@@ -17,30 +17,31 @@ function install_config {
     [ -L ~/s ] || ln -s ~/scripts ~/s
     cp -r scripts/ ~/scripts/
 
+    #SSH
     [ -d ~/.ssh ] || mkdir ~/.ssh
-    cp conf/authorized_keys.txt ~/.ssh/authorized_keys
+    cp common/conf/authorized_keys.txt ~/.ssh/authorized_keys
 
-    # Setup bashrc
+    #BASH
     echo "** Installing config files"
-    #[[ -z `grep "LC_COLLATE" /etc/profile` ]] && echo 'export LC_COLLATE=C' | sudo tee -a /etc/profile
-
     touch ~/.bash_aliases
     sed -i /##CUSTOM##/,/####/d ~/.bash_aliases
-    cat conf/bash_aliases.txt >> ~/.bash_aliases
+    cat common/bash_aliases.txt >> ~/.bash_aliases
     sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
-    cat conf/debian/bash_aliases.txt >> ~/.bash_aliases
+    cat debian/bash_aliases.txt >> ~/.bash_aliases
 
-    [ -f ~/.bashrc ]    || cp conf/ubuntu/bashrc.txt ~/.bashrc
-    [ -f ~/.gitconfig ] || cp conf/gitconfig.txt ~/.gitconfig
-    [ -f ~/.profile ]   || cp conf/bash.profile.txt ~/.profile
+    [ -f ~/.bashrc ]    || cp ubuntu/bashrc.txt ~/.bashrc
+    [ -f ~/.gitconfig ] || cp common/gitconfig.txt ~/.gitconfig
+    [ -f ~/.profile ]   || cp common/bash.profile.txt ~/.profile
 
-    cp conf/terminator-solarized/config ~/.config/terminator/
+    cp common/terminator-solarized/config ~/.config/terminator/
 }
 
 function install_base {
     echo "** Installing base software..."
     sudo apt-get -y install git 
     sudo apt-get -y install exuberant-ctags
+    sudo apt-get -y install rsync
+    sudo apt-get -y install sudo
     sudo apt-get -y install tmux
 
     if [[ -z $DISPLAY ]]; then
@@ -50,8 +51,6 @@ function install_base {
         sudo apt-get -y install terminator
         sudo apt-get -y install vim-gtk
     fi
-
-    
 }
 
 function install_chrome {
@@ -96,7 +95,10 @@ function sub_samba {
 
 function install_vmware {
     #sudo apt-get install dkms build-essential
-    sudo apt-get -y install open-vm-tools open-vm-tools-desktop
+    sudo apt-get -y install open-vm-tools 
+    if [[ -n $DISPLAY ]]; then
+        sudo apt-get -y install open-vm-tools-desktop 
+    fi
 }
 
 function install_zsh {
@@ -125,6 +127,7 @@ function showhelp {
     chrome  : configure chrome ppa and install
     config  : base configuration
     dev     : development packages
+    docker  : install docker
     init    : run base, bash, zsh
     net     : network tools
     vmware  : install vmware tools
@@ -143,6 +146,7 @@ do
         "chrome")     install_chrome;;
         "config")     install_config;;
         "dev")        install_dev;;
+        "docker")     install_docker;;
         "init")       init;;
         "net")        install_net;;
         "vmware")     install_vmware;;
