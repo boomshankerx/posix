@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
-#release=`lsb_release -r | egrep -o '[0-9]+.[0-9]+'`
-#major=`echo ${release%.*}`
-#minor=`echo ${release#*.}`
-#echo $release
-#echo $major
-#echo $minor
-
 home=`pwd`
+os=`uname`
 echo $home
-lsb_release -a
+uname -a
+
+function config_vim() {
+    git clone ssh://lorne@server:/mnt/data/repos/vim ~/vim
+    cd ~/vim
+    chmod +x install build.sh
+    install
+    build.sh
+    cd $home
+}
 
 function install_config {
     echo "** Installing common scripts..."
@@ -19,7 +22,7 @@ function install_config {
 
     #SSH
     [ -d ~/.ssh ] || mkdir ~/.ssh
-    cp common/conf/authorized_keys.txt ~/.ssh/authorized_keys
+    cp common/authorized_keys.txt ~/.ssh/authorized_keys
 
     #BASH
     echo "** Installing config files"
@@ -29,17 +32,23 @@ function install_config {
     sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
     cat debian/bash_aliases.txt >> ~/.bash_aliases
 
-    [ -f ~/.bashrc ]    || cp ubuntu/bashrc.txt ~/.bashrc
+    #[ -f ~/.bashrc ]    || cp ubuntu/bashrc.txt ~/.bashrc
     [ -f ~/.gitconfig ] || cp common/gitconfig.txt ~/.gitconfig
     [ -f ~/.profile ]   || cp common/bash.profile.txt ~/.profile
 
+    #TERMINATOR
+    mkdir -p ~/.config/terminator
     cp common/terminator-solarized/config ~/.config/terminator/
+
+    #TMUX
+    cp common/.tmux.conf ~
 }
 
 function install_base {
     echo "** Installing base software..."
-    sudo apt-get -y install git 
     sudo apt-get -y install exuberant-ctags
+    sudo apt-get -y install git 
+    sudo apt-get -y install powerline
     sudo apt-get -y install rsync
     sudo apt-get -y install sudo
     sudo apt-get -y install tmux
@@ -67,7 +76,11 @@ function install_dev {
 }
 
 function install_docker {
-   curl -sSL https://get.docker.com/ | sh 
+    curl -sSL https://get.docker.com/ | sh 
+}
+function install_fonts {
+    sudo cp fonts/* /usr/share/fonts/truetype/
+    sudo fc-cache -f -v
 }
 
 function install_gui {
@@ -91,7 +104,7 @@ function sub_samba {
     sudo apt-get install winbind
     sudo sed -i.bak 's/files mdns4_minimal/files wins mdns4_minimal/' /etc/nsswitch.conf
     sudo sed -i.bak 's/workgroup = .*/workgroup = TECHG/' /etc/samba/smb.conf
-}   
+}
 
 function install_vmware {
     #sudo apt-get install dkms build-essential
@@ -115,8 +128,9 @@ function install_zsh {
 
 function init {
     install_base
-    install_zsh
     install_config
+    install_fonts
+    install_zsh
 }
 
 # PROCESS ARGUMENTS
@@ -130,8 +144,10 @@ function showhelp {
     config  : base configuration
     dev     : development packages
     docker  : install docker
+    fonts   : install fonts
     init    : run base, bash, zsh
     net     : network tools
+    vim     : config vim
     vmware  : install vmware tools
     zsh     : install oh-my-zsh"
 }
@@ -149,8 +165,10 @@ do
         "config")     install_config;;
         "dev")        install_dev;;
         "docker")     install_docker;;
+        "fonts")      install_fonts;;
         "init")       init;;
         "net")        install_net;;
+        "vim")        config_vim;;
         "vmware")     install_vmware;;
         "zsh")        install_zsh;;
     esac
