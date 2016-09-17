@@ -9,8 +9,8 @@ function config_vim() {
     git clone ssh://lorne@server:/mnt/data/repos/vim ~/vim
     cd ~/vim
     chmod +x install build.sh
-    install
-    build.sh
+    ./install
+    ./build.sh
     cd $home
 }
 
