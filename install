@@ -34,7 +34,7 @@ function install_config {
 
     #[ -f ~/.bashrc ]    || cp ubuntu/bashrc.txt ~/.bashrc
     [ -f ~/.gitconfig ] || cp common/gitconfig.txt ~/.gitconfig
-    [ -f ~/.profile ]   || cp common/bash.profile.txt ~/.profile
+    #[ -f ~/.profile ]   || cp common/bash.profile.txt ~/.profile
 
     #TERMINATOR
     mkdir -p ~/.config/terminator
@@ -122,8 +122,10 @@ function install_zsh {
     sudo chown -R $USER:$USER ~/.oh-my-zsh
 
     touch ~/.oh-my-zsh/custom/techg.zsh
-    sed -i /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
+    sed -i'' /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
     cat debian/bash_aliases.txt >> ~/.oh-my-zsh/custom/techg.zsh
+
+    sed -i'' 's/ZSH_THEME=.*/ZSH_THEME="agnoster"/' ~/.zshrc
 }
 
 function init {
