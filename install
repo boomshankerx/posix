@@ -41,7 +41,7 @@ function install_config {
     cp common/terminator-solarized/config ~/.config/terminator/
 
     #TMUX
-    cp common/.tmux.conf ~
+    cp common/tmux.conf ~/.tmux.conf
 }
 
 function install_base {
