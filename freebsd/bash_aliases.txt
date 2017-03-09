@@ -11,8 +11,9 @@ alias pmn='portmaster -L | grep New'
 
 #PKG
 alias pv='pkg version'
+alias pv='pkg version -vL='
 alias pu='pkg update'
-alias puu='pkg upgrade'
+alias puu='pkg update && pkg upgrade'
 
 #ZFS
 alias zls='zfs list -t snapshot'
