@@ -14,25 +14,27 @@ function base {
 
 function base_config {
 		sed -i "" /##CUSTOM##/,/####/d /etc/rc.conf 
-		cat conf/freebsd/rc.conf | tee /etc/rc.conf
+		cat freebsd/rc.conf | tee /etc/rc.conf
+
+        cp 
 }
 
 function config {
 		chsh -s bash
 		sed -i "" /##CUSTOM##/,/####/d /etc/profile 
-		cat conf/freebsd/profile.txt | tee -a /etc/profile
+		cat freebsd/profile.txt | tee -a /etc/profile
 
 		sed -i "" /##CUSTOM##/,/####/d ~/.bash_aliases
-		cat conf/bash_aliases.txt | tee -a ~/.bash_aliases
+		cat common/bash_aliases.txt | tee -a ~/.bash_aliases
 
 		sed -i "" /##FREEBSD##/,/####/d ~/.bash_aliases
-		cat conf/freebsd/bash_aliases.txt | tee -a ~/.bash_aliases
+		cat freebsd/bash_aliases.txt | tee -a ~/.bash_aliases
 
 		sed -i "" /##CUSTOM##/,/####/d ~/.bash_profile
-		cat conf/freebsd/bash_profile.txt | tee -a ~/.bash_profile
+		cat freebsd/bash_profile.txt | tee -a ~/.bash_profile
 		
 		sed -i "" /##CUSTOM##/,/####/d ~/.bashrc
-		cat conf/freebsd/bashrc.txt | tee -a ~/.bashrc
+		cat freebsd/bashrc.txt | tee -a ~/.bashrc
 
 		sed -i "" -e "s/#UseDNS yes/UseDNS no/" /etc/ssh/sshd_config
 

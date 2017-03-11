@@ -7,11 +7,11 @@ alias vi='vim'
 #PORTMASTER
 alias pm='portmaster'
 alias pml='portmaster -l'
-alias pmn='portmaster -L | grep New'
+alias pmu='portmaster -L | grep New'
 
 #PKG
-alias pv='pkg version'
-alias pv='pkg version -vL='
+alias pv='pkg version -v'
+alias pvu='pkg version -vRL='
 alias pu='pkg update'
 alias puu='pkg update && pkg upgrade'
 
