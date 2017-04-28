@@ -129,6 +129,7 @@ function install_zsh {
 }
 
 function init {
+    echo 'Executing base,config,fonts,zsh\n'
     install_base
     install_config
     install_fonts
@@ -147,7 +148,7 @@ function showhelp {
     dev     : development packages
     docker  : install docker
     fonts   : install fonts
-    init    : run base, bash, zsh
+    init    : run base,config,fonts,zsh
     net     : network tools
     vim     : config vim
     vmware  : install vmware tools
@@ -162,17 +163,17 @@ fi
 for arg in $@
 do
     case $arg in
-        "base")       install_base;;
-        "chrome")     install_chrome;;
-        "config")     install_config;;
-        "dev")        install_dev;;
-        "docker")     install_docker;;
-        "fonts")      install_fonts;;
-        "init")       init;;
-        "net")        install_net;;
-        "vim")        config_vim;;
-        "vmware")     install_vmware;;
-        "zsh")        install_zsh;;
+        "base")   install_base;;
+        "chrome") install_chrome;;
+        "config") install_config;;
+        "dev")    install_dev;;
+        "docker") install_docker;;
+        "fonts")  install_fonts;;
+        "init")   init;;
+        "net")    install_net;;
+        "vim")    config_vim;;
+        "vmware") install_vmware;;
+        "zsh")    install_zsh;;
     esac
 done
 
