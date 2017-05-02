@@ -15,9 +15,9 @@ function do_backup {
 	for (( i = count - 1; i > 0; i-- )); do
 		[ -d $dest.$i ] && mv $dest.$i $dest.$(($i+1))
 	done
-	mv $dest $dest.1
+	mv $dest.0 $dest.1
 	opt="-av --delete --link-dest=$dest.1"
-	rsync $opt $src $dest
+	rsync $opt $src $dest.0
 }
 
 echo "`date`	Starting backup for: BACKUP" | tee -a $LOGFILE
@@ -26,11 +26,14 @@ do_backup /mnt/data/backup/ backup
 echo "`date`	Starting backup for: DOCUMENTS" | tee -a $LOGFILE
 do_backup /mnt/data/documents/ documents
 
+echo "`date`	Starting backup for: HEATHER" | tee -a $LOGFILE
+do_backup /mnt/data/heather/ heather
+
 echo "`date`	Starting backup for: PICTURES" | tee -a $LOGFILE
 do_backup /mnt/data/pictures/ pictures
 
-#echo "`date`	Starting backup for: STORAGE" | tee -a $LOGFILE
-#do_backup /mnt/storage/ storage
+echo "`date`	Starting backup for: VIDEOS" | tee -a $LOGFILE
+do_backup /mnt/data/videos/ videos
 
 echo "`date`	Starting backup for: REPOS" | tee -a $LOGFILE
 do_backup /mnt/data/repos/ repos
