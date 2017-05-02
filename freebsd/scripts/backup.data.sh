@@ -16,7 +16,7 @@ function do_backup {
 		[ -d $dest.$i ] && mv $dest.$i $dest.$(($i+1))
 	done
 	mv $dest $dest.1
-	opt="-av -zz --delete --link-dest=$dest.1"
+	opt="-av --delete --link-dest=$dest.1"
 	rsync $opt $src $dest
 }
 
