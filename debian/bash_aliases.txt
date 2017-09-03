@@ -2,6 +2,7 @@
 
 #VIM
 #alias vi='vim'
+alias v='vim'
 alias vi='gvim'
 
 #DEBIAN APT
