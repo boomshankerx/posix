@@ -58,7 +58,7 @@ function install_base {
     else
         sudo apt-get -y install gitk git-gui
         sudo apt-get -y install terminator
-        sudo apt-get -y install vim-gtk
+        sudo apt-get -y install vim-gtk3
     fi
 }
 
