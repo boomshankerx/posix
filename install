@@ -6,11 +6,10 @@ echo $home
 uname -a
 
 function config_vim() {
-    git clone ssh://lorne@server.techg:/mnt/data/repos/vim ~/vim
+    git clone https://github.com/boomshankerx/vim
     cd ~/vim
-    chmod +x install build
+    chmod +x install
     ./install
-    ./build
     cd $home
 }
 
