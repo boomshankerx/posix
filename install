@@ -6,7 +6,7 @@ echo $home
 uname -a
 
 function config_vim() {
-    git clone https://github.com/boomshankerx/vim
+    git clone https://github.com/boomshankerx/vim ~/vim
     cd ~/vim
     chmod +x install
     ./install
