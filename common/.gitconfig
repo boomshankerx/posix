@@ -1,5 +1,5 @@
 [user]                                                                      
-    email = lorne@techgsolution.com
+    email = boomshankerx@hotmail.com
     name = Lorne Guse
 [alias]
     br = branch
@@ -15,4 +15,5 @@
     type = cat-file -t
     unstage = reset HEAD --
 [core]
-	editor = vim
+    editor = vim
+    autocrlf = false
