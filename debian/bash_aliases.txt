@@ -6,9 +6,8 @@ alias v='vim'
 alias vi='gvim'
 
 #DEBIAN APT
+alias ai='sudo apt -y install'
 alias au='apt update'
 alias auu='apt update && apt upgrade'
-alias ag='sudo apt-get'
-alias agi='sudo apt-get -y install'
 
 ####

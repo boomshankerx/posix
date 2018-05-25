@@ -31,8 +31,6 @@ function install_config {
     sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
     cat debian/bash_aliases.txt >> ~/.bash_aliases
 
-    #[ -f ~/.bashrc ]    || cp ubuntu/bashrc.txt ~/.bashrc
-    #[ -f ~/.profile ]   || cp common/bash.profile.txt ~/.profile
     [ -f ~/.gitconfig ] || cp common/.gitconfig ~/.gitconfig
 
     #TERMINATOR
