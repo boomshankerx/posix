@@ -19,7 +19,7 @@ function install_config {
     [ -L ~/s ] || ln -s ~/scripts ~/s
     cp -r scripts/ ~/scripts/
 
-    cp -r home/ ~
+    cp -vrT home ~
 
     git clone https://github.com/aaron-williamson/base16-gnome-terminal.git ~/.config/base16-gnome-terminal
 
@@ -35,12 +35,14 @@ function install_config {
 
 function install_base {
     echo "** Installing base software..."
+    sudo apt-get -y install byobu
     sudo apt-get -y install exuberant-ctags
     sudo apt-get -y install git 
     sudo apt-get -y install powerline
     sudo apt-get -y install rsync
     sudo apt-get -y install sudo
     sudo apt-get -y install tmux
+    sudo apt-get -y install tmuxinator
 
     if [[ -z $DISPLAY ]]; then
         sudo apt-get -y install vim-nox
@@ -68,9 +70,11 @@ function install_docker {
     curl -sSL https://get.docker.com/ | sh 
 }
 function install_fonts {
-    #sudo cp fonts/* /usr/share/fonts/truetype/
     sudo apt-get -y install fonts-powerline
+    git clone https://github.com/powerline/fonts.git ~/fonts --depth=1
+    ~/fonts/install.sh
     sudo fc-cache -fv
+    rm -fr ~/fonts
 }
 
 function install_gui {
