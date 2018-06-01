@@ -19,26 +19,18 @@ function install_config {
     [ -L ~/s ] || ln -s ~/scripts ~/s
     cp -r scripts/ ~/scripts/
 
-    #SSH
-    [ -d ~/.ssh ] || mkdir ~/.ssh
-    cp common/authorized_keys ~/.ssh/authorized_keys
+    cp -r home/ ~
+
+    git clone https://github.com/aaron-williamson/base16-gnome-terminal.git ~/.config/base16-gnome-terminal
 
     #BASH
     echo "** Installing config files"
     touch ~/.bash_aliases
     sed -i /##CUSTOM##/,/####/d ~/.bash_aliases
-    cat common/bash_aliases.txt >> ~/.bash_aliases
+    cat home/.bash_aliases >> ~/.bash_aliases
     sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
-    cat debian/bash_aliases.txt >> ~/.bash_aliases
+    cat debian/.bash_aliases >> ~/.bash_aliases
 
-    [ -f ~/.gitconfig ] || cp common/.gitconfig ~/.gitconfig
-
-    #TERMINATOR
-    mkdir -p ~/.config/terminator
-    cp common/terminator-solarized/config ~/.config/terminator/
-
-    #TMUX
-    cp common/.tmux.conf ~/.tmux.conf
 }
 
 function install_base {
@@ -122,8 +114,6 @@ function install_zsh {
     touch ~/.oh-my-zsh/custom/techg.zsh
     sed -i'' /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
     cat debian/bash_aliases.txt >> ~/.oh-my-zsh/custom/techg.zsh
-
-    sed -i'' 's/ZSH_THEME=.*/ZSH_THEME="agnoster"/' ~/.zshrc
 }
 
 function init {
