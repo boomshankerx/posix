@@ -17,3 +17,5 @@
 [core]
     editor = vim
     autocrlf = false
+[credential]
+	helper = cache
