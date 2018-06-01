@@ -41,7 +41,7 @@ windows:
         - 
         -
   - logs:
-      layout: even-vertical
+      layout: even-horizontal
       panes:
         - tail -f /var/log/messages
         -

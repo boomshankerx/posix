@@ -35,6 +35,7 @@ function install_config {
 
 function install_base {
     echo "** Installing base software..."
+    sudo apt-get -y install atop
     sudo apt-get -y install byobu
     sudo apt-get -y install exuberant-ctags
     sudo apt-get -y install git 
