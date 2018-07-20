@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+cd ~
+cp -rv \
+    ~/.tmux.conf \
+    ~/.tmuxinator \
+    ~/.zshrc \
+    posix/home
+
+
+

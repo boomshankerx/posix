@@ -19,3 +19,5 @@
     autocrlf = false
 [credential]
 	helper = cache
+[push]
+	default = simple
