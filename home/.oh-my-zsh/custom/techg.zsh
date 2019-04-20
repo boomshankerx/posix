@@ -5,6 +5,11 @@
 alias v='vim'
 alias vi='gvim'
 
+#EXPRESSVPN
+alias ec='expressvpn connect'
+alias ed='expressvpn disconnect'
+alias es='expressvpn status'
+
 #DEBIAN APT
 alias au='apt update'
 alias auu='apt update && apt upgrade'
