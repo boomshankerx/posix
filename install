@@ -10,7 +10,7 @@ function config_vim() {
     git clone https://github.com/boomshankerx/vim ~/vim
     cd ~/vim
     chmod +x install
-    ./vimconf -i
+    ./vim -i
     cd $home
 }
 
