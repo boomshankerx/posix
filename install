@@ -43,8 +43,6 @@ function install_base {
     sudo apt-get -y install powerline
     sudo apt-get -y install rsync
     sudo apt-get -y install sudo
-    sudo apt-get -y install tmux
-    sudo apt-get -y install tmuxinator
     sudo apt-get -y install build-essential cmake
     sudo apt-get -y install python-dev python3-dev
 
@@ -53,7 +51,7 @@ function install_base {
         sudo apt-get -y install vim-nox
     else
         sudo apt-get -y install gitk git-gui
-        sudo apt-get -y install terminator
+        #sudo apt-get -y install terminator
         sudo apt-get -y install vim-gtk3
     fi
 }
@@ -106,6 +104,8 @@ function sub_samba {
 }
 
 function install_tmux() {
+    sudo apt-get -y install tmux
+    sudo apt-get -y install tmuxinator
     sudo apt-get install automake build-essential pkg-config libevent-dev libncurses5-dev
     rm -fr /tmp/tmux
     git clone https://github.com/tmux/tmux.git /tmp/tmux
