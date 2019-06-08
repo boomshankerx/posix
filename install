@@ -90,8 +90,8 @@ function install_net {
     sudo apt-get -y install wireshark
     sudo apt-get -y install kismet
     sudo apt-get -y install nmap
-}
     sudo apt-get -y install zenmap
+}
 
 function sub_samba {
     # Samba
