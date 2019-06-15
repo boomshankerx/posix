@@ -6,9 +6,9 @@ alias v='vim'
 alias vi='gvim'
 
 #EXPRESSVPN
-alias ec='expressvpn connect'
-alias ed='expressvpn disconnect'
-alias es='expressvpn status'
+alias vc='expressvpn connect'
+alias vd='expressvpn disconnect'
+alias vs='expressvpn status'
 
 #DEBIAN APT
 alias ag='sudo apt-get'
