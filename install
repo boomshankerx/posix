@@ -110,7 +110,7 @@ function install_tmux() {
     rm -fr /tmp/tmux
     git clone https://github.com/tmux/tmux.git /tmp/tmux
     cd /tmp/tmux
-    git checkout 2.7
+    git checkout 2.9
     sh autogen.sh
     ./configure && make
     sudo make install
