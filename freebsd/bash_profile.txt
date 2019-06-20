@@ -1,9 +1,0 @@
-##CUSTOM##
-CLICOLOR=1;export CLICOLOR
-PAGER=less;export PAGER
-EDITOR=vim;export EDITOR
-source /usr/local/share/git-core/contrib/completion/git-completion.bash
-if [[ -f ~/.bashrc ]]; then
-    . ~/.bashrc
-fi
-####

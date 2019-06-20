@@ -1,7 +1,0 @@
-##MAC##
-
-#VIM
-alias v='vim'
-alias vi='mvim'
-
-####

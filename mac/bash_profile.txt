@@ -1,9 +1,0 @@
-#CUSTOM##
-if [[ -f ~/.bashrc ]]; then
-    . ~/.bashrc
-fi
-
-stty -ixon
-
-export HOMEBREW_GITHUB_API_TOKEN=b148d7926d4de064977e762f825eaeb3218778b9
-####

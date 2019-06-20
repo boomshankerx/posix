@@ -7,22 +7,16 @@ uname -a
 
 function install_config {
     echo "** Installing common scripts..."
-    [ -d ~/scripts ] || mkdir ~/scripts
-    [ -L ~/s ] || ln -s ~/scripts ~/s
-    cp -r scripts/ ~/scripts/
-
     cp -vrT home ~
-
-    git clone https://github.com/aaron-williamson/base16-gnome-terminal.git ~/.config/base16-gnome-terminal
+    [ -L ~/s ] || ln -s ~/scripts ~/s
 
     #BASH
     echo "** Installing config files"
     touch ~/.bash_aliases
-    sed -i /##CUSTOM##/,/####/d ~/.bash_aliases
-    cat home/.bash_aliases >> ~/.bash_aliases
     sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
     cat debian/.bash_aliases >> ~/.bash_aliases
 
+    #git clone https://github.com/aaron-williamson/base16-gnome-terminal.git ~/.config/base16-gnome-terminal
 }
 
 function install_base {
@@ -70,11 +64,6 @@ function install_fonts {
     rm -fr ~/fonts
 }
 
-function install_gui {
-    sudo apt-get -y install docky
-    sudo apt-get -y install gnome-do
-}
-
 function install_net {
     echo "** Installing network packages..."
     sudo apt-get -y install kismet
@@ -93,7 +82,7 @@ function install_vmware {
 }
 
 function init {
-    echo 'Executing base,config,fonts,zsh\n'
+    echo 'Initializing base system...'
     install_base
     install_fonts
     install_config
@@ -118,11 +107,14 @@ function usage() {
     fonts   : Install fonts
     init    : Initialize base system
     net     : Install network tools
+
+    PLUGINS
+    =======
     tmux    : Install TMUX 
     vim     : Build VIM
     vmware  : Install vmware tools
-    zsh     : Install oh-my-zsh"
-    samba   : Install + Configure Samba Server
+    zsh     : Install oh-my-zsh
+    samba   : Install + Configure Samba Server"
 }
 
 if [ "$1" == "-u" ]; then
