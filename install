@@ -5,15 +5,6 @@ os=`uname`
 echo $home
 uname -a
 
-function config_vim() {
-    sudo apt-get -y install build-essential cmake python-dev python3-dev
-    git clone https://github.com/boomshankerx/vim ~/vim
-    cd ~/vim
-    chmod +x install
-    ./vim -i
-    cd $home
-}
-
 function install_config {
     echo "** Installing common scripts..."
     [ -d ~/scripts ] || mkdir ~/scripts
@@ -45,7 +36,6 @@ function install_base {
     sudo apt-get -y install sudo
     sudo apt-get -y install build-essential cmake
     sudo apt-get -y install python-dev python3-dev
-
 
     if [[ -z $DISPLAY ]]; then
         sudo apt-get -y install vim-nox
@@ -87,35 +77,12 @@ function install_gui {
 
 function install_net {
     echo "** Installing network packages..."
-    sudo apt-get -y install wireshark
     sudo apt-get -y install kismet
     sudo apt-get -y install nmap
-    sudo apt-get -y install zenmap
-}
-
-function sub_samba {
-    # Samba
-    echo "** Installing samba..."
-    sudo apt-get install samba
-    sudo apt-get install smbfs
-    sudo apt-get install winbind
-    sudo sed -i.bak 's/files mdns4_minimal/files wins mdns4_minimal/' /etc/nsswitch.conf
-    sudo sed -i.bak 's/workgroup = .*/workgroup = TECHG/' /etc/samba/smb.conf
-}
-
-function install_tmux() {
-    sudo apt-get -y install tmux
-    sudo apt-get -y install tmuxinator
-    sudo apt-get install automake build-essential pkg-config libevent-dev libncurses5-dev
-    rm -fr /tmp/tmux
-    git clone https://github.com/tmux/tmux.git /tmp/tmux
-    cd /tmp/tmux
-    git checkout 2.9
-    sh autogen.sh
-    ./configure && make
-    sudo make install
-    sudo ln -s /usr/bin/tmuxinator /usr/bin/mux
-    cd -
+    if [[ -n $DISPLAY ]]; then
+        sudo apt-get -y install zenmap
+        sudo apt-get -y install wireshark
+    fi
 }
 
 function install_vmware {
@@ -125,67 +92,58 @@ function install_vmware {
     fi
 }
 
-function install_zsh {
-    sudo apt-get -y install zsh
-    sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
-    #sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-
-    sudo chown -R $USER:$USER ~/.oh-my-zsh
-
-    touch ~/.oh-my-zsh/custom/techg.zsh
-    sed -i'' /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
-    cat debian/.bash_aliases >> ~/.oh-my-zsh/custom/techg.zsh
-}
-
 function init {
     echo 'Executing base,config,fonts,zsh\n'
     install_base
-    install_zsh
-    install_tmux
     install_fonts
     install_config
+    . plugins/tmux
+    . plugins/zsh
 }
 
+function plugins() {
+    [[ -f "plugins/$1" ]] && . plugins/$1
+}
 # PROCESS ARGUMENTS
 
-function showhelp {
-    echo "USAGE install.ubuntu [-u] [options]
+function usage() {
+    echo "USAGE install [-u] [options]
     Options
     =======
-    base    : base packages
-    chrome  : configure chrome ppa and install
-    config  : base configuration
-    dev     : development packages
-    docker  : install docker
-    fonts   : install fonts
-    init    : run base,config,fonts,zsh
-    net     : network tools
-    tmux    : install latest tmux
-    vim     : config vim
-    vmware  : install vmware tools
-    zsh     : install oh-my-zsh"
+    base    : Install base packages
+    chrome  : Install Chrome web browser
+    config  : Install configuration files
+    dev     : Install development packages
+    docker  : Install docker
+    fonts   : Install fonts
+    init    : Initialize base system
+    net     : Install network tools
+    tmux    : Install TMUX 
+    vim     : Build VIM
+    vmware  : Install vmware tools
+    zsh     : Install oh-my-zsh"
+    samba   : Install + Configure Samba Server
 }
 
 if [ "$1" == "-u" ]; then
     sudo apt-get update
 fi
 
-[ $# == 0 ] && showhelp
+
+[ $# == 0 ] && usage
 for arg in $@
 do
     case $arg in
-        "base")   install_base;;
-        "chrome") install_chrome;;
-        "config") install_config;;
-        "dev")    install_dev;;
-        "docker") install_docker;;
-        "fonts")  install_fonts;;
-        "init")   init;;
-        "net")    install_net;;
-        "tmux")   install_tmux;;
-        "vim")    config_vim;;
-        "vmware") install_vmware;;
-        "zsh")    install_zsh;;
+        "base"   ) install_base;;
+        "chrome" ) install_chrome;;
+        "config" ) install_config;;
+        "dev"    ) install_dev;;
+        "docker" ) install_docker;;
+        "fonts"  ) install_fonts;;
+        "init"   ) init;;
+        "net"    ) install_net;;
+        "vmware" ) install_vmware;;
+        *        ) plugins $arg;;
     esac
 done
 
