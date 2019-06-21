@@ -24,3 +24,12 @@ alias v='vim'
 alias vi='gvim'
 
 ####
+
+
+##FUNCTIONS##
+
+clean (){
+    [[ -z "$1" ]] || sed '/^\s*#/d;/^$/d' "$1"
+}
+
+####

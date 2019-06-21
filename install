@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-home=`pwd`
+home=`pwd`/
 os=`uname`
 echo $home
 uname -a
@@ -35,7 +35,6 @@ function install_base {
         sudo apt-get -y install vim-nox
     else
         sudo apt-get -y install gitk git-gui
-        #sudo apt-get -y install terminator
         sudo apt-get -y install vim-gtk3
     fi
 }
@@ -107,14 +106,14 @@ function usage() {
     fonts   : Install fonts
     init    : Initialize base system
     net     : Install network tools
+    vmware  : Install vmware tools
 
     PLUGINS
     =======
+    samba   : Install + Configure Samba Server
     tmux    : Install TMUX 
     vim     : Build VIM
-    vmware  : Install vmware tools
-    zsh     : Install oh-my-zsh
-    samba   : Install + Configure Samba Server"
+    zsh     : Install oh-my-zsh"
 }
 
 if [ "$1" == "-u" ]; then
