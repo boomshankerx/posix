@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+echo $home
+cp -ruv \
+    ~/.tmux.conf \
+    ~/.tmuxinator \
+    ~/.zshrc \
+    "$home"home/
+cp -uv ~/.oh-my-zsh/custom/techg.zsh "$home"home/.oh-my-zsh/custom/
