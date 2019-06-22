@@ -1,22 +1,19 @@
 #!/usr/bin/env bash
 
-home=`pwd`/
+home=`pwd`
 os=`uname`
 echo $home
 uname -a
 
 function install_config {
-    echo "** Installing common scripts..."
-    cp -vrT home ~
+    echo "** Installing config files"
+    cp -vrT etc ~
     [ -L ~/s ] || ln -s ~/scripts ~/s
 
-    #BASH
-    echo "** Installing config files"
-    touch ~/.bash_aliases
     sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
     cat debian/.bash_aliases >> ~/.bash_aliases
-
-    #git clone https://github.com/aaron-williamson/base16-gnome-terminal.git ~/.config/base16-gnome-terminal
+    sed -i /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
+    cat debian/.bash_aliases >> ~/.oh-my-zsh/custom/techg.zsh
 }
 
 function install_base {

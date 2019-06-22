@@ -1,7 +1,7 @@
 # ~/.tmuxinator/hacking.yml
 
 name: hak
-root: ~/work/
+root: ~
 
 # Optional tmux socket
 # socket_name: foo

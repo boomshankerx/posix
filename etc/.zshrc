@@ -63,7 +63,6 @@ plugins=(
   git
   tmux
   tmuxinator
-  web-search
 )
 
 source $ZSH/oh-my-zsh.sh
