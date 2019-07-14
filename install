@@ -81,9 +81,9 @@ function init {
     echo 'Initializing base system...'
     install_base
     install_fonts
-    install_config
     . plugins/tmux
     . plugins/zsh
+    install_config
 }
 
 function plugins() {
