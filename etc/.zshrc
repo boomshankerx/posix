@@ -98,3 +98,4 @@ source $ZSH/oh-my-zsh.sh
 #
 #unsetopt auto_cd
 export EDITOR=vim
+export TERM=xterm-256color
