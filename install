@@ -49,9 +49,6 @@ function install_dev {
     sudo apt-get -y install tidy
 }
 
-function install_docker {
-    curl -sSL https://get.docker.com/ | sh 
-}
 function install_fonts {
     sudo apt-get -y install fonts-powerline
     git clone https://github.com/powerline/fonts.git ~/fonts --depth=1
@@ -79,6 +76,7 @@ function install_vmware {
 
 function init {
     echo 'Initializing base system...'
+    apt update
     install_base
     install_fonts
     . plugins/tmux
@@ -99,7 +97,6 @@ function usage() {
     chrome  : Install Chrome web browser
     config  : Install configuration files
     dev     : Install development packages
-    docker  : Install docker
     fonts   : Install fonts
     init    : Initialize base system
     net     : Install network tools
@@ -107,6 +104,7 @@ function usage() {
 
     PLUGINS
     =======
+    docker  : Install Docker
     samba   : Install + Configure Samba Server
     tmux    : Install TMUX 
     vim     : Build VIM
@@ -117,7 +115,6 @@ if [ "$1" == "-u" ]; then
     sudo apt-get update
 fi
 
-
 [ $# == 0 ] && usage
 for arg in $@
 do
@@ -126,7 +123,6 @@ do
         "chrome" ) install_chrome;;
         "config" ) install_config;;
         "dev"    ) install_dev;;
-        "docker" ) install_docker;;
         "fonts"  ) install_fonts;;
         "init"   ) init;;
         "net"    ) install_net;;
