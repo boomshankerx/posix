@@ -1,5 +1,5 @@
 export EDITOR=vim
-
+export NCURSES_NO_UTF8_ACS=1
 
 #EXPRESSVPN
 alias vc='expressvpn connect'
@@ -15,12 +15,11 @@ alias v='vim'
 alias vi='gvim'
 
 ##FUNCTIONS##
-
 clean (){
     [[ -z "$1" ]] || sed '/^\s*#/d;/^$/d' "$1"
 }
-
 ####
+
 ##DEBIAN##
 #APT
 alias ag='apt-get'
