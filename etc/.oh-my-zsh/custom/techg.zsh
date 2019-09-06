@@ -3,6 +3,7 @@ export NCURSES_NO_UTF8_ACS=1
 
 #EXPRESSVPN
 alias vc='expressvpn connect'
+alias vcs='expressvpn connect smart'
 alias vd='expressvpn disconnect'
 alias vs='expressvpn status'
 
