@@ -1,13 +1,13 @@
 # TMUX
 sudo apt-get -y install tmux
 sudo apt-get -y install tmuxinator
-sudo apt-get install automake build-essential pkg-config libevent-dev libncurses5-dev
+sudo apt-get install automake bison build-essential pkg-config libevent-dev libncurses-dev
 rm -fr /tmp/tmux
 git clone https://github.com/tmux/tmux.git /tmp/tmux
 cd /tmp/tmux
-git checkout 2.9
+git checkout 2.9a
 sh autogen.sh
 ./configure && make
 sudo make install
-sudo ln -s /usr/bin/tmuxinator /usr/bin/mux
+#sudo ln -s /usr/bin/tmuxinator /usr/bin/mux
 cd -
