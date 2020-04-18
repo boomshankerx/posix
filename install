@@ -18,59 +18,61 @@ function install_config {
 
 function install_base {
     echo "** Installing base software..."
-    sudo apt-get -y install atop
-    sudo apt-get -y install byobu
-    sudo apt-get -y install exuberant-ctags
-    sudo apt-get -y install git 
-    sudo apt-get -y install powerline
-    sudo apt-get -y install rsync
-    sudo apt-get -y install sudo
-    sudo apt-get -y install build-essential cmake
-    sudo apt-get -y install python-dev python3-dev
+    apt-get -y install build-essential cmake
+    apt-get -y install curl
+    apt-get -y install git 
+    apt-get -y install powerline
+    apt-get -y install python-dev python3-dev
+    apt-get -y install rsync
+    apt-get -y install sudo
+    apt-get -y install wget
+#   apt-get -y install atop
+#   apt-get -y install byobu
+#   apt-get -y install exuberant-ctags
 
     if [[ -z $DISPLAY ]]; then
-        sudo apt-get -y install vim-nox
+        apt-get -y install vim-nox
     else
-        sudo apt-get -y install gitk git-gui
-        sudo apt-get -y install vim-gtk3
+        apt-get -y install gitk git-gui
+        apt-get -y install vim-gtk3
     fi
 }
 
 function install_chrome {
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
-    sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-    sudo apt-get update 
-    sudo apt-get install google-chrome-stable
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - 
+    sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+    apt-get update 
+    apt-get install google-chrome-stable
 }
 
 function install_dev {
     echo "** Installing development packages..."
-    sudo apt-get -y install csstidy
-    sudo apt-get -y install tidy
+    apt-get -y install csstidy
+    apt-get -y install tidy
 }
 
 function install_fonts {
-    sudo apt-get -y install fonts-powerline
+    apt-get -y install fonts-powerline
     git clone https://github.com/powerline/fonts.git ~/fonts --depth=1
     ~/fonts/install.sh
-    sudo fc-cache -fv
+    fc-cache -fv
     rm -fr ~/fonts
 }
 
 function install_net {
     echo "** Installing network packages..."
-    sudo apt-get -y install kismet
-    sudo apt-get -y install nmap
+    apt-get -y install kismet
+    apt-get -y install nmap
     if [[ -n $DISPLAY ]]; then
-        sudo apt-get -y install zenmap
-        sudo apt-get -y install wireshark
+        apt-get -y install zenmap
+        apt-get -y install wireshark
     fi
 }
 
 function install_vmware {
-    sudo apt-get -y install open-vm-tools 
+    apt-get -y install open-vm-tools 
     if [[ -n $DISPLAY ]]; then
-        sudo apt-get -y install open-vm-tools-desktop 
+        apt-get -y install open-vm-tools-desktop 
     fi
 }
 
@@ -93,26 +95,27 @@ function usage() {
     echo "USAGE install [-u] [options]
     Options
     =======
-    base    : Install base packages
-    chrome  : Install Chrome web browser
-    config  : Install configuration files
-    dev     : Install development packages
-    fonts   : Install fonts
-    init    : Initialize base system
-    net     : Install network tools
-    vmware  : Install vmware tools
+    base   : Install base packages
+    chrome : Install Chrome web browser
+    config : Install configuration files
+    dev    : Install development packages
+    fonts  : Install fonts
+    init   : Initialize base system
+    net    : Install network tools
+    vmware : Install vmware tools
 
     PLUGINS
     =======
-    docker  : Install Docker
-    samba   : Install + Configure Samba Server
-    tmux    : Install TMUX 
-    vim     : Build VIM
-    zsh     : Install oh-my-zsh"
+    docker : Install Docker
+    jitsi  : Install Jitsi Meet
+    samba  : Install + Configure Samba Server
+    tmux   : Install TMUX
+    vim    : Build VIM
+    zsh    : Install oh-my-zsh"
 }
 
 if [ "$1" == "-u" ]; then
-    sudo apt-get update
+    apt-get update
 fi
 
 [ $# == 0 ] && usage

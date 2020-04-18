@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
-echo "INSTALLING JITSI"
-sudo wget -qO -  https://download.jitsi.org/jitsi-key.gpg.key | sudo apt-key add -
-sudo sh -c "echo 'deb https://download.jitsi.org stable/' > /etc/apt/sources.list.d/jitsi-stable.list" 
-sudo apt install apt-transport-https
-sudo apt update
-sudo apt-get -y install jitsi-meet
+echo "INSTALLING JITSI meet.techgsolutions.com"
+wget -qO -  https://download.jitsi.org/jitsi-key.gpg.key | sudo apt-key add -
+sh -c "echo 'deb https://download.jitsi.org stable/' > /etc/apt/sources.list.d/jitsi-stable.list" 
+apt install apt-transport-https
+apt update
+apt -y install jitsi-meet
 
-
+sed -i'' 's/anonymous/internal_plain/' /etc/prosody/conf.avail/meet.techgsolutions.com.cfg.lua
+echo '\n\nVirtualHost "guest.meet.techgsolutions.com"
+    authentication = "anonymous"
+    c2s_require_encryption = false' >> /etc/prosody/conf.avail/meet.techgsolutions.com.cfg.lua
+echo 'org.jitsi.jicofo.auth.URL=XMPP:meet.techgsolutions.com' >> /etc/jitsi/jicofo/sip-communicator.properties
