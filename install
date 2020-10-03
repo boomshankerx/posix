@@ -80,7 +80,7 @@ function install_vmware {
 
 function init {
     echo 'Initializing base system...'
-    apt update
+    sudo apt update
     install_base
     install_fonts
     . plugins/tmux
