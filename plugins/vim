@@ -1,6 +1,6 @@
 # VIM BUILD
-sudo apt-get -y install build-essential cmake python-dev python3-dev
-git clone https://github.com/boomshankerx/vim ~/vim
+sudo apt-get -y install build-essential cmake python3-dev
+git clone https://github.com/boomshankerx/vimrc ~/vimrc
 cd ~/vim
 chmod +x install
 ./vim -i

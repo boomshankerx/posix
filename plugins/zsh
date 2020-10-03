@@ -1,4 +1,5 @@
 #ZSH + OH-MY-ZSH
 sudo apt-get -y install zsh
+rm -fr ~/.oh-my-zsh
 sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 sudo chown -R $USER:$USER ~/.oh-my-zsh
