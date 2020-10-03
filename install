@@ -35,6 +35,7 @@ function install_base {
     else
         apt-get -y install gitk git-gui
         apt-get -y install vim-gtk3
+        apt-get -y install xclip
     fi
 }
 
@@ -78,9 +79,9 @@ function install_vmware {
 
 function init {
     echo 'Initializing base system...'
-    apt update
-    install_base
-    install_fonts
+    sudo apt update
+    sudo install_base
+    sudo install_fonts
     . plugins/tmux
     . plugins/zsh
     install_config
