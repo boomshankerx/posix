@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
 echo "INSTALLING JITSI meet.techgsolutions.com"
-wget -qO -  https://download.jitsi.org/jitsi-key.gpg.key | sudo apt-key add -
-sh -c "echo 'deb https://download.jitsi.org stable/' > /etc/apt/sources.list.d/jitsi-stable.list" 
-apt install apt-transport-https
-apt update
-apt -y install jitsi-meet
+sudo apt update
+sudo apt-get install wget apt-transport-https gnupg
+
+# JAVA
+wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
+echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb buster main" | sudo tee /etc/apt/sources.list.d/adoptopenjdk.list
+sudo apt update
+sudo apt install adoptopenjdk-8-hotspot
+
+# JITSI
+curl https://download.jitsi.org/jitsi-key.gpg.key | sudo sh -c 'gpg --dearmor > /usr/share/keyrings/jitsi-keyring.gpg'
+echo 'deb [signed-by=/usr/share/keyrings/jitsi-keyring.gpg] https://download.jitsi.org stable/' | sudo tee /etc/apt/sources.list.d/jitsi-stable.list > /dev/null
+sudo apt update
+sudo apt -y install jitsi-meet
 
 sed -i'' 's/anonymous/internal_plain/' /etc/prosody/conf.avail/meet.techgsolutions.com.cfg.lua
-echo '\n\nVirtualHost "guest.meet.techgsolutions.com"
+echo -e '\n\nVirtualHost "guest.meet.techgsolutions.com"
     authentication = "anonymous"
     c2s_require_encryption = false' >> /etc/prosody/conf.avail/meet.techgsolutions.com.cfg.lua
 echo 'org.jitsi.jicofo.auth.URL=XMPP:meet.techgsolutions.com' >> /etc/jitsi/jicofo/sip-communicator.properties
