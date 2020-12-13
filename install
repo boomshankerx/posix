@@ -5,28 +5,18 @@ os=`uname`
 echo $home
 uname -a
 
-function install_config {
-    echo "** Installing config files"
-    cp -vrT etc ~
-    [ -L ~/s ] || ln -s ~/scripts ~/s
-
-    sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
-    cat debian/.bash_aliases >> ~/.bash_aliases
-    sed -i /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
-    cat debian/.bash_aliases >> ~/.oh-my-zsh/custom/techg.zsh
-}
-
 function install_base {
     echo "** Installing base software..."
     sudo apt-get -y install build-essential cmake
     sudo apt-get -y install curl
     sudo apt-get -y install git 
+    sudo apt-get -y install htop
     sudo apt-get -y install powerline
     sudo apt-get -y install python-dev python3-dev
     sudo apt-get -y install rsync
     sudo apt-get -y install sudo
-    sudo apt-get -y install wget
     sudo apt-get -y install vim-youcompleteme
+    sudo apt-get -y install wget
 #   sudo apt-get -y install atop
 #   sudo apt-get -y install byobu
 #   sudo apt-get -y install exuberant-ctags
@@ -38,6 +28,17 @@ function install_base {
         sudo apt-get -y install vim-gtk3
         sudo apt-get -y install xclip
     fi
+}
+
+function install_config {
+    echo "** Installing config files"
+    cp -vrT etc ~
+    [ -L ~/s ] || ln -s ~/scripts ~/s
+
+    sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
+    cat debian/.bash_aliases >> ~/.bash_aliases
+    sed -i /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
+    cat debian/.bash_aliases >> ~/.oh-my-zsh/custom/techg.zsh
 }
 
 function install_chrome {
@@ -82,10 +83,13 @@ function init {
     echo 'Initializing base system...'
     sudo apt update
     install_base
-    install_fonts
     . plugins/tmux
     . plugins/zsh
     install_config
+    . plugins/vim
+    if [[ -z $DISPLAY ]]; then
+        install_fonts
+    fi
 }
 
 function plugins() {
