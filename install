@@ -96,7 +96,6 @@ function usage() {
     Options
     =======
     base   : Install base packages
-    chrome : Install Chrome web browser
     config : Install configuration files
     dev    : Install development packages
     fonts  : Install fonts
@@ -106,6 +105,7 @@ function usage() {
 
     PLUGINS
     =======
+    chrome : Install Chrome web browser
     docker : Install Docker
     jitsi  : Install Jitsi Meet
     samba  : Install + Configure Samba Server
