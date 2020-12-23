@@ -43,13 +43,6 @@ function install_config {
     cat debian/.bash_aliases >> ~/.oh-my-zsh/custom/techg.zsh
 }
 
-function install_chrome {
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - 
-    sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-    sudo apt-get update 
-    sudo apt-get install google-chrome-stable
-}
-
 function install_dev {
     echo "** Installing development packages..."
     sudo apt-get -y install csstidy
@@ -130,7 +123,6 @@ for arg in $@
 do
     case $arg in
         "base"   ) install_base;;
-        "chrome" ) install_chrome;;
         "config" ) install_config;;
         "dev"    ) install_dev;;
         "fonts"  ) install_fonts;;
