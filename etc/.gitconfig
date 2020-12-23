@@ -21,3 +21,5 @@
 	helper = cache
 [push]
 	default = simple
+[pull]
+	rebase = false
