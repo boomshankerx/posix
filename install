@@ -19,7 +19,6 @@ function install_base {
     sudo apt-get -y install tmuxinator
     sudo apt-get -y install wget
     sudo apt-get -y install vim-youcompleteme
-#   sudo apt-get -y install atop
 #   sudo apt-get -y install byobu
 #   sudo apt-get -y install exuberant-ctags
 
