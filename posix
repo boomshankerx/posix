@@ -31,15 +31,22 @@ function install_base {
     fi
 }
 
+function compile_config(){
+    # COMPILE CONFIG
+    sed -i /##DEBIAN##/,/####/d etc/.bash_aliases
+    cat debian/.bash_aliases >> etc/.bash_aliases
+    sed -i /##DEBIAN##/,/####/d etc/.oh-my-zsh/custom/techg.zsh
+    cat debian/.bash_aliases >> etc/.oh-my-zsh/custom/techg.zsh
+}
+
+
 function install_config {
     echo "** Installing config files"
+    compile_config
+
     cp -vrT etc ~
     [ -L ~/s ] || ln -s ~/scripts ~/s
 
-    sed -i /##DEBIAN##/,/####/d ~/.bash_aliases
-    cat debian/.bash_aliases >> ~/.bash_aliases
-    sed -i /##DEBIAN##/,/####/d ~/.oh-my-zsh/custom/techg.zsh
-    cat debian/.bash_aliases >> ~/.oh-my-zsh/custom/techg.zsh
 }
 
 function install_dev {
@@ -94,13 +101,14 @@ function usage() {
     echo "USAGE install [-u] [options]
     Options
     =======
-    base   : Install base packages
-    config : Install configuration files
-    dev    : Install development packages
-    fonts  : Install fonts
-    init   : Initialize base system
-    net    : Install network tools
-    vmware : Install vmware tools
+    base    : Install base packages
+    compile : Compile config files
+    config  : Install configuration files
+    dev     : Install development packages
+    fonts   : Install fonts
+    init    : Initialize base system
+    net     : Install network tools
+    vmware  : Install vmware tools
 
     PLUGINS
     =======
@@ -121,14 +129,15 @@ fi
 for arg in $@
 do
     case $arg in
-        "base"   ) install_base;;
-        "config" ) install_config;;
-        "dev"    ) install_dev;;
-        "fonts"  ) install_fonts;;
-        "init"   ) init;;
-        "net"    ) install_net;;
-        "vmware" ) install_vmware;;
-        *        ) plugins $arg;;
+        "base"    ) install_base;;
+        "compile" ) compile_config;;
+        "config"  ) install_config;;
+        "dev"     ) install_dev;;
+        "fonts"   ) install_fonts;;
+        "init"    ) init;;
+        "net"     ) install_net;;
+        "vmware"  ) install_vmware;;
+        *         ) plugins $arg;;
     esac
 done
 
