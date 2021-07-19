@@ -1,0 +1,6 @@
+# https://github.com/aircrack-ng/rtl8812au
+sudo apt install dkms build-essential libelf-dev linux-headers-`uname -r`
+cd ~
+git clone https://github.com/aircrack-ng/rtl8812au.git
+cd rtl8812au
+sudo dkms_install
