@@ -2,8 +2,10 @@ export EDITOR=vim
 export NCURSES_NO_UTF8_ACS=1
 
 # COMMON
+alias c=cat
 alias df='df -h'
 alias du='du -hc'
+alias e=echo
 
 #EXPRESSVPN
 alias vc='expressvpn connect'
