@@ -61,6 +61,7 @@ ZSH_THEME="agnoster"
 plugins=(
   common-aliases
   git
+  tg_hacker
   tmux
   tmuxinator
   zsh-autosuggestions
