@@ -6,6 +6,7 @@ alias c=cat
 alias df='df -h'
 alias du='du -hc'
 alias e=echo
+alias lf='less +F'
 
 #EXPRESSVPN
 alias vc='expressvpn connect'
