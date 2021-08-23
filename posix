@@ -116,9 +116,11 @@ function usage() {
     docker : Install Docker
     jitsi  : Install Jitsi Meet
     samba  : Install + Configure Samba Server
+    sync   : Sync local settings to repo
     tmux   : Install TMUX
     vim    : Build VIM
     zsh    : Install oh-my-zsh"
+
 }
 
 if [ "$1" == "-u" ]; then
