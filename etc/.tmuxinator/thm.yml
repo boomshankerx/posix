@@ -18,7 +18,7 @@ root: ~/w/thm
 # on_project_first_start: command
 
 # Run on project start, after the first time
-# on_project_restart: command
+on_project_restart: ~/w/thm/start.sh
 
 # Run on project exit ( detaching from tmux session )
 # on_project_exit: command
