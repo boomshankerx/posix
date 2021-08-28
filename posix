@@ -41,16 +41,14 @@ function compile_config(){
 
 
 function install_config {
-    echo "** Installing config files"
-    compile_config
-
+    echo "\n#\n# Installing config files\n#"
     cp -vrT etc ~
     [ -L ~/s ] || ln -s ~/scripts ~/s
 
 }
 
 function install_dev {
-    echo "** Installing development packages..."
+    echo "\n#\n# Installing development packages...\n#"
     sudo apt-get -y install csstidy
     sudo apt-get -y install tidy
 }
@@ -64,7 +62,7 @@ function install_fonts {
 }
 
 function install_net {
-    echo "** Installing network packages..."
+    echo "\n#\n#  Installing network packages...\n#"
     sudo apt-get -y install kismet
     sudo apt-get -y install nmap
     if [[ -n $DISPLAY ]]; then

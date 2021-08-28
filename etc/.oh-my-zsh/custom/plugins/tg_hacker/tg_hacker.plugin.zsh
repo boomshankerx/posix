@@ -2,8 +2,8 @@
 #
 # VARIABLES
 #
-export LISTDIR="/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt"
-export LISTPASS="/usr/share/wordlists/rockyou.txt"
+export DIRLIST="/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt"
+export PASSLIST="/usr/share/wordlists/rockyou.txt"
 
 #
 # ALIASES
@@ -11,6 +11,9 @@ export LISTPASS="/usr/share/wordlists/rockyou.txt"
 
 #alias me='echo $(ifconfig eth0 | grep "inet " | cut -b 9- | cut  -d" " -f2) | xclip -selection c'
 #alias ve='echo $(ifconfig tun0 | grep "inet " | cut -b 9- | cut  -d" " -f2) | xclip -selection c'
+alias hc='hak_hashcat'
+alias jrock='john --wordlist=$PASSLIST'
+alias jshow='john --show'
 alias msf=msfconsole
 alias nmap_basic="sudo nmap -v -Pn -n -T4 -sC -sV -oN nmap.basic.txt"
 alias nmap_full="sudo nmap -v -Pn -n -T4 -A -oN nmap.full.txt"
@@ -18,6 +21,7 @@ alias nmap_full_all="sudo nmap -v -Pn -n -T4 -p- -A -oN nmap.full.all.txt"
 alias tmp='cat $base/tmp'
 alias ve='me tun0'
 alias vpn='sudo -b openvpn'
+
 
 #
 # FUNCTIONS
@@ -79,6 +83,15 @@ hak_gobuster(){
     OUTPUT=gobuster.txt
     touch $OUTPUT
     gobuster dir -w "$WORDLIST" -u http://"$IP":"$PORT" -o $OUTPUT -x $EXT
+}
+
+hak_hashcat() {
+    MODE=${1}
+    HASHES=${2:-"hashes.txt"}
+    ATTACK=${3:-0}
+    WORDLIST=${4:-"$PASSLIST"}
+    echo "hashcat -m $MODE -a $ATTACK $HASHES $WORDLIST"
+    hashcat -m $MODE -a $ATTACK $HASHES $WORDLIST
 }
 
 hak_nikto() {
