@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+
+#
+# KALITOOLS
+#
+echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
+cd /opt
+
+echo "# AutoRecon"
+echo "# nessus"
+echo "# nmapAutomator"
+sudo rm -r nmapAutomator
+sudo git clone https://github.com/21y4d/nmapAutomator.git
+sudo ln -s $(pwd)/nmapAutomator/nmapAutomator.sh /usr/local/bin/
+
+echo "# nishang"
+echo "# PowerSploit"
+
+
