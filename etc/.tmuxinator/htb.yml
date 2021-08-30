@@ -12,7 +12,7 @@ root: ~/w/htb
 # Project hooks
 
 # Runs on project start, always
-# on_project_start: ~/w/htb/start.sh
+on_project_start: ~/w/htb/start.sh
 
 # Run on project start, the first time
 # on_project_first_start: command
@@ -53,8 +53,3 @@ windows:
       panes:
         -  
         -  
-  - notes:
-      layout: even-horizontal 
-      panes:
-        - 
-        - 
