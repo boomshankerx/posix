@@ -3,5 +3,5 @@ sudo apt-get -y install build-essential cmake python3-dev
 git clone https://github.com/boomshankerx/vimrc ~/vimrc
 cd ~/vimrc
 chmod +x install
-./vim -i
+./vimrc -i
 cd - 

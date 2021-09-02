@@ -4,19 +4,35 @@
 # KALITOOLS
 #
 echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
-cd /opt
 
+cd ~
+git clone https://github.com/Dewalt-arch/pimpmykali
+
+cd /opt
 echo "# AutoRecon"
+
 echo "# enum4linux-ng"
 sudo git clone https://github.com/cddmp/enum4linux-ng.git
 sudo ln -s $(pwd)/enum4linux-ng/enum4linux-ng.py /usr/local/bin/enum4linux-ng
+
 echo "# nessus"
+#sudo chmod -R lorne:lorne 
+
 echo "# nmapAutomator"
 sudo rm -r nmapAutomator
 sudo git clone https://github.com/21y4d/nmapAutomator.git
 sudo ln -s $(pwd)/nmapAutomator/nmapAutomator.sh /usr/local/bin/
 
 echo "# nishang"
+#sudo chmod -R lorne:lorne 
+
 echo "# PowerSploit"
+#sudo chmod -R lorne:lorne 
 
+echo "# Windows Exploit Suggester NG"
+sudo git clone https://github.com/bitsadmin/wesng.git
+sudo chmod -R lorne:lorne wesng
 
+echi "# Windows Exploit Suggester"
+sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git
+sudo chmod -R lorne:lorne Windows-Exploit-Suggester
