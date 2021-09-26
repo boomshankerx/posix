@@ -5,8 +5,11 @@
 #
 echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
 
-cd ~
-git clone https://github.com/Dewalt-arch/pimpmykali
+sudo apt install ghidra
+
+cd ~/scripts
+git clone https://github.com/Dewalt-arch/pimpmykali ~/scripts
+git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom/plugins/msfvenom/
 
 cd /opt
 echo "# AutoRecon"
@@ -22,9 +25,6 @@ echo "# nmapAutomator"
 sudo rm -r nmapAutomator
 sudo git clone https://github.com/21y4d/nmapAutomator.git
 sudo ln -s $(pwd)/nmapAutomator/nmapAutomator.sh /usr/local/bin/
-
-echo "# nishang"
-#sudo chmod -R lorne:lorne 
 
 echo "# PowerSploit"
 #sudo chmod -R lorne:lorne 
