@@ -85,7 +85,7 @@ function init {
     . plugins/zsh
     . plugins/vim
     install_config
-    if [[ -z $DISPLAY ]]; then
+    if [[ -n $DISPLAY ]]; then
         install_fonts
     fi
 }
@@ -119,6 +119,7 @@ function usage() {
     vim    : Build VIM
     zsh    : Install oh-my-zsh"
 
+    ls plugins
 }
 
 if [ "$1" == "-u" ]; then

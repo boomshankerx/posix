@@ -104,3 +104,5 @@ export LC_ALL=en_US.UTF-8
 #unsetopt auto_cd
 export EDITOR=vim
 export TERM=xterm-256color
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin

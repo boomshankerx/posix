@@ -37,4 +37,5 @@ alias auf='sudo apt update && sudo apt full-upgrade -y'
 alias aur='sudo apt autoremove -y'
 alias auu='sudo apt update && sudo apt upgrade -y'
 alias uuu='auf && aur'
+alias sc='systemctl'
 ####

@@ -8,7 +8,7 @@ echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
 sudo apt install ghidra
 
 cd ~/scripts
-git clone https://github.com/Dewalt-arch/pimpmykali ~/scripts
+git clone https://github.com/Dewalt-arch/pimpmykali ~/scripts/pimpmykali
 git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom/plugins/msfvenom/
 
 cd /opt
@@ -19,7 +19,7 @@ sudo git clone https://github.com/cddmp/enum4linux-ng.git
 sudo ln -s $(pwd)/enum4linux-ng/enum4linux-ng.py /usr/local/bin/enum4linux-ng
 
 echo "# nessus"
-#sudo chmod -R lorne:lorne 
+#sudo chown -R lorne:lorne 
 
 echo "# nmapAutomator"
 sudo rm -r nmapAutomator
@@ -27,12 +27,12 @@ sudo git clone https://github.com/21y4d/nmapAutomator.git
 sudo ln -s $(pwd)/nmapAutomator/nmapAutomator.sh /usr/local/bin/
 
 echo "# PowerSploit"
-#sudo chmod -R lorne:lorne 
+#sudo chown -R lorne:lorne 
 
 echo "# Windows Exploit Suggester NG"
 sudo git clone https://github.com/bitsadmin/wesng.git
-sudo chmod -R lorne:lorne wesng
+sudo chown -R lorne:lorne wesng
 
 echi "# Windows Exploit Suggester"
 sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git
-sudo chmod -R lorne:lorne Windows-Exploit-Suggester
+sudo chown -R lorne:lorne Windows-Exploit-Suggester

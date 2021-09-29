@@ -11,5 +11,6 @@ echo "deb [signed-by=/usr/share/keyrings/syncthing-archive-keyring.gpg] https://
 # Increase preference of Syncthing's packages ("pinning")
 printf "Package: *\nPin: origin apt.syncthing.net\nPin-Priority: 990\n" | sudo tee /etc/apt/preferences.d/syncthing
 # Update and install syncthing:
-sudo apt-get update
-sudo apt-get install syncthing
+sudo apt update
+sudo apt install -y syncthing
+sudo apt install -y syncthing-gtk
