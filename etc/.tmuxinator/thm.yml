@@ -47,7 +47,9 @@ on_project_first_start: ~/w/thm/start.sh
 windows:
   - main:
       layout: even-horizontal
-      synchronize: after
+      #synchronize: after
       panes:
         - 
-        - 
+  - tg_hacker:
+      panes:
+        - v ~/.oh-my-zsh/custom/plugins/tg_hacker/tg_hacker.plugin.zsh
