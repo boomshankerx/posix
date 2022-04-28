@@ -50,6 +50,9 @@ windows:
       #synchronize: after
       panes:
         - 
+  - notes:
+      panes:
+        -
   - tg_hacker:
       panes:
-        - v ~/.oh-my-zsh/custom/plugins/tg_hacker/tg_hacker.plugin.zsh
+        - v ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh

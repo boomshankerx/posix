@@ -22,13 +22,16 @@ echo "# nessus"
 #sudo chown -R lorne:lorne 
 
 echo "# LinEnum"
-git clone https://github.com/rebootuser/LinEnum.git
+sudo git clone https://github.com/rebootuser/LinEnum.git
 sudo chown -R lorne:lorne LinEnum 
 
 echo "# nmapAutomator"
 sudo rm -r nmapAutomator
 sudo git clone https://github.com/21y4d/nmapAutomator.git
 sudo ln -s $(pwd)/nmapAutomator/nmapAutomator.sh /usr/local/bin/
+
+echo "# OLEDUMP"
+
 
 echo "# Windows Exploit Suggester NG"
 sudo git clone https://github.com/bitsadmin/wesng.git

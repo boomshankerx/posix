@@ -43,11 +43,15 @@ on_project_start: ~/w/htb/start.sh
 
 # Controls whether the tmux session should be attached to automatically. Defaults to true.
 # attach: false
-
 windows:
   - main:
       layout: even-horizontal
-      synchronize: after
+      #synchronize: after
       panes:
-        -  
-        -  
+        - 
+  - tg_hacker:
+      panes:
+        - v ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
+  - notes:
+      panes:
+        -

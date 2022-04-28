@@ -1,6 +1,6 @@
 .gitconfig
 .imwheelrc
-.oh-my-zsh/custom/plugins/tg_hacker/
+.oh-my-zsh/custom/plugins/tg-hacker/
 .oh-my-zsh/custom/techg.zsh
 .tmux.conf
 .tmuxinator

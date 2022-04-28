@@ -63,7 +63,7 @@ plugins=(
     common-aliases
     git
     msfvenom
-    tg_hacker
+    tg-hacker
     tmux
     tmuxinator
     zsh-autosuggestions
