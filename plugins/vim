@@ -1,5 +1,6 @@
 # VIM BUILD
 sudo apt-get -y install build-essential cmake python3-dev
+sudo apt-get -y install vim-youcompleteme
 git clone https://github.com/boomshankerx/vimrc ~/vimrc
 cd ~/vimrc
 chmod +x install
