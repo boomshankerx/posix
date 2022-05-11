@@ -26,6 +26,10 @@ alias vi='gvim'
 clean (){
     [[ -z "$1" ]] || sed '/^\s*#/d;/^$/d' "$1"
 }
+reset_permissions(){
+    find . -type f -exec chmod 664 {} \; -print
+    find . -type d -exec chmod 775 {} \; -print
+}
 ####
 
 ##DEBIAN##

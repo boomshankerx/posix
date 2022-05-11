@@ -4,10 +4,10 @@
 # VARIABLES
 #
 
-export DIR_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
-export DIR_MEDIUM="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
 export HAKVARS=~/hakvars
-export PASSLIST="/usr/share/wordlists/rockyou.txt"
+export LIST_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
+export LIST_MEDIUM="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
+export LIST_ROCK="/usr/share/wordlists/rockyou.txt"
 export SECLISTS="/usr/share/wordlists/seclists"
 
 #
@@ -19,8 +19,8 @@ alias dlps='tpl ps_dl'
 alias f='focus'
 alias hcat='h-hashcat'
 alias hcatshow='hashcat --show'
-alias hrock='hydra -VI -P $PASSLIST'
-alias jrock='john --wordlist=$PASSLIST --pot=john.txt'
+alias hrock='hydra -VI -P $LIST_ROCK'
+alias jrock='john --wordlist=$LIST_ROCK --pot=john.txt'
 alias jshow='john --show'
 alias msf=msfconsole
 alias s='sync'
@@ -156,7 +156,7 @@ h-init() {
 h-ffuf(){
     HOST=${2:-$RHOST}
     PORT=${1:-80}
-    WORDLIST=${3:-$DIR_MEDIUM}
+    WORDLIST=${3:-$LIST_MEDIUM}
     OUTPUT=ffuf.$IP-$PORT.txt
     touch $OUTPUT
     ffuf -w $WORDLIST -u http://$HOST:$PORT/FUZZ -o $OUTPUT -of csv -c 
@@ -165,7 +165,7 @@ h-ffuf(){
 h-gobuster(){
     HOST=${1:-$RHOST}
     PORT=${2:-80}
-    WORDLIST=${3:-$DIR_MEDIUM}
+    WORDLIST=${3:-$LIST_MEDIUM}
     OUTPUT=gobuster.$IP-$PORT.txt
     touch $OUTPUT
     echo "gobuster dir -t 50 -o $OUTPUT -w $WORDLIST -u http://$HOST:$PORT -x html,php,txt,js,css,py"
@@ -176,7 +176,7 @@ h-hashcat() {
     ATTACK=${1:-0}
     MODE=${2:-0}
     HASHES=${3:-hashes.txt}
-    WORDLIST=${4:-"$PASSLIST"}
+    WORDLIST=${4:-"$LIST_ROCK"}
     OUTPUT="hashcat.txt"
     echo "hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST"
     hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST
@@ -186,7 +186,7 @@ h-hashcatshow() {
     ATTACK=${1:-0}
     MODE=${2:-0}
     HASHES=${3:-"hashes.txt"}
-    WORDLIST=${4:-"$PASSLIST"}
+    WORDLIST=${4:-"$LIST_ROCK"}
     OUTPUT="hashcat.txt"
     echo "hashcat --show -m $MODE $HASHES"
     hashcat --show -m $MODE $HASHES
@@ -210,13 +210,15 @@ h-web() {
 # NMAP
 #
 
-alias nmap- "sudo nmap -vv -Pn -n -T5"
-alias nmap-basic="sudo nmap -vv -Pn -n -T5 -oN nmap.basic.txt"
-alias nmap-basic-all="sudo nmap -vv -Pn -n -T5 -p- -oN nmap.basic.all.txt"
-alias nmap-full="sudo nmap -vv -n -T5 -A -oN nmap.full.txt"
-alias nmap-full-all="sudo nmap -vv -n -T5 -A -p- -oN nmap.full.all.txt"
-alias nmap-script="sudo nmap -vv -Pn -n -T5 -sC -sV -oN nmap.script.txt"
-alias nmap-script-all="sudo nmap -vv -Pn -n -T5 -sC -sV -p- -oN nmap.script.all.txt"
+alias nmap-="sudo nmap -vv -Pn -n -T4"
+alias nmap-arp="sudo nmap -vv -n -sn -PR"
+alias nmap-basic-all="sudo nmap -vv -Pn -n -T4 -p- -oN nmap.basic.all.txt"
+alias nmap-basic="sudo nmap -vv -Pn -n -T4 -oN nmap.basic.txt"
+alias nmap-discover="sudo nmap -vv -sn"
+alias nmap-full-all="sudo nmap -vv -n -T4 -A -p- -oN nmap.full.all.txt"
+alias nmap-full="sudo nmap -vv -n -T4 -A -oN nmap.full.txt"
+alias nmap-script-all="sudo nmap -vv -Pn -n -T4 -sC -sV -p- -oN nmap.script.all.txt"
+alias nmap-script="sudo nmap -vv -Pn -n -T4 -sC -sV -oN nmap.script.txt"
 
 nmap-get-ports(){
     IP=${1:-$ip}
