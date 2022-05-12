@@ -23,9 +23,17 @@ alias v='vim'
 alias vi='gvim'
 
 ##FUNCTIONS##
+
+# Remove hash comments from file and output to stdout
 clean (){
     [[ -z "$1" ]] || sed '/^\s*#/d;/^$/d' "$1"
 }
+
+# 
+empty (){
+    [[ -f "$1" ]] && echo '' > $1
+}
+
 reset_permissions(){
     find . -type f -exec chmod 664 {} \; -print
     find . -type d -exec chmod 775 {} \; -print
