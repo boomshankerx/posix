@@ -14,6 +14,9 @@ alias vcs='expressvpn connect smart'
 alias vd='expressvpn disconnect'
 alias vs='expressvpn status'
 
+#SUBLIME TEXT
+alias s=subl
+
 #TMUXINATOR
 alias mux=tmuxinator
 . ~/.tmuxinator/tmuxinator.zsh

@@ -52,7 +52,7 @@ windows:
         - 
   - notes:
       panes:
-        - v notes.txt
+        - 
   - tg_hacker:
       panes:
         - v ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
