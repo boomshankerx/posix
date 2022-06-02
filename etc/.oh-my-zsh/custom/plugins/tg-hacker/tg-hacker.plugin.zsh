@@ -22,7 +22,7 @@ alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
 alias jshow="john --show"
 alias msf=msfconsole
-alias ngrok="/opt/ngrok http 80"
+alias ngrok="ngrok http 80"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
 alias s='sync'
 alias sshclean="ssh-keygen -R rhost; ssh"
@@ -33,6 +33,7 @@ alias ve="me tun0"
 alias vpn="sudo -b openvpn"
 alias vpnkill="sudo pkill openvpn"
 alias vpnshow="pgrep -a openvpn"
+alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip systeminfo.txt"
 alias xc="xclip -sel c"
 
 
@@ -71,12 +72,6 @@ base() {
     fi
     echo $BASE
     cd $BASE
-}
-
-clip() {
-    FILE=$1
-    cat $FILE
-    cat $FILE | xclip -selection c
 }
 
 # Select target ip:port
@@ -148,6 +143,11 @@ listen() {
         rlwrap nc -lvnp $LPORT
     fi
 }
+
+listen-file() {
+    [[ -n "$1" ]] &&  nc -lvp $LPORT > $1
+}
+
 
 # Get ip address of local interface default: eth0
 me() {
