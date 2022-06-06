@@ -15,7 +15,6 @@ function install_base {
     sudo apt-get -y install htop
     sudo apt-get -y install powerline
     sudo apt-get -y install rsync
-    sudo apt-get -y install sudo
     sudo apt-get -y install tmux
     sudo apt-get -y install tmuxinator
     sudo apt-get -y install wget
@@ -28,15 +27,6 @@ function install_base {
         sudo apt-get -y install xclip
     fi
 }
-
-function compile_config(){
-    # COMPILE CONFIG
-    sed -i /##DEBIAN##/,/####/d etc/.bash_aliases
-    cat debian/.bash_aliases >> etc/.bash_aliases
-    sed -i /##DEBIAN##/,/####/d etc/.oh-my-zsh/custom/techg.zsh
-    cat debian/.bash_aliases >> etc/.oh-my-zsh/custom/techg.zsh
-}
-
 
 function install_config {
     echo "\n#\n# Installing config files\n#"
@@ -91,8 +81,8 @@ function init {
 function plugins() {
     [[ -f "plugins/$1" ]] && . plugins/$1
 }
-# PROCESS ARGUMENTS
 
+# PROCESS ARGUMENTS
 function usage() {
     echo "USAGE install [-u] [options]
     Options
