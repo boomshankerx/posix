@@ -54,7 +54,7 @@ decomment (){
 clip() {
     if [[ -f $1 ]]; then
         cat $1
-        cat $1 | xclip -selection c
+        cat $1 | xclip -sel c
     fi
 }
 

@@ -49,9 +49,7 @@ windows:
       layout: even-horizontal
       #synchronize: after
       panes:
-        - 
-  - notes:
-      panes:
+        -
         - 
   - tg_hacker:
       panes:

@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 
-
 #
 # VARIABLES
 #
@@ -15,6 +14,7 @@ export SECLISTS="/usr/share/wordlists/seclists"
 # ALIASES
 #
 
+#alias ngrok="ngrok http 80"
 alias f="focus"
 alias hcat="h-hashcat"
 alias hcatshow="hashcat --show"
@@ -22,10 +22,10 @@ alias hi="h-init"
 alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
 alias jshow="john --show"
-alias msf=msfconsole
-#alias ngrok="ngrok http 80"
+alias msf="msfconsole -x 'setg LHOST tun0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
 alias s='sync'
+alias sshclean='ssh-keygen -R rhost && ssh'
 alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
@@ -41,10 +41,10 @@ alias xc="xclip -sel c"
 #
 
 alias find-cap="getcap -r / 2>/dev/null"
+alias find-suid="find / -type f -perm -4000 -ls 2>/dev/null"
 alias find-sgid="find / -type f -perm -2000 -ls 2>/dev/null"
 alias find-sguid="find / -type f -perm /6000 -ls 2>/dev/null"
 alias find-sudo="sudo -l"
-alias find-suid="find / -type f -perm -4000 -ls 2>/dev/null"
 
 #
 # GREP
@@ -61,6 +61,11 @@ add-host() {
     IP=${2:-$RHOST}
     sudo sed -i /$HOST$/d /etc/hosts
     echo "$IP $HOST" | sudo tee -a /etc/hosts
+}
+
+del-host(){
+    HOST="$1"
+    sudo sed -i /$HOST$/d /etc/hosts
 }
 
 base() {
@@ -94,20 +99,18 @@ lport() {
 }
 
 listen() {
-    [[ -n $LPORT ]] || lport
-    if [[ -z "$1" ]]; then
-        echo "normal"
-        nc -lvnp $LPORT
-    else
-        echo "rlwrap"
-        rlwrap nc -lvnp $LPORT
-    fi
+    [[ -n "$1" ]] && lport "$1"
+    nc -lvnp $LPORT
+}
+
+listen-rlwrap(){
+    [[ -n "$1" ]] && lport "$1"
+    rlwrap nc -lvnp $LPORT
 }
 
 listen-file() {
     [[ -n "$1" ]] &&  nc -lvp $LPORT > $1
 }
-
 
 # Get ip address of local interface default: eth0
 me() {
@@ -188,22 +191,20 @@ h-enum4linux() {
 }
 
 h-ffuf(){
-    PORT=${1:-80}
-    HOST=${2:-$RHOST}
-    WORDLIST=${3:-$LIST_COMMON}
-    OUTPUT="$IP-$PORT-nikto.txt"
+    HOST=${1:-$RHOST}
+    WORDLIST=${2:-$LIST_COMMON}
+    OUTPUT="$HOST-ffuf.txt"
     touch $OUTPUT
-    ffuf -w $WORDLIST -u http://$HOST:$PORT/FUZZ -o $OUTPUT -of csv -c 
+    ffuf -w $WORDLIST -c -u http://$HOST/FUZZ -o $OUTPUT -of all -recursion -recursion-depth 2
 }
 
 h-gobuster(){
-    PORT=${1:-80}
-    HOST=${2:-$RHOST}
-    WORDLIST=${3:-$LIST_COMMON}
-    OUTPUT="$IP-$PORT-gobuster.txt"
+    HOST=${1:-$RHOST}
+    WORDLIST=${2:-$LIST_COMMON}
+    OUTPUT="$HOST-gobuster.txt"
     touch $OUTPUT
-    echo "gobuster dir -t 50 -o $OUTPUT -w $WORDLIST -u http://$HOST:$PORT -x html,php,txt,js,css,py"
-    gobuster dir -t 50 -o $OUTPUT -w "$WORDLIST" -u http://"$HOST":"$PORT" -x html,php,txt,js,css,py
+    echo "gobuster dir -t 25 -o $OUTPUT -w $WORDLIST -u http://$HOST -x html,php,txt,js,css,py"
+    gobuster dir -t 25 -w "$WORDLIST" -o $OUTPUT -u http://$HOST -x html,php,txt,js,css,py
 }
 
 h-hashcat() {
@@ -268,70 +269,17 @@ msf-handle() {
 # NMAP
 #
 
-alias nmap-="sudo nmap -v -n -Pn -T4"
-#alias nmap-arp="sudo nmap -v -n -sn -PR"
-#alias nmap-basic-all="sudo nmap -v -n -Pn -T4 -p- -oN nmap.basic.all.txt"
-#alias nmap-basic="sudo nmap -v -n -Pn -T4 -oN nmap.basic.txt"
-#alias nmap-discover="sudo nmap -v -n -T4 -sn -PE -oN"
-#alias nmap-discover="sudo nmap -v -sn"
-#alias nmap-full-all="sudo nmap -v -n -T4 -A -p- -oN nmap.full.all.txt"
-#alias nmap-full="sudo nmap -v -n -T4 -A -oN nmap.full.txt"
-#alias nmap-script-all="sudo nmap -v -n -Pn -T4 -sC -sV -p- -oN nmap.script.all.txt"
-#alias nmap-script="sudo nmap -v -n -Pn -T4 -sC -sV -oN nmap.script.txt"
+alias nmap-="sudo nmap -v -n -Pn"
 
-nmap-arp()        { sudo nmap -v -n -sn -PR              -oN ${1:-$RHOST}-nmap-arp.txt ${1:-$RHOST} }
-nmap-basic()      { sudo nmap -v -n -Pn -T4              -oN ${1:-$RHOST}-nmap-basic.txt ${1:-$RHOST} }
-nmap-basic-all()  { sudo nmap -v -n -Pn -T4 -p-          -oN ${1:-$RHOST}-nmap-basic-all.txt ${1:-$RHOST} }
-nmap-discover()   { sudo nmap -v -n -T4 -sn -PE          -oN ${1:-$RHOST}-nmap-discover.txt ${1:-$RHOST} }
-nmap-full()       { sudo nmap -v -n -Pn -T4 -A           -oN ${1:-$RHOST}-nmap-full.txt ${1:-$RHOST} }
-nmap-full-all()   { sudo nmap -v -n -Pn -T4 -A -p-       -oN ${1:-$RHOST}-nmap.full.all.txt ${1:-$RHOST} }
-nmap-script()     { sudo nmap -v -n -Pn -T4 -sC -sV      -oN ${1:-$RHOST}-nmap.script.txt ${1:-$RHOST} }
-nmap-script-all() { sudo nmap -v -n -Pn -T4 -sC -sV -p-  -oN ${1:-$RHOST}-nmap.script.all.txt ${1:-$RHOST} }
-
-#nmapper(){
-    #local ACTION
-    #local TARGET
-
-    #local base="sudo nmap -v -n -Pn -T4"
-
-    #PARAMS=""
-    #while :; do
-        #case "$1" in
-            #-a|--action)
-                #if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-                    #ACTION=$2
-                    #shift 2
-                #else
-                    #exit 1
-                    #echo "Error: Argument for $1 is missing" >&2
-                #fi
-                #;;
-            #-t|--target)
-                #if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-                    #TARGET=$2
-                    #shift 2
-                #else
-                    #exit 1
-                    #echo "Error: Argument for $1 is missing" >&2
-                #fi
-                #;;
-            #-*|--*=) # unsupported flags
-                #echo "Error: Unsupported flag $1" >&2
-                #exit 1
-                #;;
-            #*) # preserve positional arguments
-                #PARAMS="$PARAMS $1"
-                #shift
-                #;;
-        #esac
-    #done
-    ## set positional arguments in their proper place
-    #eval set -- "$PARAMS"
-
-    #echo "$ACTION $TARGET"
-
-
-#}
+nmap-arp()         { sudo nmap -v -n -sn -PR                    ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-arp.txt }
+nmap-basic()       { sudo nmap -v -n -Pn -T4                    ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic.txt } 
+nmap-basic-all()   { sudo nmap -v -n -Pn -T4 -p-                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic-all.txt }
+nmap-discover()    { sudo nmap -v -n -T4 -sn -PE                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-discover.txt } 
+nmap-full()        { sudo nmap -v -n -Pn -T4 -A                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full.txt }
+nmap-full-all()    { sudo nmap -v -n -Pn -T4 -A -p-             ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full-all.txt }
+nmap-script()      { sudo nmap -v -n -Pn -T4 -sC -sV            ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-txt }
+nmap-script-all()  { sudo nmap -v -n -Pn -T4 -sC -sV -p-        ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-script-vuln() { sudo nmap -v -n -Pn -T4 -sV --script vuln  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 
 nmap-ports(){
     IP=${1:-"$RHOST"}
@@ -339,11 +287,10 @@ nmap-ports(){
     nmap-parse-ports
 }
 
-nmap-parse-ports() {
-    FILE=${1:-"nmap.ports.txt"} 
+nmap-ports-parse() {
+    FILE=${1:-"nmap-ports.txt"} 
     RPORTS=$(cat $FILE | grep -P '^\d+' | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//);
-    sed -i "/^export RPORTS=*/d" $TG_CONF
-    echo "export RPORTS=$RPORTS" >> $TG_CONF
+    tg-setvar RPORTS "$RPORTS"
     echo "RPORTS=$RPORTS"
 }
 
