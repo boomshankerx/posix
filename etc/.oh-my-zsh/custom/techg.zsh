@@ -21,7 +21,7 @@ alias df='df -h'
 alias du='du -hc'
 alias e='echo'
 alias lf='less +F'
-alias ps='ps auxf'
+alias psa='ps auxf'
 
 # EXPRESSVPN
 alias vc='expressvpn connect'
@@ -52,9 +52,9 @@ decomment (){
 
 # Copy file to clipboard
 clip() {
-    if [[ -f $1 ]]; then
-        cat $1
-        cat $1 | xclip -sel c
+    if [[ -f "$1" ]]; then
+        cat "$1"
+        cat "$1" | xclip -sel c
     fi
 }
 

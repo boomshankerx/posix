@@ -34,7 +34,7 @@ alias vpn="sudo -b openvpn"
 alias vpnkill="sudo pkill openvpn"
 alias vpnshow="pgrep -a openvpn"
 alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip systeminfo.txt"
-alias xc="xclip -sel c"
+alias x="xclip -selection clipboard"
 
 #
 # FIND
@@ -116,14 +116,14 @@ listen-file() {
 me() {
     iface=${1:-"eth0"}
     export LHOST=$(ifconfig $iface | grep "inet " | cut -b 9- | cut  -d" " -f2)
-    echo -n $LHOST | xclip -selection c
+    echo -n $LHOST | xclip -selection clipboard
     echo "LHOST: $LHOST"
     tg-setvar LHOST "$LHOST"
 }
 
 # Copy rhost to clipboard
 rhost() {
-    echo -n $RHOST | xclip -selection c
+    echo -n $RHOST | xclip -selection clipboard
     echo "RHOST: $RHOST"
 }
 
@@ -191,20 +191,22 @@ h-enum4linux() {
 }
 
 h-ffuf(){
-    HOST=${1:-$RHOST}
-    WORDLIST=${2:-$LIST_COMMON}
-    OUTPUT="$HOST-ffuf.txt"
+    IP=${1:-$RHOST}
+    PORT=${2:-80}
+    WORDLIST=${3:-$LIST_COMMON}
+    OUTPUT="$IP-$PORT-ffuf.txt"
     touch $OUTPUT
-    ffuf -w $WORDLIST -c -u http://$HOST/FUZZ -o $OUTPUT -of all -recursion -recursion-depth 2
+    ffuf -w $WORDLIST -c -u http://$IP:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
 }
 
 h-gobuster(){
-    HOST=${1:-$RHOST}
+    IP=${1:-$RHOST}
+    PORT=${2:-80}
     WORDLIST=${2:-$LIST_COMMON}
-    OUTPUT="$HOST-gobuster.txt"
+    OUTPUT="$IP-$PORT-gobuster.txt"
     touch $OUTPUT
-    echo "gobuster dir -t 25 -o $OUTPUT -w $WORDLIST -u http://$HOST -x html,php,txt,js,css,py"
-    gobuster dir -t 25 -w "$WORDLIST" -o $OUTPUT -u http://$HOST -x html,php,txt,js,css,py
+    echo "gobuster dir -t 25 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x html,php,txt,js,css,py"
+    gobuster dir -t 25 -w "$WORDLIST" -o $OUTPUT -u http://$IP:$PORT -x html,php,txt,js,css,py
 }
 
 h-hashcat() {
@@ -235,7 +237,7 @@ h-ssh() {
 h-web() {
     PORT=${1:-80}
     IP=${2:-$RHOST}
-    OUTPUT="$IP.nikto.txt"
+    OUTPUT="$IP-nikto.txt"
     touch $OUTPUT
     whatweb -v -a 3 "$IP:$PORT" | tee $IP.whatweb.txt 
     nikto -host "$IP" -port "$PORT" -output $OUTPUT -Format txt
@@ -245,14 +247,14 @@ h-web() {
 # METASPLOIT
 #
 
-msf-handle() {
+msfhandle() {
     payloads=( \
         "linux/x64/meterpreter/reverse_tcp" \
         "linux/x64/shell_reverse_tcp" \
         "linux/x86/meterpreter/reverse_tcp" \
         "linux/x86/shell_reverse_tcp" \
-        "windows/meterpreter/reverse_tcp" \
         "windows/shell_reverse_tcp"
+        "windows/meterpreter/reverse_tcp" \
         "windows/x64/meterpreter/reverse_tcp" \
         "windows/x64/shell_reverse_tcp" \
     )
