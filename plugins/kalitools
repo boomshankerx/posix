@@ -4,20 +4,19 @@
 # KALITOOLS
 #
 echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
+sudo apt install dirsearch
 sudo apt install ghidra
+sudo apt install remmina
 
 cd ~/scripts
 git clone https://github.com/Dewalt-arch/pimpmykali ~/scripts/pimpmykali
 git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom/plugins/msfvenom/
 
 cd /opt
-echo "# AutoRecon"
 
 echo "# enum4linux-ng"
 sudo git clone https://github.com/cddmp/enum4linux-ng.git
 sudo ln -s $(pwd)/enum4linux-ng/enum4linux-ng.py /usr/local/bin/enum4linux-ng
-
-echo "# nessus"
 
 echo "# LinEnum"
 sudo git clone https://github.com/rebootuser/LinEnum.git
@@ -28,7 +27,12 @@ sudo ln -s $(pwd)/nmapAutomator/nmapAutomator.sh /usr/local/bin/
 
 echo "# OLEDUMP"
 
-echi "# Windows Exploit Suggester"
+echo "# threader3000"
+sudo git clone https://github.com/dievus/threader3000.git
+sudo ln -s $(pwd)/threader3000/threader3000.py /usr/local/bin/threader3000
+
+
+echo "# Windows Exploit Suggester"
 sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git
 
 echo "# Windows Exploit Suggester NG"

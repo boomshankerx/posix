@@ -17,7 +17,7 @@ export SECLISTS="/usr/share/wordlists/seclists"
 #alias ngrok="ngrok http 80"
 alias f="focus"
 alias hcat="h-hashcat"
-alias hcatshow="hashcat --show"
+alias hcatshow="h-hashcatshow"
 alias hi="h-init"
 alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
@@ -175,25 +175,28 @@ EOF
 # HAK FUNCTIONS
 #
 
-# Initialize ctf folder
-h-init() {
-    BASE=${1:-$(pwd)}
-    [[ -d $BASE ]] || mkdir -p $BASE
-    cd $BASE
-    BASE=$(pwd)
-    tg-setvar BASE $BASE
-    touch notes.txt
+
+h-dirsearch(){
+    IP=${1:-$RHOST}
+    PORT=${2:-80}
+    EXT=${3:-"php,html,txt"}
+    WORDLIST=${4:-$LIST_MEDIUM}
+    OUTPUT="$IP-$PORT-dirsearch.txt"
+    touch $OUTPUT
+    echo "dirsearch  -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT"
+    dirsearch -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT
 }
 
 h-enum4linux() {
-    OUTPUT="$RHOST-enum4linux.txt"
-    enum4linux-ng $RHOST -oA $OUTPUT 
+    IP=${1:-$RHOST}
+    OUTPUT="$IP-enum4linux"
+    enum4linux-ng $IP -oA $OUTPUT 
 }
 
 h-ffuf(){
     IP=${1:-$RHOST}
     PORT=${2:-80}
-    WORDLIST=${3:-$LIST_COMMON}
+    WORDLIST=${3:-$LIST_MEDIUM}
     OUTPUT="$IP-$PORT-ffuf.txt"
     touch $OUTPUT
     ffuf -w $WORDLIST -c -u http://$IP:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
@@ -202,17 +205,18 @@ h-ffuf(){
 h-gobuster(){
     IP=${1:-$RHOST}
     PORT=${2:-80}
-    WORDLIST=${2:-$LIST_COMMON}
+    EXT=${3:-"php,html,txt"}
+    WORDLIST=${4:-$LIST_MEDIUM}
     OUTPUT="$IP-$PORT-gobuster.txt"
     touch $OUTPUT
-    echo "gobuster dir -t 25 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x html,php,txt,js,css,py"
-    gobuster dir -t 25 -w "$WORDLIST" -o $OUTPUT -u http://$IP:$PORT -x html,php,txt,js,css,py
+    echo "gobuster dir -t 25 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x $EXT"
+    gobuster dir -t 25 -w "$WORDLIST" -o $OUTPUT -u http://$IP:$PORT -x $EXT
 }
 
 h-hashcat() {
-    ATTACK=${1:-0}
-    MODE=${2:-0}
-    HASHES=${3:-hashes.txt}
+    MODE=${1:-0}
+    ATTACK=${2:-0}
+    HASHES=${3:-"hashes"}
     WORDLIST=${4:-"$LIST_ROCK"}
     OUTPUT="hashcat.txt"
     echo "hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST"
@@ -220,13 +224,21 @@ h-hashcat() {
 }
 
 h-hashcatshow() {
-    ATTACK=${1:-0}
-    MODE=${2:-0}
-    HASHES=${3:-"hashes.txt"}
-    WORDLIST=${4:-"$LIST_ROCK"}
+    MODE=${1:-0}
+    HASHES=${2:-"hashes"}
     OUTPUT="hashcat.txt"
     echo "hashcat --show -m $MODE $HASHES"
     hashcat --show -m $MODE $HASHES
+}
+
+# Initialize ctf folder
+h-init() {
+    BASE=${1:-$(pwd)}
+    [[ -d $BASE ]] || mkdir -p $BASE
+    cd $BASE
+    BASE=$(pwd)
+    tg-setvar BASE $BASE
+    touch notes.txt
 }
 
 h-ssh() {
@@ -273,19 +285,20 @@ msfhandle() {
 
 alias nmap-="sudo nmap -v -n -Pn"
 
-nmap-arp()         { sudo nmap -v -n -sn -PR                    ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-arp.txt }
-nmap-basic()       { sudo nmap -v -n -Pn -T4                    ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic.txt } 
-nmap-basic-all()   { sudo nmap -v -n -Pn -T4 -p-                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic-all.txt }
-nmap-discover()    { sudo nmap -v -n -T4 -sn -PE                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-discover.txt } 
-nmap-full()        { sudo nmap -v -n -Pn -T4 -A                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full.txt }
-nmap-full-all()    { sudo nmap -v -n -Pn -T4 -A -p-             ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full-all.txt }
-nmap-script()      { sudo nmap -v -n -Pn -T4 -sC -sV            ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-txt }
-nmap-script-all()  { sudo nmap -v -n -Pn -T4 -sC -sV -p-        ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
-nmap-script-vuln() { sudo nmap -v -n -Pn -T4 -sV --script vuln  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
+nmap-arp()            { sudo nmap -vv -n -sn -PR                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-arp.txt }
+nmap-basic()          { sudo nmap -vv -n -Pn -T4                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic.txt } 
+nmap-basic-all()      { sudo nmap -vv -n -Pn -T4 -p-                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic-all.txt }
+nmap-discover()       { sudo nmap -vv -n -T4 -sn -PE                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-discover.txt } 
+nmap-full()           { sudo nmap -vv -n -Pn -T4 -A                                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full.txt }
+nmap-full-all()       { sudo nmap -vv -n -Pn -T4 -A -p-                            ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full-all.txt }
+nmap-script()         { sudo nmap -vv -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-txt }
+nmap-script-all()     { sudo nmap -vv -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-script-vuln()    { sudo nmap -vv -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
+nmap-script-vulscan() { sudo nmap -vv -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
 
 nmap-ports(){
     IP=${1:-"$RHOST"}
-    sudo nmap -v -Pn -T4 -oN nmap-ports.txt $IP 
+    sudo nmap -vv -Pn -T4 -oN nmap-ports.txt $IP 
     nmap-parse-ports
 }
 

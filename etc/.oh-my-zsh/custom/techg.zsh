@@ -52,9 +52,9 @@ decomment (){
 
 # Copy file to clipboard
 clip() {
-    if [[ -f "$1" ]]; then
-        cat "$1"
-        cat "$1" | xclip -sel c
+    if [[ -f $1 ]]; then
+        cat $1
+        cat $1 | xclip -sel c
     fi
 }
 

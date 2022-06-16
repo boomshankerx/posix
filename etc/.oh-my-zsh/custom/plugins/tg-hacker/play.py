@@ -42,7 +42,7 @@ def main(args):
     cmd = args.cmd
     if cmd == "":
         args.list = True
-    if cmd == "all":
+    if cmd == "a":
         args.all = True
     if args.all:
         print("\n#\n# ALL COMMANDS\n#\n")
