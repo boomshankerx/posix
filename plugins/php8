@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "deb [signed-by=/usr/local/share/keyrings/sury-php/apt.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/sury-php.list
+[[ -f /usr/local/share/keyrings ]] || mkdir /usr/local/share/keyrings
+wget https://packages.sury.org/php/apt.gpg -P /usr/local/share/keyrings/sury-php/
