@@ -4,11 +4,13 @@
 # VARIABLES
 #
 
-export TG_CONF=~/.tg_hacker
 export LIST_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
 export LIST_MEDIUM="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
+export LIST_PW_100K="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-100000.txt"
+export LIST_PW_10K="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt"
 export LIST_ROCK="/usr/share/wordlists/rockyou.txt"
 export SECLISTS="/usr/share/wordlists/seclists"
+export TG_CONF=~/.tg_hacker
 
 #
 # ALIASES
@@ -199,7 +201,7 @@ h-ffuf(){
     WORDLIST=${3:-$LIST_MEDIUM}
     OUTPUT="$IP-$PORT-ffuf.txt"
     touch $OUTPUT
-    ffuf -w $WORDLIST -c -u http://$IP:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
+    ffuf -w $WORDLIST -t 40 -c -u http://$IP:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
 }
 
 h-gobuster(){
@@ -209,8 +211,8 @@ h-gobuster(){
     WORDLIST=${4:-$LIST_MEDIUM}
     OUTPUT="$IP-$PORT-gobuster.txt"
     touch $OUTPUT
-    echo "gobuster dir -t 25 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x $EXT"
-    gobuster dir -t 25 -w "$WORDLIST" -o $OUTPUT -u http://$IP:$PORT -x $EXT
+    echo "gobuster dir -t 40 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x $EXT"
+    gobuster dir -t 40 -w "$WORDLIST" -o $OUTPUT -u http://$IP:$PORT -x $EXT
 }
 
 h-hashcat() {
@@ -298,7 +300,8 @@ nmap-script-vulscan() { sudo nmap -vv -n -Pn -T4 -sV --script vulscan/vulscan.ns
 
 nmap-ports(){
     IP=${1:-"$RHOST"}
-    sudo nmap -vv -Pn -T4 -oN nmap-ports.txt $IP 
+    PORTS=${2:-""}
+    sudo nmap -vv -Pn -T4 $PORTS -oN nmap-ports.txt $IP 
     nmap-parse-ports
 }
 
