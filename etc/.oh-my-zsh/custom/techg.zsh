@@ -12,7 +12,7 @@ alias au='sudo apt update'
 alias auf='sudo apt update && sudo apt full-upgrade -y'
 alias aar='sudo apt autoremove -y'
 alias auu='sudo apt update && sudo apt upgrade -y'
-alias uuu='auf && aur'
+alias uuu='auf && aar'
 alias sc='systemctl'
 
 # COMMON

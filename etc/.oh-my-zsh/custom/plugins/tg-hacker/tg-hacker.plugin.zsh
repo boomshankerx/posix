@@ -216,8 +216,8 @@ h-gobuster(){
 }
 
 h-hashcat() {
-    MODE=${1:-0}
-    ATTACK=${2:-0}
+    ATTACK=${1:-0}
+    MODE=${2:-0}
     HASHES=${3:-"hashes"}
     WORDLIST=${4:-"$LIST_ROCK"}
     OUTPUT="hashcat.txt"
