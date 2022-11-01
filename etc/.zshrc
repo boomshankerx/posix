@@ -107,3 +107,4 @@ export EDITOR=vim
 export TERM=xterm-256color
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
+eval $(thefuck --alias)
