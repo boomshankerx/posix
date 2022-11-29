@@ -2,18 +2,8 @@ export EDITOR=vim
 export NCURSES_NO_UTF8_ACS=1
 
 #
-# ALIAS
+# ALIASES
 #
-
-# APT
-alias ag='sudo apt'
-alias ai='sudo apt install -y'
-alias au='sudo apt update'
-alias auf='sudo apt update && sudo apt full-upgrade -y'
-alias aar='sudo apt autoremove -y'
-alias auu='sudo apt update && sudo apt upgrade -y'
-alias uuu='auf && aar'
-alias sc='systemctl'
 
 # COMMON
 alias c=cat
@@ -23,6 +13,16 @@ alias e='echo'
 alias lf='less +F'
 alias psa='ps auxf'
 
+# DEBIAN
+alias ag='sudo apt'
+alias ai='sudo apt install -y'
+alias au='sudo apt update'
+alias auf='sudo apt update && sudo apt full-upgrade -y'
+alias aar='sudo apt autoremove -y'
+alias auu='sudo apt update && sudo apt upgrade -y'
+alias uuu='auf && aar'
+alias sc='systemctl'
+
 # EXPRESSVPN
 alias vc='expressvpn connect'
 alias vcs='expressvpn connect smart'
@@ -30,7 +30,7 @@ alias vd='expressvpn disconnect'
 alias vs='expressvpn status'
 
 # SUBLIME TEXT
-#alias sub=subl
+alias sb=subl
 
 # TMUXINATOR
 alias mux=tmuxinator
@@ -40,6 +40,9 @@ alias mux=tmuxinator
 alias v='vim'
 alias vi='gvim'
 
+# HELP
+alias help-git="alias | grep git"
+alias help-tmux="less ~/.tmux.conf"
 
 #
 # FUNCTIONS
@@ -59,7 +62,7 @@ clip() {
 }
 
 # Copy empty string to file
-empty (){
+empty(){
     [[ -f "$1" ]] && echo '' > $1
 }
 

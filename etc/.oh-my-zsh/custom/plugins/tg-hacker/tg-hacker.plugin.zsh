@@ -8,8 +8,9 @@ export LIST_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.t
 export LIST_MEDIUM="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
 export LIST_PW_100K="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-100000.txt"
 export LIST_PW_10K="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt"
+export LIST_PW_1M="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-1000000.txt"
 export LIST_ROCK="/usr/share/wordlists/rockyou.txt"
-export SECLISTS="/usr/share/wordlists/seclists"
+export LIST_SECLISTS="/usr/share/wordlists/seclists"
 export TG_CONF=~/.tg_hacker
 
 #
@@ -17,10 +18,11 @@ export TG_CONF=~/.tg_hacker
 #
 
 #alias ngrok="ngrok http 80"
+alias _strip='tr -d "[:space:]"'
 alias f="focus"
-alias hcat="h-hashcat"
-alias hcatshow="h-hashcatshow"
-alias hi="h-init"
+alias hcat="tg-hashcat"
+alias hcatshow="tg-hashcatshow"
+alias hi="tg-init"
 alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
 alias jshow="john --show"
@@ -150,6 +152,85 @@ sync() {
     [[ "$1" == "-v" ]] && cat $TG_CONF
 }
 
+#
+# FUNCTIONS
+#
+
+tg-dirsearch(){
+    IP=${1:-$RHOST}
+    PORT=${2:-80}
+    EXT=${3:-"php,html,txt"}
+    WORDLIST=${4:-$LIST_MEDIUM}
+    OUTPUT="$IP-$PORT-dirsearch.txt"
+    touch $OUTPUT
+    echo "dirsearch  -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT"
+    dirsearch -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT
+}
+
+tg-enum4linux() {
+    IP=${1:-$RHOST}
+    OUTPUT="$IP-enum4linux"
+    enum4linux-ng $IP -oY $OUTPUT 
+}
+
+tg-ffuf(){
+    IP=${1:-$RHOST}
+    PORT=${2:-80}
+    WORDLIST=${3:-$LIST_MEDIUM}
+    OUTPUT="$IP-$PORT-ffuf.txt"
+    touch $OUTPUT
+    ffuf -w $WORDLIST -t 40 -c -u http://$IP:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
+}
+
+tg-gobuster(){
+    IP=${1:-$RHOST}
+    PORT=${2:-80}
+    EXT=${3:-"php,html,txt"}
+    WORDLIST=${4:-$LIST_MEDIUM}
+    OUTPUT="$IP-$PORT-gobuster.txt"
+    touch $OUTPUT
+    echo "gobuster dir -t 40 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x $EXT"
+    gobuster dir -t 40 -w "$WORDLIST" -o $OUTPUT -u http://$IP:$PORT -x $EXT
+}
+
+tg-hashcat() {
+    ATTACK=${1:-0}
+    MODE=${2:-0}
+    HASHES=${3:-"hashes"}
+    WORDLIST=${4:-"$LIST_ROCK"}
+    OUTPUT="hashcat.txt"
+    echo "hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST"
+    hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST
+}
+
+tg-hashcatshow() {
+    MODE=${1:-0}
+    HASHES=${2:-"hashes"}
+    OUTPUT="hashcat.txt"
+    echo "hashcat --show -m $MODE $HASHES"
+    hashcat --show -m $MODE $HASHES
+}
+
+# Initialize ctf folder
+tg-init() {
+    BASE=${1:-$(pwd)}
+    [[ -d $BASE ]] || mkdir -p $BASE
+    cd $BASE
+    BASE=$(pwd)
+    tg-setvar BASE $BASE
+    touch notes.txt
+}
+
+tg-init-config(){
+    cat << EOF > $TG_CONF
+#!/usr/bin/env zsh
+export LHOST=
+export LPORT=4444
+export RHOST=
+export RPORT=
+export BASE=
+EOF
+}
 
 tg-setvar(){
     if [[ $# < 2 ]]; then
@@ -161,94 +242,12 @@ tg-setvar(){
     echo "export $var=$value" >> $TG_CONF
 }
 
-tg-init(){
-    cat << EOF > $TG_CONF
-#!/usr/bin/env zsh
-export LHOST=
-export LPORT=4444
-export RHOST=
-export RPORT=
-export BASE=
-EOF
-}
-
-
-#
-# HAK FUNCTIONS
-#
-
-
-h-dirsearch(){
-    IP=${1:-$RHOST}
-    PORT=${2:-80}
-    EXT=${3:-"php,html,txt"}
-    WORDLIST=${4:-$LIST_MEDIUM}
-    OUTPUT="$IP-$PORT-dirsearch.txt"
-    touch $OUTPUT
-    echo "dirsearch  -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT"
-    dirsearch -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT
-}
-
-h-enum4linux() {
-    IP=${1:-$RHOST}
-    OUTPUT="$IP-enum4linux"
-    enum4linux-ng $IP -oA $OUTPUT 
-}
-
-h-ffuf(){
-    IP=${1:-$RHOST}
-    PORT=${2:-80}
-    WORDLIST=${3:-$LIST_MEDIUM}
-    OUTPUT="$IP-$PORT-ffuf.txt"
-    touch $OUTPUT
-    ffuf -w $WORDLIST -t 40 -c -u http://$IP:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
-}
-
-h-gobuster(){
-    IP=${1:-$RHOST}
-    PORT=${2:-80}
-    EXT=${3:-"php,html,txt"}
-    WORDLIST=${4:-$LIST_MEDIUM}
-    OUTPUT="$IP-$PORT-gobuster.txt"
-    touch $OUTPUT
-    echo "gobuster dir -t 40 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x $EXT"
-    gobuster dir -t 40 -w "$WORDLIST" -o $OUTPUT -u http://$IP:$PORT -x $EXT
-}
-
-h-hashcat() {
-    ATTACK=${1:-0}
-    MODE=${2:-0}
-    HASHES=${3:-"hashes"}
-    WORDLIST=${4:-"$LIST_ROCK"}
-    OUTPUT="hashcat.txt"
-    echo "hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST"
-    hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST
-}
-
-h-hashcatshow() {
-    MODE=${1:-0}
-    HASHES=${2:-"hashes"}
-    OUTPUT="hashcat.txt"
-    echo "hashcat --show -m $MODE $HASHES"
-    hashcat --show -m $MODE $HASHES
-}
-
-# Initialize ctf folder
-h-init() {
-    BASE=${1:-$(pwd)}
-    [[ -d $BASE ]] || mkdir -p $BASE
-    cd $BASE
-    BASE=$(pwd)
-    tg-setvar BASE $BASE
-    touch notes.txt
-}
-
-h-ssh() {
+tg-ssh() {
     sshclean
     ssh "$@"
 }
 
-h-web() {
+tg-web() {
     PORT=${1:-80}
     IP=${2:-$RHOST}
     OUTPUT="$IP-nikto.txt"
@@ -312,4 +311,4 @@ nmap-ports-parse() {
     echo "RPORTS=$RPORTS"
 }
 
-[[ -f $TG_CONF ]] || tg-init
+[[ -f $TG_CONF ]] || tg-init-config
