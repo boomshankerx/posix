@@ -5,6 +5,7 @@
 #
 
 export LIST_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
+export LIST_SMALL="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt"
 export LIST_MEDIUM="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
 export LIST_PW_100K="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-100000.txt"
 export LIST_PW_10K="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt"
@@ -22,6 +23,7 @@ alias _strip='tr -d "[:space:]"'
 alias f="focus"
 alias hcat="tg-hashcat"
 alias hcatshow="tg-hashcatshow"
+alias help-tg-hacker='less ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh'
 alias hi="tg-init"
 alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
@@ -121,14 +123,14 @@ me() {
     iface=${1:-"eth0"}
     export LHOST=$(ifconfig $iface | grep "inet " | cut -b 9- | cut  -d" " -f2)
     echo -n $LHOST | xclip -selection clipboard
-    echo "LHOST: $LHOST"
+    echo "$LHOST"
     tg-setvar LHOST "$LHOST"
 }
 
 # Copy rhost to clipboard
 rhost() {
     echo -n $RHOST | xclip -selection clipboard
-    echo "RHOST: $RHOST"
+    echo $RHOST
 }
 
 # Launch python http server in current folder 
@@ -157,10 +159,10 @@ sync() {
 #
 
 tg-dirsearch(){
-    IP=${1:-$RHOST}
-    PORT=${2:-80}
-    EXT=${3:-"php,html,txt"}
-    WORDLIST=${4:-$LIST_MEDIUM}
+    WORDLIST=${1:-$LIST_COMMON}
+    IP=${2:-$RHOST}
+    PORT=${3:-80}
+    EXT=${4:-"php,html,txt"}
     OUTPUT="$IP-$PORT-dirsearch.txt"
     touch $OUTPUT
     echo "dirsearch  -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT"
@@ -174,19 +176,19 @@ tg-enum4linux() {
 }
 
 tg-ffuf(){
-    IP=${1:-$RHOST}
+    WORDLIST=${1:-$LIST_SMALL}
     PORT=${2:-80}
-    WORDLIST=${3:-$LIST_MEDIUM}
+    IP=${3:-$RHOST}
     OUTPUT="$IP-$PORT-ffuf.txt"
     touch $OUTPUT
     ffuf -w $WORDLIST -t 40 -c -u http://$IP:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
 }
 
 tg-gobuster(){
-    IP=${1:-$RHOST}
-    PORT=${2:-80}
-    EXT=${3:-"php,html,txt"}
-    WORDLIST=${4:-$LIST_MEDIUM}
+    WORDLIST=${1:-$LIST_SMALL}
+    EXT=${2:-"php,html,txt"}
+    PORT=${3:-80}
+    IP=${4:-$RHOST}
     OUTPUT="$IP-$PORT-gobuster.txt"
     touch $OUTPUT
     echo "gobuster dir -t 40 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x $EXT"
@@ -209,6 +211,9 @@ tg-hashcatshow() {
     OUTPUT="hashcat.txt"
     echo "hashcat --show -m $MODE $HASHES"
     hashcat --show -m $MODE $HASHES
+}
+
+tg-hydra() {
 }
 
 # Initialize ctf folder
@@ -241,8 +246,8 @@ tg-setvar(){
     sed -i "/$var=/d" $TG_CONF
     echo "export $var=$value" >> $TG_CONF
 }
-
 tg-ssh() {
+
     sshclean
     ssh "$@"
 }
