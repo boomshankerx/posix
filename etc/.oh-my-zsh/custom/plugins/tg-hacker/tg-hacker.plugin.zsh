@@ -159,9 +159,9 @@ sync() {
 #
 
 tg-dirsearch(){
-    WORDLIST=${1:-$LIST_COMMON}
+    PORT=${1:-80}
     IP=${2:-$RHOST}
-    PORT=${3:-80}
+    WORDLIST=${3:-$LIST_COMMON}
     EXT=${4:-"php,html,txt"}
     OUTPUT="$IP-$PORT-dirsearch.txt"
     touch $OUTPUT
@@ -255,9 +255,9 @@ tg-ssh() {
 tg-web() {
     PORT=${1:-80}
     IP=${2:-$RHOST}
-    OUTPUT="$IP-nikto.txt"
+    OUTPUT="$IP-$PORT-nikto.txt"
     touch $OUTPUT
-    whatweb -v -a 3 "$IP:$PORT" | tee $IP.whatweb.txt 
+    whatweb -v -a 3 "$IP:$PORT" | tee $IP-$PORT.whatweb.txt 
     nikto -host "$IP" -port "$PORT" -output $OUTPUT -Format txt
 }
 
@@ -289,7 +289,7 @@ msfhandle() {
 # NMAP
 #
 
-alias nmap-="sudo nmap -v -n -Pn"
+alias nmap-="sudo nmap -vv -n -Pn"
 
 nmap-arp()            { sudo nmap -vv -n -sn -PR                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-arp.txt }
 nmap-basic()          { sudo nmap -vv -n -Pn -T4                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic.txt } 
@@ -304,9 +304,9 @@ nmap-script-vulscan() { sudo nmap -vv -n -Pn -T4 -sV --script vulscan/vulscan.ns
 
 nmap-ports(){
     IP=${1:-"$RHOST"}
-    PORTS=${2:-""}
-    sudo nmap -vv -Pn -T4 $PORTS -oN nmap-ports.txt $IP 
-    nmap-parse-ports
+    OPTS=${2:-""}
+    sudo nmap -vv -Pn -T4 $OPTS -oN nmap-ports.txt $IP 
+    nmap-ports-parse
 }
 
 nmap-ports-parse() {
