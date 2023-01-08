@@ -5,6 +5,7 @@
 #
 echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
 sudo apt install dirsearch
+sudo apt install feroxbuster
 sudo apt install ghidra
 sudo apt install remmina
 

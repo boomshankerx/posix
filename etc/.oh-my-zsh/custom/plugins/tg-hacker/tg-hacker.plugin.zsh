@@ -4,12 +4,12 @@
 # VARIABLES
 #
 
-export LIST_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
-export LIST_SMALL="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-small.txt"
-export LIST_MEDIUM="/usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
-export LIST_PW_100K="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-100000.txt"
-export LIST_PW_10K="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt"
-export LIST_PW_1M="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-1000000.txt"
+export LIST_DIR_L="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories.txt"
+export LIST_DIR_M="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt"
+export LIST_DIR_S="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-directories.txt"
+export LIST_PW_L="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-1000000.txt"
+export LIST_PW_M="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-100000.txt"
+export LIST_PW_S="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt"
 export LIST_ROCK="/usr/share/wordlists/rockyou.txt"
 export LIST_SECLISTS="/usr/share/wordlists/seclists"
 export TG_CONF=~/.tg_hacker
@@ -35,6 +35,7 @@ alias sshclean='ssh-keygen -R rhost && ssh'
 alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
+alias transfer="serve 80 ~/w/transfer"
 alias ve="me tun0"
 alias vpn="sudo -b openvpn"
 alias vpnkill="sudo pkill openvpn"
@@ -47,9 +48,9 @@ alias x="xclip -selection clipboard"
 #
 
 alias find-cap="getcap -r / 2>/dev/null"
-alias find-suid="find / -type f -perm -4000 -ls 2>/dev/null"
 alias find-sgid="find / -type f -perm -2000 -ls 2>/dev/null"
-alias find-sguid="find / -type f -perm /6000 -ls 2>/dev/null"
+alias find-suid="find / -type f -perm -4000 -ls 2>/dev/null"
+alias find-sguid="find / -type f -perm -6000 -ls 2>/dev/null"
 alias find-sudo="sudo -l"
 
 #
@@ -99,7 +100,7 @@ focus() {
 
 # Set local callback port
 lport() {
-    LPORT=${1:-"4444"}
+    LPORT=${1:-"5420"}
     tg-setvar LPORT "$LPORT"
     echo "LPORT: $LPORT"
 }
@@ -139,7 +140,7 @@ serve() {
     DIR=${2:-$(pwd)}
     echo "Serving files from $DIR"
     if type python3 >/dev/null 2>&1; then
-       python3 -m http.server "$PORT"
+       python3 -m http.server "$PORT" --directory $DIR
     else
        python -m SimpleHTTPServer "$PORT" 
     fi
@@ -160,39 +161,51 @@ sync() {
 
 tg-dirsearch(){
     PORT=${1:-80}
-    IP=${2:-$RHOST}
-    WORDLIST=${3:-$LIST_COMMON}
+    HOST=${2:-$RHOST}
+    WORDLIST=${3:-$LIST_DIR_M}
     EXT=${4:-"php,html,txt"}
-    OUTPUT="$IP-$PORT-dirsearch.txt"
+    OUTPUT="$HOST-$PORT-dirsearch.txt"
     touch $OUTPUT
-    echo "dirsearch  -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT"
-    dirsearch -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$IP:$PORT -e $EXT
+    echo "dirsearch  -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -e $EXT"
+    dirsearch -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -e $EXT
 }
 
 tg-enum4linux() {
-    IP=${1:-$RHOST}
-    OUTPUT="$IP-enum4linux"
-    enum4linux-ng $IP -oY $OUTPUT 
+    HOST=${1:-$RHOST}
+    OUTPUT="$HOST-enum4linux"
+    enum4linux-ng $HOST -oY $OUTPUT 
+}
+
+tg-ferox(){
+    PORT=${1:-80}
+    HOST=${2:-$RHOST}
+    DEPTH=${3:-2}
+    WORDLIST=${4:-$LIST_DIR_M}
+    EXT=${5:-"php,html,txt"}
+    OUTPUT="$HOST-$PORT-ferox.txt"
+    touch $OUTPUT
+    echo "feroxbuster  -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT"
+    feroxbuster -d $DEPTH -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT --no-state
 }
 
 tg-ffuf(){
-    WORDLIST=${1:-$LIST_SMALL}
-    PORT=${2:-80}
-    IP=${3:-$RHOST}
-    OUTPUT="$IP-$PORT-ffuf.txt"
+    PORT=${1:-80}
+    HOST=${2:-$RHOST}
+    WORDLIST=${3:-$LIST_DIR_M}
+    OUTPUT="$HOST-$PORT-ffuf.txt"
     touch $OUTPUT
-    ffuf -w $WORDLIST -t 40 -c -u http://$IP:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
+    ffuf -w $WORDLIST -t 40 -c -u http://$HOST:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
 }
 
 tg-gobuster(){
-    WORDLIST=${1:-$LIST_SMALL}
-    EXT=${2:-"php,html,txt"}
-    PORT=${3:-80}
-    IP=${4:-$RHOST}
-    OUTPUT="$IP-$PORT-gobuster.txt"
+    PORT=${1:-80}
+    HOST=${2:-$RHOST}
+    WORDLIST=${3:-$LIST_DIR_M}
+    EXT=${4:-"php,html,txt"}
+    OUTPUT="$HOST-$PORT-gobuster.txt"
     touch $OUTPUT
-    echo "gobuster dir -t 40 -o $OUTPUT -w $WORDLIST -u http://$IP:$PORT -x $EXT"
-    gobuster dir -t 40 -w "$WORDLIST" -o $OUTPUT -u http://$IP:$PORT -x $EXT
+    echo "gobuster dir -t 40 -o $OUTPUT -w $WORDLIST -u http://$HOST:$PORT -x $EXT"
+    gobuster dir -t 40 -w "$WORDLIST" -o $OUTPUT -u http://$HOST:$PORT -x $EXT
 }
 
 tg-hashcat() {
@@ -230,7 +243,7 @@ tg-init-config(){
     cat << EOF > $TG_CONF
 #!/usr/bin/env zsh
 export LHOST=
-export LPORT=4444
+export LPORT=5420
 export RHOST=
 export RPORT=
 export BASE=
@@ -254,11 +267,11 @@ tg-ssh() {
 
 tg-web() {
     PORT=${1:-80}
-    IP=${2:-$RHOST}
-    OUTPUT="$IP-$PORT-nikto.txt"
+    HOST=${2:-$RHOST}
+    OUTPUT="$HOST-$PORT-nikto.txt"
     touch $OUTPUT
-    whatweb -v -a 3 "$IP:$PORT" | tee $IP-$PORT.whatweb.txt 
-    nikto -host "$IP" -port "$PORT" -output $OUTPUT -Format txt
+    whatweb -v -a 3 "$HOST:$PORT" | tee $HOST-$PORT.whatweb.txt 
+    nikto -host "$HOST" -port "$PORT" -output $OUTPUT -Format txt
 }
 
 #
@@ -289,23 +302,23 @@ msfhandle() {
 # NMAP
 #
 
-alias nmap-="sudo nmap -vv -n -Pn"
+alias nmap-="sudo nmap -vvv -n -Pn"
 
-nmap-arp()            { sudo nmap -vv -n -sn -PR                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-arp.txt }
-nmap-basic()          { sudo nmap -vv -n -Pn -T4                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic.txt } 
-nmap-basic-all()      { sudo nmap -vv -n -Pn -T4 -p-                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic-all.txt }
-nmap-discover()       { sudo nmap -vv -n -T4 -sn -PE                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-discover.txt } 
-nmap-full()           { sudo nmap -vv -n -Pn -T4 -A                                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full.txt }
-nmap-full-all()       { sudo nmap -vv -n -Pn -T4 -A -p-                            ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full-all.txt }
-nmap-script()         { sudo nmap -vv -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-txt }
-nmap-script-all()     { sudo nmap -vv -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
-nmap-script-vuln()    { sudo nmap -vv -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
-nmap-script-vulscan() { sudo nmap -vv -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
+nmap-arp()            { sudo nmap -vvv -n -sn -PR                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-arp.txt }
+nmap-basic()          { sudo nmap -vvv -n -Pn -T4                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic.txt } 
+nmap-basic-all()      { sudo nmap -vvv -n -Pn -T4 -p-                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic-all.txt }
+nmap-discover()       { sudo nmap -vvv -n -T4 -sn -PE                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-discover.txt } 
+nmap-full()           { sudo nmap -vvv -n -Pn -T4 -A                                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full.txt }
+nmap-full-all()       { sudo nmap -vvv -n -Pn -T4 -A -p-                            ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full-all.txt }
+nmap-script()         { sudo nmap -vvv -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
+nmap-script-all()     { sudo nmap -vvv -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-script-vuln()    { sudo nmap -vvv -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
+nmap-script-vulscan() { sudo nmap -vvv -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
 
 nmap-ports(){
-    IP=${1:-"$RHOST"}
+    HOST=${1:-"$RHOST"}
     OPTS=${2:-""}
-    sudo nmap -vv -Pn -T4 $OPTS -oN nmap-ports.txt $IP 
+    sudo nmap -vvv -Pn -T4 $OPTS -oN nmap-ports.txt $HOST 
     nmap-ports-parse
 }
 
