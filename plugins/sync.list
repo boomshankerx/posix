@@ -6,4 +6,4 @@
 .tmux.conf
 .tmuxinator
 .zshrc
-scripts/mouse.sh
+scripts/

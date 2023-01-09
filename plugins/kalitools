@@ -3,6 +3,9 @@
 #
 # KALITOOLS
 #
+
+mkdir ~/transfer
+
 echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
 sudo apt install dirsearch
 sudo apt install feroxbuster
@@ -19,9 +22,6 @@ echo "# enum4linux-ng"
 sudo git clone https://github.com/cddmp/enum4linux-ng.git
 sudo ln -s $(pwd)/enum4linux-ng/enum4linux-ng.py /usr/local/bin/enum4linux-ng
 
-echo "# LinEnum"
-sudo git clone https://github.com/rebootuser/LinEnum.git
-
 echo "# nmapAutomator"
 sudo git clone https://github.com/21y4d/nmapAutomator.git
 sudo ln -s $(pwd)/nmapAutomator/nmapAutomator.sh /usr/local/bin/
@@ -31,7 +31,6 @@ echo "# OLEDUMP"
 echo "# threader3000"
 sudo git clone https://github.com/dievus/threader3000.git
 sudo ln -s $(pwd)/threader3000/threader3000.py /usr/local/bin/threader3000
-
 
 echo "# Windows Exploit Suggester"
 sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git
