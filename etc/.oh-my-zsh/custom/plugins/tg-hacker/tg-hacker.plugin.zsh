@@ -29,13 +29,14 @@ alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
 alias jshow="john --show"
 alias msf="msfconsole -x 'setg LHOST tun0;'"
+alias msfl="msfconsole -x 'setg LHOST eth0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
 alias s='sync'
 alias sshclean='ssh-keygen -R rhost && ssh'
 alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
-alias transfer="serve 80 ~/transfer"
+alias transfer="ls ~/transfer;serve 80 ~/transfer"
 alias ve="me tun0"
 alias vpn="sudo -b openvpn"
 alias vpnkill="sudo pkill openvpn"
@@ -177,15 +178,14 @@ tg-enum4linux() {
 }
 
 tg-ferox(){
-    PORT=${1:-80}
-    HOST=${2:-$RHOST}
-    DEPTH=${3:-2}
+    DEPTH=${1:-1}
+    PORT=${2:-80}
+    HOST=${3:-$RHOST}
     WORDLIST=${4:-$LIST_DIR_M}
     EXT=${5:-"php,html,txt"}
     OUTPUT="$HOST-$PORT-ferox.txt"
     touch $OUTPUT
-    echo "feroxbuster  -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT"
-    feroxbuster -d $DEPTH -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT --no-state
+    feroxbuster -d $DEPTH -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT --no-state 
 }
 
 tg-ffuf(){
@@ -268,10 +268,10 @@ tg-ssh() {
 tg-web() {
     PORT=${1:-80}
     HOST=${2:-$RHOST}
-    OUTPUT="$HOST-$PORT-nikto.txt"
+    OUTPUT="$HOST-$PORT"
     touch $OUTPUT
-    whatweb -v -a 3 "$HOST:$PORT" | tee $HOST-$PORT.whatweb.txt 
-    nikto -host "$HOST" -port "$PORT" -output $OUTPUT -Format txt
+    whatweb -v -a 3 "$HOST:$PORT" | tee $OUTPUT-whatweb.txt 
+    nikto -host "$HOST" -port "$PORT" -output $OUTPUT-nikto.txt -Format txt
 }
 
 #
@@ -314,6 +314,7 @@ nmap-script()         { sudo nmap -vvv -n -Pn -T4 -sC -sV                       
 nmap-script-all()     { sudo nmap -vvv -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
 nmap-script-vuln()    { sudo nmap -vvv -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -vvv -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
+nmap-rust()           { sudo rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                                 -oN ${1:-$RHOST}-nmap-script-all.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}

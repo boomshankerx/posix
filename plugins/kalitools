@@ -12,8 +12,9 @@ sudo apt install feroxbuster
 sudo apt install ghidra
 sudo apt install remmina
 
-cd ~/scripts
-git clone https://github.com/Dewalt-arch/pimpmykali ~/scripts/pimpmykali
+cd ~
+
+git clone https://github.com/Dewalt-arch/pimpmykali ~/pimpmykali
 git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom/plugins/msfvenom/
 
 cd /opt

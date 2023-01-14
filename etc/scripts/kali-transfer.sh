@@ -2,10 +2,10 @@
 
 [[ -d ~/transfer ]] || mkdir ~/transfer
 cd ~/transfer
-curl -O https://github.com/DominicBreuker/pspy/releases/download/latest/pspy32
-curl -O https://github.com/DominicBreuker/pspy/releases/download/latest/pspy64
-curl -O https://github.com/carlospolop/PEASS-ng/releases/download/latest/linpeas.sh
-curl -O https://github.com/carlospolop/PEASS-ng/releases/download/latest/winPEAS.bat
-curl -O https://github.com/carlospolop/PEASS-ng/releases/download/latest/winPEASx64.bat
-curl -O https://github.com/carlospolop/PEASS-ng/releases/download/latest/winPEASx86.bat
-curl -O https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
+curl -#LO https://github.com/DominicBreuker/pspy/releases/latest/download/pspy32
+curl -#LO https://github.com/DominicBreuker/pspy/releases/latest/download/pspy64
+curl -#LO https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
+curl -#LO https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
+curl -#LO https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe
+curl -#LO https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx86.exe
+curl -#LO https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh

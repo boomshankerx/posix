@@ -9,6 +9,7 @@ export NCURSES_NO_UTF8_ACS=1
 alias c=cat
 alias df='df -h'
 alias du='du -hc'
+alias du1='du -hcd1 | sort -h'
 alias e='echo'
 alias lf='less +F'
 alias psa='ps auxf'

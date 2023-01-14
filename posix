@@ -86,15 +86,14 @@ function plugins() {
 
 # PROCESS ARGUMENTS
 function usage() {
-    echo "USAGE install [-u] [options]
+    echo "USAGE posix [options]
     Options
     =======
     base    : Install base packages
-    compile : Compile config files
     config  : Install configuration files
     dev     : Install development packages
     fonts   : Install fonts
-    init    : Initialize base system
+    init    : Initialize from clean install
     net     : Install network tools
     vmware  : Install vmware tools
 
@@ -109,19 +108,15 @@ function usage() {
     vim    : Build VIM
     zsh    : Install oh-my-zsh"
 
-    ls plugins
+    ls plugins -1 
+    
 }
-
-if [ "$1" == "-u" ]; then
-    sudo apt-get update
-fi
 
 [ $# == 0 ] && usage
 for arg in $@
 do
     case $arg in
         "base"    ) install_base;;
-        "compile" ) compile_config;;
         "config"  ) install_config;;
         "dev"     ) install_dev;;
         "fonts"   ) install_fonts;;
