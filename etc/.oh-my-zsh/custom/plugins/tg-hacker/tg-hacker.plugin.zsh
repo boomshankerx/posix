@@ -87,10 +87,10 @@ base() {
 
 # Select target ip:port
 focus() {
-    IP=${1:-"EMPTY"}
+    HOST=${1:-"EMPTY"}
     PORT=${2:-"EMPTY"}
     # Set shell variables
-    [[ "$IP" != "EMPTY" ]] && export RHOST="$IP"
+    [[ "$HOST" != "EMPTY" ]] && export RHOST="$HOST"
     [[ "$PORT" != "EMPTY" ]] && export RPORT="$PORT"
     # Add target to hosts file as rhost replacing as necessary
     add-host
@@ -98,6 +98,7 @@ focus() {
     tg-setvar RHOST "$RHOST"
     tg-setvar RPORT "$RPORT"
 }
+
 
 # Set local callback port
 lport() {
@@ -124,9 +125,12 @@ listen-file() {
 me() {
     iface=${1:-"eth0"}
     export LHOST=$(ifconfig $iface | grep "inet " | cut -b 9- | cut  -d" " -f2)
+    export SUBNET=$(ip a show dev eth0 | grep inet | awk '{print $2}' | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
     echo -n $LHOST | xclip -selection clipboard
-    echo "$LHOST"
     tg-setvar LHOST "$LHOST"
+    tg-setvar SUBNET "$SUBNET"
+    echo "$LHOST"
+    echo "$SUBNET"
 }
 
 # Copy rhost to clipboard
