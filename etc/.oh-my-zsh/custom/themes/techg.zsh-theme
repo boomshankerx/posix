@@ -99,7 +99,7 @@ prompt_ip() {
   else
     ip="$(ifconfig eth0 | grep 'inet ' | cut -c9- | awk '{print $2}') (eth0)"
   fi
-    prompt_segment blue black "$ip"
+    prompt_segment 236 white "$ip"
 }
 
 # Git: branch/detached head, dirty status
@@ -253,19 +253,18 @@ prompt_aws() {
 ## Main prompt
 build_prompt() {
   RETVAL=$?
-  echo -n "╔══"
+  echo -n "╔═"
   prompt_status
   prompt_virtualenv
   prompt_aws
   prompt_context
   prompt_ip
+  prompt_dir
   prompt_git
   prompt_bzr
   prompt_hg
   prompt_end
-  echo -n "\n╚" 
-  prompt_dir
-  prompt_end
+  echo -n "\n$"
 }
 
 PROMPT='%{%f%b%k%}$(build_prompt) '

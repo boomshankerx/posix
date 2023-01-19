@@ -125,7 +125,7 @@ listen-file() {
 me() {
     iface=${1:-"eth0"}
     export LHOST=$(ifconfig $iface | grep "inet " | cut -b 9- | cut  -d" " -f2)
-    export SUBNET=$(ip a show dev eth0 | grep inet | awk '{print $2}' | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
+    export SUBNET=$(ip a show dev eth0 | grep "inet " | awk '{print $2}' | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
     echo -n $LHOST | xclip -selection clipboard
     tg-setvar LHOST "$LHOST"
     tg-setvar SUBNET "$SUBNET"
