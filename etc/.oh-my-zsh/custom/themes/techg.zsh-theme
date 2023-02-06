@@ -93,15 +93,6 @@ prompt_context() {
   fi
 }
 
-prompt_ip() {
-  if [[ -n $(ip l | grep tun0) ]]; then
-    ip="$(ifconfig tun0 | grep 'inet ' | cut -c9- | awk '{print $2}') (tun0)"
-  else
-    ip="$(ifconfig eth0 | grep 'inet ' | cut -c9- | awk '{print $2}') (eth0)"
-  fi
-    prompt_segment 236 white "$ip"
-}
-
 # Git: branch/detached head, dirty status
 prompt_git() {
   (( $+commands[git] )) || return
@@ -211,10 +202,6 @@ prompt_hg() {
   fi
 }
 
-# Dir: current working directory
-prompt_dir() {
-  prompt_segment blue $CURRENT_FG '%~'
-}
 
 # Virtualenv: current working virtualenv
 prompt_virtualenv() {
@@ -250,21 +237,43 @@ prompt_aws() {
   esac
 }
 
+# Dir: current working directory
+prompt_dir() {
+  prompt_segment 250 black '%~'
+}
+
+# Show current local IP address. Prefer VPN over LAN. 
+prompt_ip() {
+  if [[ -n $(ip l | grep tun0) ]]; then
+    ip="$(ifconfig tun0 | grep 'inet ' | cut -c9- | awk '{print $2}') (tun0)"
+  else
+    ip="$(ifconfig eth0 | grep 'inet ' | cut -c9- | awk '{print $2}') (eth0)"
+  fi
+    prompt_segment 236 white "$ip"
+}
+
+# Show 24h time
+prompt_time() {
+  prompt_segment 240 white "[%T]"
+}
+
 ## Main prompt
 build_prompt() {
   RETVAL=$?
-  echo -n "╔═"
+  echo -n "╔"
   prompt_status
   prompt_virtualenv
   prompt_aws
   prompt_context
+  prompt_time
   prompt_ip
-  prompt_dir
   prompt_git
   prompt_bzr
   prompt_hg
   prompt_end
-  echo -n "\n$"
+  echo -n "\n╚"
+  prompt_dir
+  prompt_end
 }
 
 PROMPT='%{%f%b%k%}$(build_prompt) '
