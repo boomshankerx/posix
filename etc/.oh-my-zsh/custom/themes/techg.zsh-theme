@@ -237,11 +237,6 @@ prompt_aws() {
   esac
 }
 
-# Dir: current working directory
-prompt_dir() {
-  prompt_segment 250 black '%~'
-}
-
 # Show current local IP address. Prefer VPN over LAN. 
 prompt_ip() {
   if [[ -n $(ip l | grep tun0) ]]; then
@@ -249,12 +244,18 @@ prompt_ip() {
   else
     ip="$(ifconfig eth0 | grep 'inet ' | cut -c9- | awk '{print $2}') (eth0)"
   fi
-    prompt_segment 236 white "$ip"
+    prompt_segment 242 default "$ip"
 }
 
 # Show 24h time
 prompt_time() {
-  prompt_segment 240 white "[%T]"
+  prompt_segment 238 default "[%T]"
+}
+
+# Dir: current working directory
+prompt_dir() {
+  CURRENT_BG='NONE'
+  prompt_segment black default '%~'
 }
 
 ## Main prompt
