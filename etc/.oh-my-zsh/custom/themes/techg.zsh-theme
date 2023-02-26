@@ -254,27 +254,28 @@ prompt_time() {
 
 # Dir: current working directory
 prompt_dir() {
-  CURRENT_BG='NONE'
-  prompt_segment black default '%~'
+  #CURRENT_BG='NONE'
+  prompt_segment 242 default '%~'
 }
 
 ## Main prompt
 build_prompt() {
   RETVAL=$?
-  echo -n "╔"
+  #echo -n "╔"
   prompt_status
   prompt_virtualenv
   prompt_aws
   prompt_context
+  prompt_dir
   prompt_time
   prompt_ip
   prompt_git
   prompt_bzr
   prompt_hg
   prompt_end
-  echo -n "\n╚"
-  prompt_dir
-  prompt_end
+  #echo -n "\n╚"
+  echo -n "\n$"
+  #prompt_end
 }
 
 PROMPT='%{%f%b%k%}$(build_prompt) '

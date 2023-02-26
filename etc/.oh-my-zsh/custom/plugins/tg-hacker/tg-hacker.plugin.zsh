@@ -118,7 +118,7 @@ listen-rlwrap(){
 }
 
 listen-file() {
-    [[ -n "$1" ]] &&  nc -lvp $LPORT > $1
+    [[ -n "$1" ]] &&  nc -lvnp $LPORT > $1
 }
 
 # Get ip address of local interface default: eth0
@@ -213,13 +213,12 @@ tg-gobuster(){
 }
 
 tg-hashcat() {
-    ATTACK=${1:-0}
-    MODE=${2:-0}
-    HASHES=${3:-"hashes"}
-    WORDLIST=${4:-"$LIST_ROCK"}
+    MODE=${1:-0}
+    HASHES=${2:-"hashes"}
+    WORDLIST=${3:-"$LIST_ROCK"}
     OUTPUT="hashcat.txt"
     echo "hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST"
-    hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST
+    hashcat -m $MODE -o $OUTPUT $HASHES $WORDLIST
 }
 
 tg-hashcatshow() {
