@@ -9,7 +9,7 @@ mkdir ~/transfer
 echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
 sudo apt install dirsearch
 sudo apt install feroxbuster
-sudo apt install ghidra
+#sudo apt install ghidra
 sudo apt install remmina
 
 cd ~
@@ -22,6 +22,9 @@ cd /opt
 echo "# enum4linux-ng"
 sudo git clone https://github.com/cddmp/enum4linux-ng.git
 sudo ln -s $(pwd)/enum4linux-ng/enum4linux-ng.py /usr/local/bin/enum4linux-ng
+
+echo "# hiati-hash"
+sudo gem install haiti-hash
 
 echo "# nmapAutomator"
 sudo git clone https://github.com/21y4d/nmapAutomator.git

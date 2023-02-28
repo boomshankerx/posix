@@ -108,7 +108,7 @@ function usage() {
     vim    : Build VIM
     zsh    : Install oh-my-zsh"
 
-    ls plugins -1 
+    ls plugins 
     
 }
 
