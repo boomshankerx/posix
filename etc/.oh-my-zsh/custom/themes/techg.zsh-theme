@@ -89,7 +89,7 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USERNAME" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)%n@%m"
+    prompt_segment black default "%(!.%{%F{red}%}.)%n@%m"
   fi
 }
 
@@ -218,7 +218,7 @@ prompt_status() {
   local -a symbols
 
   [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
+  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}💀"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
 
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
@@ -255,27 +255,24 @@ prompt_time() {
 # Dir: current working directory
 prompt_dir() {
   #CURRENT_BG='NONE'
-  prompt_segment 242 default '%~'
+  prompt_segment 21 default '%~'
 }
 
 ## Main prompt
 build_prompt() {
   RETVAL=$?
-  #echo -n "╔"
-  prompt_status
   prompt_virtualenv
-  prompt_aws
-  prompt_context
   prompt_dir
+  prompt_context
+  prompt_status
   prompt_time
   prompt_ip
   prompt_git
-  prompt_bzr
-  prompt_hg
+  #prompt_aws
+  #prompt_bzr
+  #prompt_hg
   prompt_end
-  #echo -n "\n╚"
-  echo -n "\n$"
-  #prompt_end
+  echo -n "\n%(!.#.$)"
 }
 
 PROMPT='%{%f%b%k%}$(build_prompt) '

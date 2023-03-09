@@ -118,7 +118,9 @@ listen-rlwrap(){
 }
 
 listen-file() {
-    [[ -n "$1" ]] &&  nc -lvnp $LPORT > $1
+    FILE=${1}
+    PORT=${2:=$LPORT}
+    [[ -n "$1" ]] &&  nc -lvnp $PORT > $FILE
 }
 
 # Get ip address of local interface default: eth0
