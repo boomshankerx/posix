@@ -216,7 +216,7 @@ tg-gobuster(){
 
 tg-hashcat() {
     MODE=${1:-0}
-    HASHES=${2:-"hashes"}
+    HASHES=${2:-"hashes.txt"}
     WORDLIST=${3:-"$LIST_ROCK"}
     OUTPUT="hashcat.txt"
     echo "hashcat -a $ATTACK -m $MODE -o $OUTPUT $HASHES $WORDLIST"
@@ -225,7 +225,7 @@ tg-hashcat() {
 
 tg-hashcatshow() {
     MODE=${1:-0}
-    HASHES=${2:-"hashes"}
+    HASHES=${2:-"hashes.txt"}
     OUTPUT="hashcat.txt"
     echo "hashcat --show -m $MODE $HASHES"
     hashcat --show -m $MODE $HASHES

@@ -255,7 +255,7 @@ prompt_time() {
 # Dir: current working directory
 prompt_dir() {
   #CURRENT_BG='NONE'
-  prompt_segment 21 default '%~'
+  prompt_segment blue default '%~'
 }
 
 ## Main prompt
