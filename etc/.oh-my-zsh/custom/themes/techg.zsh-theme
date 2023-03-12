@@ -218,7 +218,7 @@ prompt_status() {
   local -a symbols
 
   [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}💀"
+  [[ $UID -eq 0 ]] && symbols+="%{%F{red}%}💀"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
 
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
@@ -239,12 +239,16 @@ prompt_aws() {
 
 # Show current local IP address. Prefer VPN over LAN. 
 prompt_ip() {
-  if [[ -n $(ip l | grep tun0) ]]; then
-    ip="$(ifconfig tun0 | grep 'inet ' | cut -c9- | awk '{print $2}') (tun0)"
-  else
-    ip="$(ifconfig eth0 | grep 'inet ' | cut -c9- | awk '{print $2}') (eth0)"
+  local dev=""
+  dev="$(ifconfig | egrep "tun[0-9]+" | cut -d ":" -f1)"
+  if [[ -z $dev ]]; then
+    dev="$(ifconfig | egrep "eth[0-9]+" | cut -d ":" -f1)"
+    if [[ -z $dev ]]; then
+      dev="$(ifconfig | egrep "ens[0-9]+" | cut -d ":" -f1)"
+    fi
   fi
-    prompt_segment 242 default "$ip"
+  ip="$(ifconfig $dev | grep 'inet ' | cut -c9- | awk '{print $2}') ($dev)"
+  prompt_segment 242 default "$ip"
 }
 
 # Show 24h time
