@@ -72,12 +72,12 @@ function init {
     echo 'Initializing base system...'
     sudo apt update
     install_base
-    install_config
     . plugins/vim
     . plugins/zsh
     if [[ -n $DISPLAY ]]; then
         install_fonts
     fi
+    install_config
 }
 
 function plugins() {
