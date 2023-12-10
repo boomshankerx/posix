@@ -73,3 +73,30 @@ reset_permissions(){
     find . -type d -exec chmod 775 {} \; -print
 }
 
+# Mount disk image with multiple partitions on loop device
+los() (
+  img="$1"
+  dev="$(sudo losetup --show -f -P "$img")"
+  echo "$dev"
+  for part in "$dev"?*; do
+    if [ "$part" = "${dev}p*" ]; then
+      part="${dev}"
+    fi
+    dst="/mnt/$(basename "$part")"
+    echo "$dst"
+    sudo mkdir -p "$dst"
+    sudo mount "$part" "$dst"
+  done
+)
+
+losd() (
+  dev="/dev/loop$1"
+  for part in "$dev"?*; do
+    if [ "$part" = "${dev}p*" ]; then
+      part="${dev}"
+    fi
+    dst="/mnt/$(basename "$part")"
+    sudo umount "$dst"
+  done
+  sudo losetup -d "$dev"
+)

@@ -7,6 +7,7 @@
 export LIST_DIR_L="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories.txt"
 export LIST_DIR_M="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt"
 export LIST_DIR_S="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-directories.txt"
+export LIST_FILES_M="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt"
 export LIST_PW_L="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-1000000.txt"
 export LIST_PW_M="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-100000.txt"
 export LIST_PW_S="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt"
@@ -102,7 +103,7 @@ focus() {
 
 # Set local callback port
 lport() {
-    LPORT=${1:-"5420"}
+    LPORT=${1:-"4444"}
     tg-setvar LPORT "$LPORT"
     echo "LPORT: $LPORT"
 }
@@ -186,9 +187,9 @@ tg-enum4linux() {
 tg-ferox(){
     DEPTH=${1:-1}
     PORT=${2:-80}
-    HOST=${3:-$RHOST}
-    WORDLIST=${4:-$LIST_DIR_M}
-    EXT=${5:-"php,html,txt"}
+    WORDLIST=${3:-$LIST_DIR_M}
+    EXT=${4:-"php,html,txt"}
+    HOST=${5:-$RHOST}
     OUTPUT="$HOST-$PORT-ferox.txt"
     touch $OUTPUT
     feroxbuster -d $DEPTH -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT --no-state 
@@ -264,8 +265,8 @@ tg-setvar(){
     sed -i "/$var=/d" $TG_CONF
     echo "export $var=$value" >> $TG_CONF
 }
-tg-ssh() {
 
+tg-ssh() {
     sshclean
     ssh "$@"
 }
@@ -319,7 +320,7 @@ nmap-script()         { sudo nmap -vvv -n -Pn -T4 -sC -sV                       
 nmap-script-all()     { sudo nmap -vvv -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
 nmap-script-vuln()    { sudo nmap -vvv -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -vvv -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
-nmap-rust()           { sudo rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                                 -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-rust()           { sudo rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                   -oN ${1:-$RHOST}-nmap-script-all.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}

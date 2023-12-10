@@ -9,6 +9,7 @@ mkdir ~/transfer
 echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
 sudo apt install -y cyberchef  
 sudo apt install -y dirsearch
+sudo apt install -y enum4linux-ng
 sudo apt install -y feroxbuster
 sudo apt install -y ghidra
 sudo apt install -y remmina
