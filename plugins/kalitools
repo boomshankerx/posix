@@ -24,10 +24,6 @@ git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom
 
 cd /opt
 
-echo "# enum4linux-ng"
-sudo git clone https://github.com/cddmp/enum4linux-ng.git
-sudo ln -s $(pwd)/enum4linux-ng/enum4linux-ng.py /usr/local/bin/enum4linux-ng
-
 echo "# hiati-hash"
 sudo gem install haiti-hash
 
@@ -40,6 +36,11 @@ echo "# OLEDUMP"
 echo "# threader3000"
 sudo git clone https://github.com/dievus/threader3000.git
 sudo ln -s $(pwd)/threader3000/threader3000.py /usr/local/bin/threader3000
+
+echo "# volatility3"
+git clone https://github.com/volatilityfoundation/volatility3.git
+pip3 install -r /opt/volatility3/requirements.txt
+[[ -L /usr/local/bin/vol.py ]] || ln -s /opt/volatility3/vol.py /usr/local/bin/vol.py
 
 echo "# Windows Exploit Suggester"
 sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git
