@@ -159,7 +159,7 @@ sync() {
     . $TG_CONF
     . ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
     cd $BASE
-    clear
+    clear -x
     [[ "$1" == "-v" ]] && cat $TG_CONF
 }
 
@@ -188,7 +188,7 @@ tg-ferox(){
     DEPTH=${1:-1}
     PORT=${2:-80}
     WORDLIST=${3:-$LIST_DIR_M}
-    EXT=${4:-"php,html,txt"}
+    EXT=${4:-"php,html,txt,json"}
     HOST=${5:-$RHOST}
     OUTPUT="$HOST-$PORT-ferox.txt"
     touch $OUTPUT
@@ -308,24 +308,24 @@ msfhandle() {
 # NMAP
 #
 
-alias nmap-="sudo nmap -vvv -n -Pn"
+alias nmap-="sudo nmap -v -n -Pn"
 
-nmap-arp()            { sudo nmap -vvv -n -sn -PR                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-arp.txt }
-nmap-basic()          { sudo nmap -vvv -n -Pn -T4                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic.txt } 
-nmap-basic-all()      { sudo nmap -vvv -n -Pn -T4 -p-                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic-all.txt }
-nmap-discover()       { sudo nmap -vvv -n -T4 -sn -PE                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-discover.txt } 
-nmap-full()           { sudo nmap -vvv -n -Pn -T4 -A                                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full.txt }
-nmap-full-all()       { sudo nmap -vvv -n -Pn -T4 -A -p-                            ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full-all.txt }
-nmap-script()         { sudo nmap -vvv -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
-nmap-script-all()     { sudo nmap -vvv -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
-nmap-script-vuln()    { sudo nmap -vvv -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
-nmap-script-vulscan() { sudo nmap -vvv -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
+nmap-arp()            { sudo nmap -v -n -sn -PR                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-arp.txt }
+nmap-basic()          { sudo nmap -v -n -Pn -T4                                   ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic.txt } 
+nmap-basic-all()      { sudo nmap -v -n -Pn -T4 -p-                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-basic-all.txt }
+nmap-discover()       { sudo nmap -v -n -T4 -sn -PE                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-discover.txt } 
+nmap-full()           { sudo nmap -v -n -Pn -T4 -A                                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full.txt }
+nmap-full-all()       { sudo nmap -v -n -Pn -T4 -A -p-                            ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full-all.txt }
+nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
+nmap-script-all()     { sudo nmap -v -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-script-vuln()    { sudo nmap -v -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
+nmap-script-vulscan() { sudo nmap -v -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
 nmap-rust()           { sudo rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                   -oN ${1:-$RHOST}-nmap-script-all.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}
     OPTS=${2:-""}
-    sudo nmap -vvv -Pn -T4 $OPTS -oN nmap-ports.txt $HOST 
+    sudo nmap -v -Pn -T4 $OPTS -oN nmap-ports.txt $HOST 
     nmap-ports-parse
 }
 

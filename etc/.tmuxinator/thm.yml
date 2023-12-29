@@ -15,7 +15,7 @@ root: ~/w/thm
 # on_project_start: command
 
 # Run on project start, the first time
-on_project_first_start: ~/w/thm/start.sh
+# on_project_first_start: ~/w/thm/start.sh
 
 # Run on project start, after the first time
 # on_project_restart: 
