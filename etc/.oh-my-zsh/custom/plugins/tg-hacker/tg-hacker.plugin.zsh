@@ -59,7 +59,9 @@ alias find-sudo="sudo -l"
 # GREP
 #
 
-alias grep-email="grep -E -o '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b'"
+alias grep-domain='grep -E -o "([a-z0-9-]{2,24})+\.(ca|com|org|info|net)"'
+alias grep-email='grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b"'
+alias grep-ip='grep -E -o "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"'
 
 #
 # FUNCTIONS
@@ -82,8 +84,7 @@ base() {
         BASE=$(pwd)
         tg-setvar BASE "$BASE"
     fi
-    echo $BASE
-    cd $BASE
+    echo $BASE cd $BASE
 }
 
 # Select target ip:port

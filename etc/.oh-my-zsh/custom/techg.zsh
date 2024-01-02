@@ -13,6 +13,7 @@ alias du1='du -hcd1 | sort -h'
 alias e='echo'
 alias lf='less +F'
 alias psa='ps auxf'
+alias x="clip"
 
 # DEBIAN
 alias ag='sudo apt'
@@ -58,7 +59,7 @@ decomment (){
 clip() {
     if [[ -f $1 ]]; then
         cat $1
-        cat $1 | xclip -sel c
+        cat $1 | xclip -selection clipboard
     fi
 }
 
