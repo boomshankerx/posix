@@ -1,5 +1,5 @@
 sudo apt install -y mariadb-server
-sudo apt install -y php7.3 php7.3-apcu php7.3-curl php7.3-gd php7.3-imap php7.3-intl php7.3-mbstring php7.3-mysql php7.3-xml php7.3-zip
+sudo apt install -y php8.2 php8.2-{apcu,bcmath,cgi,cli,common,curl,fpm,gd,imap,imap,intl,mbstring,mysql,xml,zip}
 cd ~
 git clone https://github.com/osTicket/osTicket.git
 git clone https://github.com/osTicket/osTicket-plugins.git
