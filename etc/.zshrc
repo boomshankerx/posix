@@ -107,6 +107,7 @@ export LC_COLLATE=C
 export EDITOR=vim
 export TERM=xterm-256color
 export GOPATH=$HOME/go
+export PATH="/usr/local/sbin;/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH=$PATH:$GOPATH/bin
 eval $(thefuck --alias)
 
