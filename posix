@@ -46,11 +46,16 @@ function install_dev {
 }
 
 function install_fonts {
+    # Powerline fonts
     sudo apt-get -y install fonts-powerline
     git clone https://github.com/powerline/fonts.git ~/fonts --depth=1
     ~/fonts/install.sh
-    fc-cache -fv
     rm -fr ~/fonts
+    # Nerd Font
+    wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip
+    sudo unzip FiraCode.zip -d /usr/local/share/fonts
+    rm FiraCode.zip
+    fc-cache -fv
 }
 
 function install_net {
