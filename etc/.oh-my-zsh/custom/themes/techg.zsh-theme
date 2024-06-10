@@ -242,7 +242,7 @@ prompt_ip() {
   local dev=""
   dev="$(ifconfig | egrep "tun[0-9]+" | cut -d ":" -f1)"
   if [[ -z $dev ]]; then
-    dev="$(ifconfig | egrep "eth[0-9]+" | cut -d ":" -f1)"
+    dev="$(ifconfig | egrep "^eth[0-9]+" | cut -d ":" -f1)"
     if [[ -z $dev ]]; then
       dev="$(ifconfig | egrep "ens[0-9]+" | cut -d ":" -f1)"
     fi
