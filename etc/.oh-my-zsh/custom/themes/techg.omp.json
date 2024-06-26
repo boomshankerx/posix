@@ -12,7 +12,7 @@
           "foreground": "#ffffff",
           "background": "#0077c2",
           "leading_diamond": "\u256d\u2500\ue0b6",
-          "template": "\uf120 {{ .Name }} "
+          "template": "\uf120 {{.UserName}}@{{ .HostName }} "
         },
         {
           "type": "root",
@@ -253,7 +253,7 @@
           "trailing_diamond": "\ue0b4",
           "template": " \uf073 {{ .CurrentDate | date .Format }} ",
           "properties": {
-            "time_format": "Jan _2, 15:04"
+            "time_format": "1-_2 15:04"
           }
         }
       ]

@@ -106,7 +106,7 @@ export LC_COLLATE=C
 export EDITOR=vim
 export TERM=xterm-256color
 export GOPATH=$HOME/go
-export PATH="/usr/local/sbin;/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH=$PATH:$GOPATH/bin
 eval $(thefuck --alias)
 
@@ -120,5 +120,5 @@ precmd(){
     fi
 }
 
-export POSH_IP=$(tg-getip)
-eval "$(/usr/local/bin/oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
+export POSH_IP=$(tg-ipfull)
+eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"

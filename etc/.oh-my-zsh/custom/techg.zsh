@@ -68,7 +68,11 @@ empty(){
     [[ -f "$1" ]] && echo '' > $1
 }
 
-tg-getip(){
+tg-ip(){
+    tg-ipfull | cut -d'|' -f1 | cut -d'/' -f1
+
+}
+tg-ipfull(){
   local dev=""
   dev="$(ip a | egrep -o '\btun[0-9]+' | head -1)"
   if [[ -z $dev ]]; then
@@ -77,7 +81,7 @@ tg-getip(){
         dev="$(ip a | egrep -o '\bens[0-9]+' | head -1)"
     fi
   fi
-  ip="$(ip a | grep $dev | grep inet | awk '{print $2}') ($dev)"
+  ip="$(ip a | grep $dev | grep inet | awk '{print $2}')|$dev"
   echo $ip
 }
 
