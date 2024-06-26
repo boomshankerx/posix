@@ -50,11 +50,6 @@ alias help-tmux="less ~/.tmux.conf"
 # FUNCTIONS
 #
 
-# Remove hash comments from file and output to stdout
-decomment (){
-    [[ -z "$1" ]] || sed '/^\s*#/d;/^$/d' "$1"
-}
-
 # Copy file to clipboard
 clip() {
     if [[ -f $1 ]]; then
@@ -63,9 +58,27 @@ clip() {
     fi
 }
 
+# Remove hash comments from file and output to stdout
+decomment (){
+    [[ -z "$1" ]] || sed '/^\s*#/d;/^$/d' "$1"
+}
+
 # Copy empty string to file
 empty(){
     [[ -f "$1" ]] && echo '' > $1
+}
+
+tg-getip(){
+  local dev=""
+  dev="$(ip a | egrep -o '\btun[0-9]+' | head -1)"
+  if [[ -z $dev ]]; then
+      dev="$(ip a | egrep -o '\beth[0-9]+' | head -1)"
+    if [[ -z $dev ]]; then
+        dev="$(ip a | egrep -o '\bens[0-9]+' | head -1)"
+    fi
+  fi
+  ip="$(ip a | grep $dev | grep inet | awk '{print $2}') ($dev)"
+  echo $ip
 }
 
 # Reset files and folders to default permissions

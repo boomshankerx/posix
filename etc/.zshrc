@@ -62,7 +62,6 @@ plugins=(
     aws
     common-aliases
     git
-    msfvenom
     tg-hacker
     tmux
     tmuxinator
@@ -120,3 +119,6 @@ precmd(){
         echo 
     fi
 }
+
+export POSH_IP=$(tg-getip)
+eval "$(/usr/local/bin/oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
