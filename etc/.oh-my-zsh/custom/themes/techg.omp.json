@@ -22,14 +22,6 @@
           "template": "<parentBackground>\ue0b0</> \uf292 "
         },
         {
-          "type": "text",
-          "style": "powerline",
-          "powerline_symbol": "\ue0b0",
-          "foreground": "#2d3436",
-          "background": "#8e8e8e",
-          "template": "{{ .Env.POSH_IP }}"
-        },
-        {
           "type": "path",
           "style": "powerline",
           "powerline_symbol": "\ue0b0",
