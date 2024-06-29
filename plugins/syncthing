@@ -5,9 +5,9 @@
 #
 
 # Add the release PGP keys:
-sudo curl -s -o /usr/share/keyrings/syncthing-archive-keyring.gpg https://syncthing.net/release-key.gpg
+sudo curl -s -o /etc/apt/keyrings/syncthing.gpg https://syncthing.net/release-key.gpg
 # Add the "stable" channel to your APT sources:
-echo "deb [signed-by=/usr/share/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list
+echo "deb [signed-by=/etc/apt/keyrings/syncthing.gpg] https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list
 # Increase preference of Syncthing's packages ("pinning")
 printf "Package: *\nPin: origin apt.syncthing.net\nPin-Priority: 990\n" | sudo tee /etc/apt/preferences.d/syncthing
 # Update and install syncthing:

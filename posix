@@ -33,8 +33,9 @@ function install_base {
 }
 
 function install_config {
-    echo "\n#\n# Installing config files\n#"
-    cp -vrT etc ~
+    echo -e "\n#\n# Installing config files\n#"
+    rsync -aiv etc ~
+    #cp -vrT etc ~
     [ -L ~/s ] || ln -s ~/scripts ~/s
 
 }

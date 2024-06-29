@@ -3,7 +3,7 @@ sudo apt-get -y install automake bison build-essential pkg-config libevent-dev l
 rm -fr /tmp/tmux
 git clone https://github.com/tmux/tmux.git /tmp/tmux
 cd /tmp/tmux
-git checkout 3.1b
+git checkout 3.4
 sh autogen.sh
 ./configure && make
 sudo make install
