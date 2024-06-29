@@ -18,6 +18,11 @@ sudo apt install -y sliver
 echo "# ngrok"
 curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
 
+# pipx tools
+echo "# volatility3"
+pipx install volatility3
+
+# Github hosted tools
 cd ~
 git clone https://github.com/Dewalt-arch/pimpmykali ~/pimpmykali
 git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom/plugins/msfvenom/
@@ -36,11 +41,6 @@ echo "# OLEDUMP"
 echo "# threader3000"
 sudo git clone https://github.com/dievus/threader3000.git
 sudo ln -s $(pwd)/threader3000/threader3000.py /usr/local/bin/threader3000
-
-echo "# volatility3"
-git clone https://github.com/volatilityfoundation/volatility3.git
-pip3 install -r /opt/volatility3/requirements.txt
-[[ -L /usr/local/bin/vol.py ]] || ln -s /opt/volatility3/vol.py /usr/local/bin/vol.py
 
 echo "# Windows Exploit Suggester"
 sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git

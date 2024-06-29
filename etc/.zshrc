@@ -122,3 +122,4 @@ precmd(){
 
 export POSH_IP=$(tg-ipfull)
 eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
+export PATH=$HOME/.local/bin:$PATH

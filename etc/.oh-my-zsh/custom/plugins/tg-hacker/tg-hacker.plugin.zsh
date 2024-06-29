@@ -32,6 +32,7 @@ alias jshow="john --show"
 alias msf="msfconsole -x 'setg LHOST tun0;'"
 alias msfl="msfconsole -x 'setg LHOST eth0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
+alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"
 alias s='sync'
 alias sshclean='ssh-keygen -R rhost && ssh'
 alias t1="tree -L 1"
