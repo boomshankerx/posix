@@ -108,6 +108,7 @@ export TERM=xterm-256color
 export GOPATH=$HOME/go
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH=$PATH:$GOPATH/bin
+export PATH=$HOME/.local/bin:$PATH
 eval $(thefuck --alias)
 
 precmd(){
@@ -122,4 +123,3 @@ precmd(){
 
 export POSH_IP=$(tg-ipfull)
 eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
-export PATH=$HOME/.local/bin:$PATH

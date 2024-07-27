@@ -34,8 +34,7 @@ install_base() {
 
 install_config() {
     echo -e "\n#\n# Installing config files\n#"
-    rsync -aiv etc ~
-    #cp -vrT etc ~
+    cp -vrT etc ~
     [ -L ~/s ] || ln -s ~/scripts ~/s
 
 }
@@ -90,6 +89,7 @@ init() {
     install_base
     . plugins/vim
     . plugins/zsh
+    . plugins/omp
     if [[ -n $DISPLAY ]]; then
         install_fonts
     fi
@@ -133,7 +133,7 @@ for arg in $@
 do
     case $arg in
         "base"        ) install_base;;
-        "config|conf" ) install_config;;
+        "config"      ) install_config;;
         "dev"         ) install_dev;;
         "fonts"       ) install_fonts;;
         "init"        ) init;;
