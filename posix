@@ -9,7 +9,8 @@ install_base() {
     echo "** Installing base software"
     #sudo apt-get -y install build-essential cmake
     #sudo apt-get -y install byobu
-    #sudo apt-get -y install python-dev python3-dev
+    #sudo apt-get -y install python3-dev python3-pip python3-setuptools
+    #sudo apt-get -y install thefuck
     sudo apt-get -y install curl
     sudo apt-get -y install git 
     sudo apt-get -y install htop
@@ -17,7 +18,6 @@ install_base() {
     sudo apt-get -y install powerline
     sudo apt-get -y install rsync
     sudo apt-get -y install sudo
-    sudo apt-get -y install thefuck
     sudo apt-get -y install tldr
     sudo apt-get -y install tmux
     sudo apt-get -y install tmuxinator

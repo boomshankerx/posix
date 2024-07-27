@@ -14,6 +14,9 @@ sudo chmod a+r /etc/apt/keyrings/docker.asc
 if [[ "$VERSION_CODENAME" == "kali-rolling" ]]; then
     VERSION_CODENAME="bookworm"
 fi
+if [[ "$VERSION_CODENAME" == "wilma" ]]; then
+    VERSION_CODENAME="bookworm"
+fi
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
   "$VERSION_CODENAME" stable" | \

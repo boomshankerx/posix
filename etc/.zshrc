@@ -109,7 +109,6 @@ export GOPATH=$HOME/go
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH=$PATH:$GOPATH/bin
 export PATH=$HOME/.local/bin:$PATH
-eval $(thefuck --alias)
 
 precmd(){
     # Print a newline before the prompt, unless it's the
