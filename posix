@@ -5,8 +5,8 @@ os=`uname`
 echo $home
 uname -a
 
-function install_base {
-    echo "** Installing base software..."
+install_base() {
+    echo "** Installing base software"
     #sudo apt-get -y install build-essential cmake
     #sudo apt-get -y install byobu
     #sudo apt-get -y install python-dev python3-dev
@@ -32,7 +32,7 @@ function install_base {
     fi
 }
 
-function install_config {
+install_config() {
     echo -e "\n#\n# Installing config files\n#"
     rsync -aiv etc ~
     #cp -vrT etc ~
@@ -40,13 +40,13 @@ function install_config {
 
 }
 
-function install_dev {
-    echo "\n#\n# Installing development packages...\n#"
+install_dev() {
+    echo "\n#\n# Installing development packages\n#"
     sudo apt-get -y install csstidy
     sudo apt-get -y install tidy
 }
 
-function install_fonts {
+install_fonts() {
     # Powerline fonts
     sudo apt-get -y install fonts-powerline
     git clone https://github.com/powerline/fonts.git ~/fonts --depth=1
@@ -59,8 +59,15 @@ function install_fonts {
     fc-cache -fv
 }
 
-function install_net {
-    echo "\n#\n#  Installing network packages...\n#"
+install_kali(){
+    echo -e "#\n# Installing Kali\n#\n\n"
+    plugins/docker
+    plugins/kalitools
+    plugins/syncthing
+}
+
+install_net() {
+    echo "\n#\n#  Installing network packages\n#"
     sudo apt-get -y install kismet
     sudo apt-get -y install nmap
     if [[ -n $DISPLAY ]]; then
@@ -69,15 +76,16 @@ function install_net {
     fi
 }
 
-function install_vmware {
+install_vmware() {
+    echo -e "#\n# Installing vmware tools\n#\n\n"
     sudo apt-get -y install open-vm-tools 
     if [[ -n $DISPLAY ]]; then
         sudo apt-get -y install open-vm-tools-desktop 
     fi
 }
 
-function init {
-    echo 'Initializing base system...'
+init() {
+    echo -e "#\n# Initializing base system\n#\n\n"
     sudo apt update
     install_base
     . plugins/vim
@@ -88,12 +96,12 @@ function init {
     install_config
 }
 
-function plugins() {
+plugins() {
     [[ -f "plugins/$1" ]] && . plugins/$1
 }
 
 # PROCESS ARGUMENTS
-function usage() {
+ usage() {
     echo "USAGE posix [options]
     Options
     =======
@@ -109,11 +117,11 @@ function usage() {
     =======
     chrome : Install Chrome web browser
     docker : Install Docker
-    jitsi  : Install Jitsi Meet
+    kali   : Install kali stuff
     samba  : Install + Configure Samba Server
     sync   : Sync local settings to repo
-    tmux   : Install TMUX
-    vim    : Build VIM
+    tmux   : Build TMUX from source
+    vim    : Install + Configure VIM
     zsh    : Install oh-my-zsh"
 
     ls plugins 
@@ -124,14 +132,15 @@ function usage() {
 for arg in $@
 do
     case $arg in
-        "base"    ) install_base;;
-        "config"  ) install_config;;
-        "dev"     ) install_dev;;
-        "fonts"   ) install_fonts;;
-        "init"    ) init;;
-        "net"     ) install_net;;
-        "vmware"  ) install_vmware;;
-        *         ) plugins $arg;;
+        "base"        ) install_base;;
+        "config|conf" ) install_config;;
+        "dev"         ) install_dev;;
+        "fonts"       ) install_fonts;;
+        "init"        ) init;;
+        "kali"        ) install_kali;;
+        "net"         ) install_net;;
+        "vmware"      ) install_vmware;;
+        *             ) plugins $arg;;
     esac
 done
 

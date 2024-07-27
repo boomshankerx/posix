@@ -4,9 +4,10 @@
 # KALITOOLS
 #
 
+echo -e "#\n# Installing kalitools\n#\n\n"
+
 mkdir ~/transfer
 
-echo "\n#\n# INSTALLING KALI-TOOLS\n#\n"
 sudo apt install -y cyberchef  
 sudo apt install -y dirsearch
 sudo apt install -y enum4linux-ng
@@ -15,11 +16,13 @@ sudo apt install -y ghidra
 sudo apt install -y remmina
 sudo apt install -y sliver
 
+
+echo -e "#\n# ngrok\n#\n\n"
 echo "# ngrok"
 curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
 
 # pipx tools
-echo "# volatility3"
+echo -e "#\n# volatility3\n#\n\n"
 pipx install volatility3
 
 # Github hosted tools
@@ -29,21 +32,21 @@ git clone https://github.com/Green-m/msfvenom-zsh-completion ~/.oh-my-zsh/custom
 
 cd /opt
 
-echo "# hiati-hash"
+echo -e "#\n# hiati-hash\n#\n\n"
 sudo gem install haiti-hash
 
-echo "# nmapAutomator"
+echo -e "#\n# nmapAutomator\n#\n\n"
 sudo git clone https://github.com/21y4d/nmapAutomator.git
 sudo ln -s $(pwd)/nmapAutomator/nmapAutomator.sh /usr/local/bin/
 
 echo "# OLEDUMP"
 
-echo "# threader3000"
+echo -e "#\n# treader3000\n#\n\n"
 sudo git clone https://github.com/dievus/threader3000.git
 sudo ln -s $(pwd)/threader3000/threader3000.py /usr/local/bin/threader3000
 
-echo "# Windows Exploit Suggester"
+echo -e "#\n# Windows Exploit Suggester\n#\n\n"
 sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git
 
-echo "# Windows Exploit Suggester NG"
+echo -e "#\n# Windows Exploit Suggester NG\n#\n\n"
 sudo git clone https://github.com/bitsadmin/wesng.git
