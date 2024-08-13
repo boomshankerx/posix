@@ -6,5 +6,5 @@ sudo apt-get install linux-headers-`uname -r`
 cd ~
 git clone -b v5.6.4.2 https://github.com/aircrack-ng/rtl8812au.git ~/rtl8812au
 cd ~/rtl8812au
-./dkms-install.sh
+sudo make dkms_install
 cd -

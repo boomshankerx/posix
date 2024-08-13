@@ -62,6 +62,7 @@ plugins=(
     aws
     common-aliases
     git
+    msfvenom
     tg-hacker
     tmux
     tmuxinator
@@ -107,8 +108,9 @@ export EDITOR=vim
 export TERM=xterm-256color
 export GOPATH=$HOME/go
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-export PATH=$PATH:$GOPATH/bin
 export PATH=$HOME/.local/bin:$PATH
+export PATH=$PATH:$GOPATH/bin
+eval $(thefuck --alias)
 
 precmd(){
     # Print a newline before the prompt, unless it's the

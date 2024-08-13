@@ -26,10 +26,10 @@ alias uuu='auf && aar'
 alias sc='systemctl'
 
 # EXPRESSVPN
-alias vc='expressvpn connect'
-alias vcs='expressvpn connect smart'
-alias vd='expressvpn disconnect'
-alias vs='expressvpn status'
+#alias vc='expressvpn connect'
+#alias vcs='expressvpn connect smart'
+#alias vd='expressvpn disconnect'
+#alias vs='expressvpn status'
 
 # SUBLIME TEXT
 alias sb=subl
@@ -68,6 +68,12 @@ empty(){
     [[ -f "$1" ]] && echo '' > $1
 }
 
+tg-ip-external(){
+    ip=$(curl -s http://api.ipify.org)
+    echo $ip
+    echo $ip | xclip -selection clipboard
+}
+
 tg-ip(){
     tg-ipfull | cut -d'|' -f1 | cut -d'/' -f1
 
@@ -89,6 +95,9 @@ tg-ipfull(){
 reset_permissions(){
     find . -type f -exec chmod 664 {} \; -print
     find . -type d -exec chmod 775 {} \; -print
+}
+reset_owner(){
+    sudo chown -R $USER:$USER .
 }
 
 # Mount disk image with multiple partitions on loop device

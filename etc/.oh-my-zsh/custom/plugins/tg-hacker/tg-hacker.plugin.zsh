@@ -21,6 +21,7 @@ export TG_CONF=~/.tg_hacker
 
 #alias ngrok="ngrok http 80"
 alias _strip='tr -d "[:space:]"'
+alias cc="cyberchef"
 alias f="focus"
 alias hcat="tg-hashcat"
 alias hcatshow="tg-hashcatshow"
@@ -29,15 +30,17 @@ alias hi="tg-init"
 alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
 alias jshow="john --show"
+alias mee="tg-ip-external"
 alias msf="msfconsole -x 'setg LHOST tun0;'"
 alias msfl="msfconsole -x 'setg LHOST eth0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
-alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:2.1.1"
+alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:latest"
 alias s='sync'
 alias sshclean='ssh-keygen -R rhost && ssh'
 alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
+alias te="me wg0"
 alias transfer="ls ~/transfer;serve 80 ~/transfer"
 alias ve="me tun0"
 alias vpn="sudo -b openvpn"
@@ -85,7 +88,8 @@ base() {
         BASE=$(pwd)
         tg-setvar BASE "$BASE"
     fi
-    echo $BASE cd $BASE
+    echo $BASE 
+    cd $BASE
 }
 
 # Select target ip:port
@@ -130,7 +134,7 @@ listen-file() {
 me() {
     iface=${1:-"eth0"}
     export LHOST=$(ifconfig $iface | grep "inet " | cut -b 9- | cut  -d" " -f2)
-    export SUBNET=$(ip a show dev eth0 | grep "inet " | awk '{print $2}' | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
+    export SUBNET=$(ip a show dev $iface | grep "inet " | awk '{print $2}' | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
     echo -n $LHOST | xclip -selection clipboard
     tg-setvar LHOST "$LHOST"
     tg-setvar SUBNET "$SUBNET"
