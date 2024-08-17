@@ -8,11 +8,15 @@ export NCURSES_NO_UTF8_ACS=1
 # COMMON
 alias c=cat
 alias df='df -h'
-alias du='du -hc'
 alias du1='du -hcd1 | sort -h'
+alias du='du -hc'
 alias e='echo'
 alias lf='less +F'
 alias psa='ps auxf'
+alias rs="sudo xrandr --output Virtual-1 --auto"
+alias sb=subl
+alias v='vim'
+alias vi='gvim'
 alias x="clip"
 
 # DEBIAN
@@ -25,22 +29,9 @@ alias auu='sudo apt update && sudo apt upgrade -y'
 alias uuu='auf && aar'
 alias sc='systemctl'
 
-# EXPRESSVPN
-#alias vc='expressvpn connect'
-#alias vcs='expressvpn connect smart'
-#alias vd='expressvpn disconnect'
-#alias vs='expressvpn status'
-
-# SUBLIME TEXT
-alias sb=subl
-
 # TMUXINATOR
 alias mux=tmuxinator
 . ~/.tmuxinator/tmuxinator.zsh
-
-# VIM
-alias v='vim'
-alias vi='gvim'
 
 # HELP
 alias help-git="alias | grep git"
