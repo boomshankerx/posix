@@ -76,17 +76,26 @@ tg-ip-external(){
 
 tg-ip(){
     tg-ipfull | cut -d'|' -f1 | cut -d'/' -f1
-
 }
+
+tg-ipdev(){
+  dev=$1
+  ip="$(ip a | grep $dev | grep inet | awk '{print $2}' | cut -d'/' -f1)"
+  echo $ip
+}
+
 tg-ipfull(){
-  local dev=""
-  dev="$(ip a | egrep -o '\btun[0-9]+' | head -1)"
-  if [[ -z $dev ]]; then
-      dev="$(ip a | egrep -o '\beth[0-9]+' | head -1)"
+    local dev=""
+    dev="$(ip a | egrep -o '\btun[0-9]+' | head -1)"
+    if [[ -z $dev ]]; then
+        dev="$(ip a | egrep -o '\bwg[0-9]+' | head -1)"
+    fi
+    if [[ -z $dev ]]; then
+        dev="$(ip a | egrep -o '\beth[0-9]+' | head -1)"
+    fi
     if [[ -z $dev ]]; then
         dev="$(ip a | egrep -o '\bens[0-9]+' | head -1)"
     fi
-  fi
   ip="$(ip a | grep $dev | grep inet | awk '{print $2}')|$dev"
   echo $ip
 }

@@ -46,6 +46,7 @@ alias ve="me tun0"
 alias vpn="sudo -b openvpn"
 alias vpnkill="sudo pkill openvpn"
 alias vpnshow="pgrep -a openvpn"
+alias we="me wg0"
 alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip systeminfo.txt"
 alias x="xclip -selection clipboard"
 
@@ -132,9 +133,9 @@ listen-file() {
 
 # Get ip address of local interface default: eth0
 me() {
-    iface=${1:-"eth0"}
-    export LHOST=$(ifconfig $iface | grep "inet " | cut -b 9- | cut  -d" " -f2)
-    export SUBNET=$(ip a show dev $iface | grep "inet " | awk '{print $2}' | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
+    dev=${1:-"eth0"}
+    export LHOST=$(tg-ipdev $dev)
+    export SUBNET=$(ip a show dev $dev | grep "inet " | awk '{print $2}' | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
     echo -n $LHOST | xclip -selection clipboard
     tg-setvar LHOST "$LHOST"
     tg-setvar SUBNET "$SUBNET"
