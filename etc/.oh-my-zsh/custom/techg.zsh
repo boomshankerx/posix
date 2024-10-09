@@ -29,9 +29,6 @@ alias auu='sudo apt update && sudo apt upgrade -y'
 alias uuu='auf && aar'
 alias sc='systemctl'
 
-# DOCKER
-alias dps='docker ps --format "table {{.Names}}\t{{.ID}}"'
-
 # TMUXINATOR
 alias mux=tmuxinator
 . ~/.tmuxinator/tmuxinator.zsh

@@ -62,8 +62,8 @@ plugins=(
     aws
     common-aliases
     git
-    msfvenom
     tg-hacker
+    systemd
     tmux
     tmuxinator
     zsh-autosuggestions
@@ -110,7 +110,6 @@ export GOPATH=$HOME/go
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:$GOPATH/bin
-eval $(thefuck --alias)
 
 precmd(){
     # Print a newline before the prompt, unless it's the
