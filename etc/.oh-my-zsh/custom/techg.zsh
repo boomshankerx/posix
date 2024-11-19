@@ -30,9 +30,10 @@ alias uuu='auf && aar'
 alias sc='systemctl'
 
 # DOCKER
-alias dpss='docker ps | less -S'
+alias dcupl='docker compose up -d && docker compose logs -f'
 alias dpsl='docker ps --format "table {{.ID}}\t{{.Names}}"'
 alias dpsp='docker ps --format "table {{.Names}},{{.Ports}}"'
+alias dpss='docker ps | less -S'
 
 # TMUXINATOR
 alias mux=tmuxinator
