@@ -59,11 +59,12 @@ ZSH_THEME="techg"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    aws
     common-aliases
+    docker
+    docker-compose
     git
-    tg-hacker
     systemd
+    tg-hacker
     tmux
     tmuxinator
     zsh-autosuggestions

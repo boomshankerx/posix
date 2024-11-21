@@ -27,7 +27,8 @@ alias auf='sudo apt update && sudo apt full-upgrade -y'
 alias aar='sudo apt autoremove -y'
 alias auu='sudo apt update && sudo apt upgrade -y'
 alias uuu='auf && aar'
-alias sc='systemctl'
+alias sc='sudo systemctl'
+alias sc-daemon-reload='sudo systemctl daemon-reload'
 
 # DOCKER
 alias dcupl='docker compose up -d && docker compose logs -f'
