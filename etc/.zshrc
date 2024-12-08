@@ -62,11 +62,13 @@ plugins=(
     common-aliases
     docker
     docker-compose
+    fast-syntax-highlighting
     git
     systemd
     tg-hacker
     tmux
     tmuxinator
+    zsh-autocomplete
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
