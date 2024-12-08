@@ -124,5 +124,10 @@ precmd(){
     fi
 }
 
+#OMP
 export POSH_IP=$(tg-ipfull)
 eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
+
+#zsh-autocomplete
+bindkey              '^I'         menu-complete
+bindkey "$terminfo[kcbt]" reverse-menu-complete
