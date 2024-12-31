@@ -64,6 +64,7 @@ plugins=(
     docker-compose
     fast-syntax-highlighting
     git
+    msfvenom
     systemd
     tg-hacker
     tmux
@@ -131,3 +132,6 @@ eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json'
 #zsh-autocomplete
 bindkey              '^I'         menu-complete
 bindkey "$terminfo[kcbt]" reverse-menu-complete
+bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
+bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
+bindkey -M menuselect '^M' .accept-line

@@ -256,7 +256,7 @@ tg-init-config(){
     cat << EOF > $TG_CONF
 #!/usr/bin/env zsh
 export LHOST=
-export LPORT=5420
+export LPORT=4444
 export RHOST=
 export RPORT=
 export BASE=
