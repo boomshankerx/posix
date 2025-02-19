@@ -11,6 +11,7 @@ alias df='df -h'
 alias du1='du -hcd1 | sort -h'
 alias du='du -hc'
 alias e='echo'
+alias free="free -h"
 alias lf='less +F'
 alias psa='ps auxf'
 alias rs="sudo xrandr --output Virtual-1 --auto"
