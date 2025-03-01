@@ -2,6 +2,7 @@
 .imwheelrc
 .oh-my-zsh/custom/plugins/tg-hacker/
 .oh-my-zsh/custom/techg.zsh
+.oh-my-zsh/custom/themes/kali.zsh-theme
 .oh-my-zsh/custom/themes/techg.omp.json
 .oh-my-zsh/custom/themes/techg.zsh-theme
 .tmux.conf
