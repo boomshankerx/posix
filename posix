@@ -25,6 +25,7 @@ install_base() {
     sudo apt-get -y install tldr
     sudo apt-get -y install tmux
     sudo apt-get -y install tmuxinator
+    sudo apt-get -y install tree
     sudo apt-get -y install wget
 
     if [[ -z $DISPLAY ]]; then
