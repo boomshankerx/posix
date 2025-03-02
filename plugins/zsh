@@ -1,5 +1,5 @@
 #ZSH + OH-MY-ZSH
-sudo apt-get -y install zsh zsh-autosuggestions zsh-syntax-highlighting zsh-autocomplete
+sudo apt-get -y install zsh
 rm -fr ~/.oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 sudo chown -R $USER:$USER ~/.oh-my-zsh
