@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-echo "## SYNC LOCAL ##"
-rsync -vrR --files-from=plugins/sync.list --exclude=.git ~/ $home/etc/

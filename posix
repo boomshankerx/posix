@@ -1,26 +1,28 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")"
-home=`pwd`
-os=`uname`
-echo $home
+POSIX_PATH=$(realpath "$0")
+POSIX_HOME=$(dirname "$POSIX_PATH")
+echo $POSIX_PATH
+echo $POSIX_HOME
+cd $POSIX_HOME
+os=`uname -a`
 uname -a
+
+# Configure
+[[ -d ~/.local/bin ]] || mkdir -p ~/.local/bin
+[[ -L ~/.local/bin/posix  ]] || ln -s ~/posix/posix ~/.local/bin/posix
 
 install_base() {
     echo "** Installing base software"
-    #sudo apt-get -y install build-essential cmake
-    #sudo apt-get -y install byobu
-    #sudo apt-get -y install python3-dev python3-pip python3-setuptools
-    #sudo apt-get -y install thefuck
     sudo apt-get -y install bat
     sudo apt-get -y install curl
     sudo apt-get -y install fzf
-    sudo apt-get -y install git 
+    sudo apt-get -y install git
     sudo apt-get -y install htop
     sudo apt-get -y install jq
     sudo apt-get -y install lnav
-    sudo apt-get -y install net-tools
     sudo apt-get -y install powerline
+    sudo apt-get -y install net-tools
     sudo apt-get -y install rsync
     sudo apt-get -y install sudo
     sudo apt-get -y install tldr
@@ -38,8 +40,7 @@ install_base() {
         sudo apt-get -y install xclip
     fi
 
-    mkdir -p ~/.local/bin
-    ln -s /usr/bin/batcat ~/.local/bin/bat 
+    ln -s /usr/bin/batcat ~/.local/bin/bat
 }
 
 install_config() {
@@ -70,7 +71,7 @@ install_fonts() {
 }
 
 install_kali(){
-    echo -e "#\n# Installing Kali\n#\n\n"
+    echo -e "#\n# Installing Kali Tools\n#\n\n"
     plugins/docker
     plugins/kalitools
     plugins/syncthing
@@ -88,9 +89,9 @@ install_net() {
 
 install_vmware() {
     echo -e "#\n# Installing vmware tools\n#\n\n"
-    sudo apt-get -y install open-vm-tools 
+    sudo apt-get -y install open-vm-tools
     if [[ -n $DISPLAY ]]; then
-        sudo apt-get -y install open-vm-tools-desktop 
+        sudo apt-get -y install open-vm-tools-desktop
     fi
 }
 
@@ -98,13 +99,18 @@ init() {
     echo -e "#\n# Initializing base system\n#\n\n"
     sudo apt update
     install_base
-    . plugins/vim
-    . plugins/zsh
-    . plugins/omp
+    plugins/vim
+    plugins/zsh
+    plugins/omp
     if [[ -n $DISPLAY ]]; then
         install_fonts
     fi
     install_config
+}
+
+sync(){
+    echo -e "\n#\n# Sync Config\n#\n"
+    rsync -vrR --files-from=sync.list --exclude=.git ~/ $POSIX_HOME/etc/
 }
 
 plugins() {
@@ -135,8 +141,7 @@ plugins() {
     vim    : Install + Configure VIM
     zsh    : Install oh-my-zsh"
 
-    ls plugins 
-    
+    ls plugins
 }
 
 [ $# == 0 ] && usage
@@ -148,6 +153,7 @@ do
         "dev"         ) install_dev;;
         "fonts"       ) install_fonts;;
         "init"        ) init;;
+        "sync"        ) sync;;
         "kali"        ) install_kali;;
         "net"         ) install_net;;
         "vmware"      ) install_vmware;;
