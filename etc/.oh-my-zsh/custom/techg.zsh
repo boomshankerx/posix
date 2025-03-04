@@ -6,6 +6,7 @@ export NCURSES_NO_UTF8_ACS=1
 #
 
 # COMMON
+alias b=bat
 alias c=cat
 alias df='df -h'
 alias du1='du -hcd1 | sort -h'
@@ -36,6 +37,13 @@ alias dcupl='docker compose up -d && docker compose logs -f'
 alias dpsl='docker ps --format "table {{.ID}}\t{{.Names}}"'
 alias dpsp='docker ps --format "table {{.Names}},{{.Ports}}"'
 alias dpss='docker ps | less -S'
+
+#FZF
+export FZF_DEFAULT_COMMAND='find . -type f'
+#export FZF_COMPLETION_TRIGGER='~~'
+alias f='fzf'
+alias fp='fzf --preview "bat {1}"'
+alias fv='fzf --print0 | xargs -0 -o vim -O'
 
 # TMUXINATOR
 alias mux=tmuxinator

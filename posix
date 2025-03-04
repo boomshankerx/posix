@@ -28,6 +28,7 @@ install_base() {
     sudo apt-get -y install tmuxinator
     sudo apt-get -y install tree
     sudo apt-get -y install wget
+    sudo apt-get -y install zoxide
 
     if [[ -z $DISPLAY ]]; then
         sudo apt-get -y install vim-nox
@@ -36,6 +37,9 @@ install_base() {
         sudo apt-get -y install vim-gtk3
         sudo apt-get -y install xclip
     fi
+
+    mkdir -p ~/.local/bin
+    ln -s /usr/bin/batcat ~/.local/bin/bat 
 }
 
 install_config() {
