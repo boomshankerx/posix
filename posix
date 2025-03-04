@@ -43,11 +43,33 @@ install_base() {
     ln -s /usr/bin/batcat ~/.local/bin/bat
 }
 
-install_config() {
-    echo -e "\n#\n# Installing config files\n#"
+install_conf() {
     git pull
     cp -vrT etc ~
-    [ -L ~/s ] || ln -s ~/scripts ~/s
+    # [ -L ~/s ] || ln -s ~/scripts ~/s
+}
+
+install_config() {
+    echo -e "\n#\n# Installing config files\n#"
+
+    git pull
+
+    SRC=$(realpath etc)
+    DST=$HOME
+
+    echo $SRC
+    echo $DST
+
+    rm -fr $DST/scripts
+    rm -fr $DST/.tmuxinator
+    
+    re="s|^$SRC/||"
+    find $SRC -type f | sed "$re" | while read -r file; do
+        echo "[+] Backing up: $DST/$file"
+        [[ -L $DST/$file ]] || mv -v "$DST/$file" "$DST/$file.bak"
+    done
+
+    stow -d $SRC -t $DST .
 
 }
 
@@ -150,6 +172,7 @@ do
     case $arg in
         "base"        ) install_base;;
         "config"      ) install_config;;
+        "conf"        ) install_conf;;
         "dev"         ) install_dev;;
         "fonts"       ) install_fonts;;
         "init"        ) init;;
