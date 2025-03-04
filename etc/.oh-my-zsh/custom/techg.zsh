@@ -45,6 +45,10 @@ alias f='fzf'
 alias fp='fzf --preview "bat {1}"'
 alias fv='fzf --print0 | xargs -0 -o vim -O'
 
+#POSIX
+alias pconf='~/posix/posix config'
+alias psync='~/posix/posix sync'
+
 # TMUXINATOR
 alias mux=tmuxinator
 . ~/.tmuxinator/tmuxinator.zsh
