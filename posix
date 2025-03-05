@@ -50,26 +50,28 @@ install_conf() {
 }
 
 install_config() {
-    echo -e "\n#\n# Installing config files\n#"
+    echo -e "\n#\n# Installing config files\n#\n"
 
     git pull
 
     SRC=$(realpath etc)
     DST=$HOME
 
-    echo $SRC
-    echo $DST
-
     rm -fr $DST/scripts
     rm -fr $DST/.tmuxinator
-    
+
     re="s|^$SRC/||"
     find $SRC -type f | sed "$re" | while read -r file; do
-        echo "[+] Backing up: $DST/$file"
-        [[ -L $DST/$file ]] || mv -v "$DST/$file" "$DST/$file.bak"
+        if [[ -f $DST/$file ]] && [[ ! -L $DST/$file ]]; then
+            echo "[+] Backing up: $DST/$file"
+            echo -n "  "
+            mv -v "$DST/$file" "$DST/$file.bak"
+        fi
     done
 
     stow -d $SRC -t $DST .
+    echo
+    echo "[+] Configuration Deployed"
 
 }
 
