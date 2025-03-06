@@ -4,6 +4,7 @@ POSIX_PATH=$(realpath "$0")
 POSIX_HOME=$(dirname "$POSIX_PATH")
 #echo $POSIX_PATH
 #echo $POSIX_HOME
+cd $POSIX_HOME
 lsb_release -sa
 
 # Configure
@@ -74,23 +75,24 @@ install_config() {
     mkdir -p $DST/.ssh
 
     echo "[+] Backing up existing config" 
-    re="s|^$SRC/||"
+    re="s|^$SRC/|$DST/|"
     find $SRC -type f | sed "$re" | while read -r file; do
-        path="$DST/$file"
-        linked=0
-        while [ -n "$path" ] && [ "$path" != "$HOME" ]; do
-            if [ -L "$path" ]; then
-                linked=1
-                #target=$(readlink "$path")
-                #echo "Symlink found: $path -> $target"
+        temp="$file"
+        linked=false
+        while [ -n "$temp" ] && [ "$temp" != "$HOME" ]; do
+            if [ -L "$temp" ]; then
+                linked=true
+                #target=$(readlink "$temp")
+                #echo "Symlink found: $temp -> $target"
             fi
-            path=$(dirname "$path")
+            temp=$(dirname "$temp")
         done
 
-        if [[ -f $path ]] && [[ ! -L $path ]] && [[ ! $linked ]]; then
-            echo "[+] Backing up: $DST/$file"
+        if [[ -f $file ]] && [[ ! -L $file ]] && [[ $linked == false ]]; then
+        #if [[ -f $file ]] && [[ ! -L $file ]]; then
+            echo "[+] Backing up: $file"
             echo -n "  "
-            mv -v "$DST/$file" "$DST/$file.bak"
+            mv -v "$file" "$file.bak"
         fi
     done
 
