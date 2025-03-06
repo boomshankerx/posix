@@ -13,6 +13,7 @@ sudo apt install -y dirsearch
 sudo apt install -y enum4linux-ng
 sudo apt install -y feroxbuster
 sudo apt install -y ghidra
+sudo apt install -y name-that-hash
 sudo apt install -y remmina
 sudo apt install -y sliver
 
