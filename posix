@@ -24,6 +24,7 @@ install_base() {
     sudo apt-get -y install powerline
     sudo apt-get -y install net-tools
     sudo apt-get -y install rsync
+    sudo apt-get -y install stow
     sudo apt-get -y install sudo
     sudo apt-get -y install tldr
     sudo apt-get -y install tmux
