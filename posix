@@ -2,11 +2,9 @@
 
 POSIX_PATH=$(realpath "$0")
 POSIX_HOME=$(dirname "$POSIX_PATH")
-echo $POSIX_PATH
-echo $POSIX_HOME
-cd $POSIX_HOME
-os=`uname -a`
-uname -a
+#echo $POSIX_PATH
+#echo $POSIX_HOME
+lsb_release -sa
 
 # Configure
 [[ -d ~/.local/bin ]] || mkdir -p ~/.local/bin
@@ -23,8 +21,8 @@ install_base() {
         htop
         jq
         lnav
-        powerline
         net-tools
+        powerline
         rsync
         stow
         sudo
@@ -66,26 +64,49 @@ install_conf() {
 install_config() {
     echo -e "\n#\n# Installing config files\n#\n"
 
-    git pull
+    git pull -q
 
     SRC=$(realpath etc)
     DST=$HOME
 
     rm -fr $DST/scripts
     rm -fr $DST/.tmuxinator
+    mkdir -p $DST/.ssh
 
+    echo "[+] Backing up existing config" 
     re="s|^$SRC/||"
     find $SRC -type f | sed "$re" | while read -r file; do
-        if [[ -f $DST/$file ]] && [[ ! -L $DST/$file ]]; then
+        path="$DST/$file"
+        linked=0
+        while [ -n "$path" ] && [ "$path" != "$HOME" ]; do
+            if [ -L "$path" ]; then
+                linked=1
+                #target=$(readlink "$path")
+                #echo "Symlink found: $path -> $target"
+            fi
+            path=$(dirname "$path")
+        done
+
+        if [[ -f $path ]] && [[ ! -L $path ]] && [[ ! $linked ]]; then
             echo "[+] Backing up: $DST/$file"
             echo -n "  "
             mv -v "$DST/$file" "$DST/$file.bak"
         fi
     done
 
-    stow -d $SRC -t $DST .
-    echo
-    echo "[+] Configuration Deployed"
+    echo "[+] Symlinking config files" 
+    stow -v -d $SRC -t $DST .
+    
+
+    # Distro specific settings
+    echo "[+] Deploying distro specific settings"
+    distro=$(lsb_release -si)
+    case $distro in
+        "Linuxmint" )
+            gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
+            gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg '-x'
+            ;;
+    esac
 
 }
 
