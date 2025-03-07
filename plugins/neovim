@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo "[+] Installing neovim"
+sudo apt install -qqy neovim luarocks npm

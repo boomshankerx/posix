@@ -14,6 +14,7 @@ alias du='du -hc'
 alias e='echo'
 alias free="free -h"
 alias lf='less +F'
+alias nv='nvim'
 alias psa='ps auxf'
 alias rs="sudo xrandr --output Virtual-1 --auto"
 alias sb=subl

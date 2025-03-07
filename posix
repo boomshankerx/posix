@@ -2,14 +2,15 @@
 
 POSIX_PATH=$(realpath "$0")
 POSIX_HOME=$(dirname "$POSIX_PATH")
-#echo $POSIX_PATH
-#echo $POSIX_HOME
+DISTRO=$(lsb_release -si)
 cd $POSIX_HOME
 lsb_release -sa
+#echo $POSIX_PATH
+#echo $POSIX_HOME
 
 # Configure
 [[ -d ~/.local/bin ]] || mkdir -p ~/.local/bin
-[[ -L ~/.local/bin/posix  ]] || ln -s ~/posix/posix ~/.local/bin/posix
+[[ -L ~/.local/bin/posix ]] || ln -s ~/posix/posix ~/.local/bin/posix
 
 install_base() {
     echo "** Installing base software"
@@ -22,7 +23,6 @@ install_base() {
         htop
         jq
         lnav
-        neovim
         net-tools
         powerline
         rsync
@@ -35,6 +35,8 @@ install_base() {
         wget
         zoxide
     )
+
+    # Check if gui environment
     if [[ -z $DISPLAY ]]; then
         apps+=(
             vim-nox
@@ -42,7 +44,7 @@ install_base() {
     else
         apps+=(
             git-gui
-            gitk 
+            gitk
             kitty
             terminator
             vim-gtk3
@@ -54,6 +56,13 @@ install_base() {
         echo "[+] Installing $app"
         sudo apt-get install -qqy $app
     done
+
+    # Distro specific
+    case "$DISTRO" in
+    "Kali" | "Linuxmint")
+        echo "[+] Installing distro specific packages"
+        ;;
+    esac
 
     ln -s /usr/bin/batcat ~/.local/bin/bat
 }
@@ -72,7 +81,7 @@ install_config() {
     SRC=$(realpath etc)
     DST=$HOME
 
-    # Cleanup existing 
+    # Cleanup existing
 
     rm -fr $DST/.config/kitty
     rm -fr $DST/.config/nvim
@@ -82,7 +91,7 @@ install_config() {
 
     mkdir -p $DST/.ssh
 
-    echo "[+] Backing up existing config" 
+    echo "[+] Backing up existing config"
     re="s|^$SRC/|$DST/|"
     find $SRC -type f | sed "$re" | while read -r file; do
         temp="$file"
@@ -101,21 +110,18 @@ install_config() {
         fi
     done
 
-    echo "[+] Symlinking config files" 
+    echo "[+] Symlinking config files"
     stow -v -d $SRC -t $DST .
-    
 
     # Distro specific settings
     echo "[+] Deploying distro specific settings"
-    distro=$(lsb_release -si)
-    case $distro in
-        "Linuxmint" )
-            gsettings set org.cinnamon.desktop.default-applications.terminal exec 'kitty'
-            gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
-            gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 10'
-            ;;
-        "Kali" )
-            ;;
+    case $DISTRO in
+    "Linuxmint")
+        gsettings set org.cinnamon.desktop.default-applications.terminal exec 'kitty'
+        gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
+        gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 10'
+        ;;
+    "Kali") ;;
     esac
 
 }
@@ -139,7 +145,7 @@ install_fonts() {
     fc-cache -fv
 }
 
-install_kali(){
+install_kali() {
     echo -e "#\n# Installing Kali Tools\n#\n\n"
     plugins/docker
     plugins/kalitools
@@ -177,7 +183,7 @@ init() {
     install_config
 }
 
-sync(){
+sync() {
     echo -e "\n#\n# Sync Config\n#\n"
     rsync -vrR --files-from=sync.list --exclude=.git ~/ $POSIX_HOME/etc/
 }
@@ -187,7 +193,7 @@ plugins() {
 }
 
 # PROCESS ARGUMENTS
- usage() {
+usage() {
     echo "USAGE posix [options]
     Options
     =======
@@ -214,20 +220,18 @@ plugins() {
 }
 
 [ $# == 0 ] && usage
-for arg in $@
-do
+for arg in $@; do
     case $arg in
-        "base"        ) install_base;;
-        "config"      ) install_config;;
-        "conf"        ) install_conf;;
-        "dev"         ) install_dev;;
-        "fonts"       ) install_fonts;;
-        "init"        ) init;;
-        "sync"        ) sync;;
-        "kali"        ) install_kali;;
-        "net"         ) install_net;;
-        "vmware"      ) install_vmware;;
-        *             ) plugins $arg;;
+    "base") install_base ;;
+    "config") install_config ;;
+    "conf") install_conf ;;
+    "dev") install_dev ;;
+    "fonts") install_fonts ;;
+    "init") init ;;
+    "sync") sync ;;
+    "kali") install_kali ;;
+    "net") install_net ;;
+    "vmware") install_vmware ;;
+    *) plugins $arg ;;
     esac
 done
-
