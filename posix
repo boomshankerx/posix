@@ -22,12 +22,12 @@ install_base() {
         htop
         jq
         lnav
+        neovim
         net-tools
         powerline
         rsync
         stow
         sudo
-        terminator
         tldr
         tmux
         tmuxinator
@@ -41,8 +41,10 @@ install_base() {
         )
     else
         apps+=(
-            gitk 
             git-gui
+            gitk 
+            kitty
+            terminator
             vim-gtk3
             xclip
         )
@@ -70,8 +72,14 @@ install_config() {
     SRC=$(realpath etc)
     DST=$HOME
 
-    rm -fr $DST/scripts
+    # Cleanup existing 
+
+    rm -fr $DST/.config/kitty
+    rm -fr $DST/.config/nvim
+    rm -fr $DST/.config/terminator
     rm -fr $DST/.tmuxinator
+    rm -fr $DST/scripts
+
     mkdir -p $DST/.ssh
 
     echo "[+] Backing up existing config" 
@@ -82,14 +90,11 @@ install_config() {
         while [ -n "$temp" ] && [ "$temp" != "$HOME" ]; do
             if [ -L "$temp" ]; then
                 linked=true
-                #target=$(readlink "$temp")
-                #echo "Symlink found: $temp -> $target"
             fi
             temp=$(dirname "$temp")
         done
 
         if [[ -f $file ]] && [[ ! -L $file ]] && [[ $linked == false ]]; then
-        #if [[ -f $file ]] && [[ ! -L $file ]]; then
             echo "[+] Backing up: $file"
             echo -n "  "
             mv -v "$file" "$file.bak"
@@ -105,8 +110,11 @@ install_config() {
     distro=$(lsb_release -si)
     case $distro in
         "Linuxmint" )
-            gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
-            gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg '-x'
+            gsettings set org.cinnamon.desktop.default-applications.terminal exec 'kitty'
+            gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
+            gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 10'
+            ;;
+        "Kali" )
             ;;
     esac
 
