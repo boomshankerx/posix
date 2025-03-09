@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
 echo "[+] Installing neovim"
-sudo apt install -qqy neovim luarocks npm
+sudo apt install -qqy \
+  fd-find \
+  luarocks \
+  neovim \
+  npm \
+  ripgrep

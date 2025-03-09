@@ -13,6 +13,7 @@ alias du1='du -hcd1 | sort -h'
 alias du='du -hc'
 alias e='echo'
 alias free="free -h"
+alias gogh='bash -c  "$(wget -qO- https://git.io/vQgMr)"'
 alias lf='less +F'
 alias nv='nvim'
 alias psa='ps auxf'
