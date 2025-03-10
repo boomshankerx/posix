@@ -4,10 +4,12 @@
 [profiles]
   [[default]]
     background_color = "#1E2127"
+    background_darkness = 0.95
+    background_type = transparent
     font = FiraCode Nerd Font Mono 11
     foreground_color = "#5C6370"
     show_titlebar = False
-    palette = "#000000:#E06C75:#98C379:#D19A66:#61AFEF:#C678DD:#56B6C2:#ABB2BF:#5C6370:#E06C75:#98C379:#D19A66:#61AFEF:#C678DD:#56B6C2:#FFFEFE"
+    palette = "#000000:#e06c75:#98c379:#d19a66:#61afef:#c678dd:#56b6c2:#abb2bf:#5c6370:#e06c75:#98c379:#d19a66:#61afef:#c678dd:#56b6c2:#fffefe"
     use_system_font = False
 [layouts]
   [[default]]
