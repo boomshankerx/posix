@@ -22,6 +22,7 @@ alias sb=subl
 alias v='vim'
 alias vi='gvim'
 alias x="clip"
+alias xc='xclip -selection clipboard'
 
 # DEBIAN
 alias ag='sudo apt'
@@ -69,6 +70,7 @@ clip() {
         cat $1
         cat $1 | xclip -selection clipboard
     fi
+
 }
 
 # Remove hash comments from file and output to stdout

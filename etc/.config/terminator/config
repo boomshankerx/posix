@@ -3,13 +3,13 @@
   zoom_in = <Primary>equal
 [profiles]
   [[default]]
-    background_color = "#1E2127"
+    background_color = "#272A34"
     background_darkness = 0.95
     background_type = transparent
     font = FiraCode Nerd Font Mono 11
-    foreground_color = "#5C6370"
+    foreground_color = "#FFFFFF"
     show_titlebar = False
-    palette = "#000000:#e06c75:#98c379:#d19a66:#61afef:#c678dd:#56b6c2:#abb2bf:#5c6370:#e06c75:#98c379:#d19a66:#61afef:#c678dd:#56b6c2:#fffefe"
+    palette = "#1F2229:#D41919:#5EBDAB:#FEA44C:#367BF0:#BF2E5D:#49AEE6:#E6E6E6:#8C42AB:#EC0101:#47D4B9:#FF8A18:#277FFF:#D71655:#05A1F7:#FFFFFF"
     use_system_font = False
 [layouts]
   [[default]]

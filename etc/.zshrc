@@ -70,7 +70,6 @@ plugins=(
     tmuxinator
     zsh-autocomplete
     zsh-autosuggestions
-    zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -114,6 +113,18 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:$GOPATH/bin
 
+# zsh-autosuggestions
+#export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
+export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+# zsh-autocomplete
+bindkey              '^I'         menu-complete
+bindkey "$terminfo[kcbt]" reverse-menu-complete
+bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
+bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
+bindkey -M menuselect '^M' .accept-line
+
+
 precmd(){
     # Print a newline before the prompt, unless it's the
     # first prompt in the process.
@@ -128,11 +139,6 @@ precmd(){
 export POSH_IP=$(tg-ipfull)
 [[ ! $(tty) =~ ^/dev/tty[1-6] ]] && eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
 
+#zoxide
 eval "$(zoxide init zsh)"
 
-#zsh-autocomplete
-bindkey              '^I'         menu-complete
-bindkey "$terminfo[kcbt]" reverse-menu-complete
-bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
-bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
-bindkey -M menuselect '^M' .accept-line

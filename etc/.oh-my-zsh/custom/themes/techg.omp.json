@@ -320,7 +320,7 @@
             "always_enabled": true,
             "cache_duration": "none"
           },
-          "template": "\ue285\ueab6 ",
+          "template": "$ ",
           "foreground": "#e0f8ff",
           "type": "status",
           "style": "plain",

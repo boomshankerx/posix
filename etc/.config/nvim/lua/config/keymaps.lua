@@ -10,7 +10,7 @@ local remap = { remap = true, silent = true }
 -- Sainer defaults
 map("i", "jj", "<esc>", defaults)
 map("n", "<C-s>", "<cmd> w <CR>", defaults)
-map("n", "Y", "yy", defaults)
+--map("n", "Y", "yy", defaults)
 map("v", "<F9>", ":sort<CR>", defaults)
 
 -- Comments
