@@ -4,16 +4,14 @@ POSIX_PATH=$(realpath "$0")
 POSIX_HOME=$(dirname "$POSIX_PATH")
 DISTRO=$(lsb_release -si)
 cd $POSIX_HOME
-lsb_release -sa
-#echo $POSIX_PATH
-#echo $POSIX_HOME
+lsb_release -sa 2>/dev/null
 
 # Configure
 [[ -d ~/.local/bin ]] || mkdir -p ~/.local/bin
 [[ -L ~/.local/bin/posix ]] || ln -s ~/posix/posix ~/.local/bin/posix
 
 install_base() {
-  echo "** Installing base software"
+  echo "\n### Installing base software\n"
 
   apps=(
     bat
@@ -69,7 +67,7 @@ install_base() {
 }
 
 install_config() {
-  echo -e "\n#\n# Installing config files\n#\n"
+  echo -e "\n### Installing config files\n"
 
   git pull -q
 
@@ -122,7 +120,7 @@ install_config() {
 }
 
 install_dev() {
-  echo "\n#\n# Installing development packages\n#"
+  echo "\n### Installing development packages\n"
   sudo apt-get -y install csstidy
   sudo apt-get -y install tidy
 }
@@ -141,14 +139,14 @@ install_fonts() {
 }
 
 install_kali() {
-  echo -e "#\n# Installing Kali Tools\n#\n\n"
+  echo -e "\n### Installing Kali Tools\n"
   plugins/docker
   plugins/kalitools
   plugins/syncthing
 }
 
 install_net() {
-  echo "\n#\n#  Installing network packages\n#"
+  echo "\n### Installing network packages\n"
   sudo apt-get -y install kismet
   sudo apt-get -y install nmap
   if [[ -n $DISPLAY ]]; then
@@ -158,7 +156,7 @@ install_net() {
 }
 
 install_vmware() {
-  echo -e "#\n# Installing vmware tools\n#\n\n"
+  echo -e "\n#### Installing vmware tools\n"
   sudo apt-get -y install open-vm-tools
   if [[ -n $DISPLAY ]]; then
     sudo apt-get -y install open-vm-tools-desktop
@@ -166,7 +164,7 @@ install_vmware() {
 }
 
 init() {
-  echo -e "#\n# Initializing base system\n#\n\n"
+  echo -e "\n### Initializing base system\n"
   sudo apt update
   install_base
   plugins/vim
@@ -179,7 +177,7 @@ init() {
 }
 
 sync() {
-  echo -e "\n#\n# Sync Config\n#\n"
+  echo -e "\n### Sync Config\n"
   rsync -vrR --files-from=sync.list --exclude=.git ~/ $POSIX_HOME/etc/
 }
 
