@@ -109,9 +109,12 @@ install_config() {
   # Distro specific settings
   echo "[+] Deploying distro specific settings"
   case $DISTRO in
-  "Kali") ;;
+  "Kali")
+    gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 11'
+    sed -i"" "s/TerminalEmulator=.*/TerminalEmulator=terminator/g" helpers.rc
+    ;;
   "Linuxmint")
-    gsettings set org.cinnamon.desktop.default-applications.terminal exec 'kitty'
+    gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
     gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 11'
     ;;
