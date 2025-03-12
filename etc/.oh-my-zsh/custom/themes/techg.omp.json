@@ -65,6 +65,7 @@
     {
       "type": "prompt",
       "alignment": "right",
+      "overflow": "hide",
       "segments": [
         {
           "properties": {
