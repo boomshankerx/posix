@@ -15,6 +15,7 @@ map("v", "<F9>", ":sort<CR>", defaults)
 
 -- Comments
 map("n", "<C-/>", "gcc", remap)
+map("n", "<C-_>", "gcc", remap)
 map("n", "q", "gc", remap)
 map("n", "qq", "gcc", remap)
 map("v", "<C-/>", "gc", remap)
