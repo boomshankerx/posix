@@ -9,7 +9,8 @@
     font = FiraCode Nerd Font Mono 11
     foreground_color = "#FFFFFF"
     show_titlebar = False
-    palette = "#1F2229:#D41919:#5EBDAB:#FEA44C:#367BF0:#BF2E5D:#49AEE6:#E6E6E6:#8C42AB:#EC0101:#47D4B9:#FF8A18:#277FFF:#D71655:#05A1F7:#FFFFFF"
+    scrollback_lines = 10000
+    palette = "#1f2229:#d41919:#5ebdab:#fea44c:#367bf0:#bf2e5d:#49aee6:#e6e6e6:#8c42ab:#ec0101:#47d4b9:#ff8a18:#277fff:#d71655:#05a1f7:#ffffff"
     use_system_font = False
 [layouts]
   [[default]]
