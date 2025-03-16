@@ -13,7 +13,7 @@ export LIST_PW_M="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-pa
 export LIST_PW_S="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt"
 export LIST_ROCK="/usr/share/wordlists/rockyou.txt"
 export LIST_SECLISTS="/usr/share/wordlists/seclists"
-export TG_CONF=~/.tg_hacker
+export TG_CONF=~/.tg-hacker
 
 #
 # ALIASES
@@ -69,7 +69,7 @@ alias grep-email='grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\
 alias grep-ip='grep -E -o "(2[0-4][0-9]|25[0-5]|1?[0-9]?[0-9])[.](2[0-4][0-9]|25[0-5]|1?[0-9]?[0-9])[.](2[0-4][0-9]|25[0-5]|1?[0-9]?[0-9])[.](2[0-4][0-9]|25[0-5]|1?[0-9]?[0-9])"'
 
 #
-# FUNCTIONS
+# HELPERS
 #
 
 add-host() {
@@ -93,26 +93,80 @@ base() {
     cd $BASE
 }
 
-# Select target ip:port
-focus() {
-    HOST=${1:-"EMPTY"}
-    PORT=${2:-"EMPTY"}
-    # Set shell variables
-    [[ "$HOST" != "EMPTY" ]] && export RHOST="$HOST"
-    [[ "$PORT" != "EMPTY" ]] && export RPORT="$PORT"
-    # Add target to hosts file as rhost replacing as necessary
-    add-host
-    # Add variables to sync $TG_CONF file 
-    tg-setvar RHOST "$RHOST"
-    tg-setvar RPORT "$RPORT"
+# Initialize ctf folder
+tg-init() {
+    BASE=${1:-$(pwd)}
+    [[ -d $BASE ]] || mkdir -p $BASE
+    cd $BASE
+    BASE=$(pwd)
+    tg-setvar BASE $BASE
+    touch notes.txt
+}
+
+tg-setvar(){
+    if [[ $# < 2 ]]; then
+        echo "Usage: tg-setvar VAR VALUE"
+    fi
+    local var="$1"
+    local value="$2"
+    sed -i "/$var=/d" $TG_CONF
+    echo "export $var=$value" >> $TG_CONF
 }
 
 
+tg-init-config(){
+    cat << EOF > $TG_CONF
+#!/usr/bin/env zsh
+export LHOST=
+export LPORT=4444
+export RHOST=
+export RPORT=
+export RURL=
+export BASE=
+EOF
+}
+
+#
+# Target
+#
+
+target() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: target RHOST [RPORT]"
+        echo "RHOST: $RHOST:$RPORT"
+        return
+    fi
+    if [[ "$1" =~ ^https?://* ]] ; then
+        echo "URL: $1"
+        export RURL="$1"
+    fi
+    echo "RHOST: $1"
+    export RHOST="$1"
+    tg-setvar RHOST "$1"
+
+    if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
+        echo "RPORT: $2"
+        export RPORT="$2"
+        tg-setvar RPORT "$2"
+    fi
+}
+
 # Set local callback port
 lport() {
-    LPORT=${1:-"4444"}
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: lport LPORT"
+        echo "LPORT: $LPORT"
+        return
+    fi
+    export LPORT=$1
     tg-setvar LPORT "$LPORT"
     echo "LPORT: $LPORT"
+}
+
+# Copy rhost to clipboard
+rhost() {
+    echo -n $RHOST | xclip -selection clipboard
+    echo $RHOST:$RPORT
 }
 
 listen() {
@@ -143,11 +197,6 @@ me() {
     echo "$SUBNET"
 }
 
-# Copy rhost to clipboard
-rhost() {
-    echo -n $RHOST | xclip -selection clipboard
-    echo $RHOST
-}
 
 # Launch python http server in current folder 
 serve() {
@@ -242,36 +291,7 @@ tg-hashcatshow() {
 tg-hydra() {
 }
 
-# Initialize ctf folder
-tg-init() {
-    BASE=${1:-$(pwd)}
-    [[ -d $BASE ]] || mkdir -p $BASE
-    cd $BASE
-    BASE=$(pwd)
-    tg-setvar BASE $BASE
-    touch notes.txt
-}
 
-tg-init-config(){
-    cat << EOF > $TG_CONF
-#!/usr/bin/env zsh
-export LHOST=
-export LPORT=4444
-export RHOST=
-export RPORT=
-export BASE=
-EOF
-}
-
-tg-setvar(){
-    if [[ $# < 2 ]]; then
-        echo "Wrong args"
-    fi
-    local var="$1"
-    local value="$2"
-    sed -i "/$var=/d" $TG_CONF
-    echo "export $var=$value" >> $TG_CONF
-}
 
 tg-ssh() {
     sshclean
@@ -310,7 +330,6 @@ msfhandle() {
     done
 }
 
-
 #
 # NMAP
 #
@@ -327,7 +346,7 @@ nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                         
 nmap-script-all()     { sudo nmap -v -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
 nmap-script-vuln()    { sudo nmap -v -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -v -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
-nmap-rust()           { sudo rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                   -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-rust()           { sudo rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                 -oN ${1:-$RHOST}-nmap-script-all.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}
@@ -343,4 +362,6 @@ nmap-ports-parse() {
     echo "RPORTS=$RPORTS"
 }
 
+
 [[ -f $TG_CONF ]] || tg-init-config
+source ~/.tg-hacker
