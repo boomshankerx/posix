@@ -188,8 +188,14 @@ listen-file() {
 # Get ip address of local interface default: eth0
 me() {
     dev=${1:-"eth0"}
-    export LHOST=$(tg-ipdev $dev)
-    export SUBNET=$(ip a show dev $dev | grep "inet " | awk '{print $2}' | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
+    if [[ "$1" ]]; then 
+        export LHOST=$(ip a | grep "$1" | grep "inet " | awk '{ print $2 }')
+    else
+        export LHOST=$(ip a | grep -P "eth|ens[\\d]{2}" | grep "inet " | awk '{ print $2 }')
+    fi
+        
+    export SUBNET=$(echo -n $LHOST | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
+    export LHOST=$(echo $LHOST | cut -d'/' -f1)
     echo -n $LHOST | xclip -selection clipboard
     tg-setvar LHOST "$LHOST"
     tg-setvar SUBNET "$SUBNET"
