@@ -189,9 +189,9 @@ listen-file() {
 me() {
     dev=${1:-"eth0"}
     if [[ "$1" ]]; then 
-        export LHOST=$(ip a | grep "$1" | grep "inet " | awk '{ print $2 }')
+        export LHOST=$(ip a | grep "$1" | grep "inet " | awk '{ print $2 }' | head -1)
     else
-        export LHOST=$(ip a | grep -P "eth|ens[\\d]{2}" | grep "inet " | awk '{ print $2 }')
+        export LHOST=$(ip a | grep -P "eth|ens[\\d]{2}" | grep "inet " | awk '{ print $2 }' | head -1)
     fi
         
     export SUBNET=$(echo -n $LHOST | sed -E 's/[0-9]{1,3}\/([0-9]{1,2})/0\/\1/g')
