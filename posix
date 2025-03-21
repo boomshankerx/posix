@@ -72,20 +72,20 @@ install_config() {
   git pull -q
 
   SRC=$(realpath etc)
-  DST=$HOME
 
   # Cleanup existing
 
-  rm -fr $DST/.config/kitty
-  rm -fr $DST/.config/nvim
-  rm -fr $DST/.config/terminator
-  rm -fr $DST/.tmuxinator
-  rm -fr $DST/scripts
+  rm -fr $HOME/.config/kitty
+  rm -fr $HOME/.config/nvim
+  rm -fr $HOME/.config/terminator
+  rm -fr $HOME/.tmuxinator
+  rm -fr $HOME/scripts
 
-  mkdir -p $DST/.ssh
+  mkdir -p $HOME/.ssh
+  mkdir -p $HOME/.config
 
   echo "[+] Backing up existing config"
-  re="s|^$SRC/|$DST/|"
+  re="s|^$SRC/|$HOME/|"
   find $SRC -type f | sed "$re" | while read -r file; do
     temp="$file"
     linked=false
@@ -104,7 +104,7 @@ install_config() {
   done
 
   echo "[+] Symlinking config files"
-  stow -v -d $SRC -t $DST .
+  stow -v -d $SRC -t $HOME .
 
   # Distro specific settings
   echo "[+] Deploying distro specific settings"
