@@ -41,6 +41,10 @@ alias dpsl='docker ps --format "table {{.ID}}\t{{.Names}}"'
 alias dpsp='docker ps --format "table {{.Names}},{{.Ports}}"'
 alias dpss='docker ps | less -S'
 
+dpspp (){
+    dpsp | awk -F'[ ,]' '/->/{split($1, name, ","); container=name[1]; for(i=2; i<=NF; i++) if($i ~ /->/) {split($i, ports, "->"); split(ports[1], ext, ":"); port=ext[length(ext)]; if (!seen[container,port]++) ports_array[container] = ports_array[container] (ports_array[container]?",":"") port}} END {for (c in ports_array) print c ": " ports_array[c]}' | sort
+}
+
 #FZF
 export FZF_DEFAULT_COMMAND='find . -type f'
 #export FZF_COMPLETION_TRIGGER='~~'
