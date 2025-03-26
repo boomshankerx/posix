@@ -118,7 +118,7 @@ export PATH=$PATH:$GOPATH/bin
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 # zsh-autocomplete
-bindkey              '^I'         menu-complete
+bindkey '^I' menu-complete
 bindkey "$terminfo[kcbt]" reverse-menu-complete
 bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
 bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
