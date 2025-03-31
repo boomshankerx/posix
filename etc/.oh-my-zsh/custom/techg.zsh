@@ -68,6 +68,14 @@ alias help-tmux="less ~/.tmux.conf"
 # FUNCTIONS
 #
 
+# Auto-activate when cd'ing into a directory with a venv
+function cd() {
+    builtin cd "$@"
+    if [ -d ".venv" ]; then
+        source .venv/bin/activate
+    fi
+}
+
 # Copy file to clipboard
 clip() {
     if [[ -f $1 ]]; then
