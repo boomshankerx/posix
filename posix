@@ -2,7 +2,7 @@
 
 POSIX_PATH=$(realpath "$0")
 POSIX_HOME=$(dirname "$POSIX_PATH")
-cd $POSIX_HOME
+cd "$POSIX_HOME" || exit
 lsb_release -sa 2>/dev/null
 
 . /etc/os-release
@@ -112,7 +112,7 @@ install_config() {
   case $ID in
   "kali")
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 11'
-    sed -i"" "s/TerminalEmulator=.*/TerminalEmulator=terminator/g" helpers.rc
+    sed -i "s/TerminalEmulator=.*/TerminalEmulator=terminator/g" .config/xfce4/helpers.rc
     ;;
   "linuxmint")
     gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
