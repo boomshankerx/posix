@@ -2,16 +2,19 @@
 
 POSIX_PATH=$(realpath "$0")
 POSIX_HOME=$(dirname "$POSIX_PATH")
-DISTRO=$(lsb_release -si)
 cd $POSIX_HOME
 lsb_release -sa 2>/dev/null
+
+. /etc/os-release
+
+git pull -q
 
 # Configure
 [[ -d ~/.local/bin ]] || mkdir -p ~/.local/bin
 [[ -L ~/.local/bin/posix ]] || ln -s ~/posix/posix ~/.local/bin/posix
 
 install_base() {
-  echo "\n### Installing base software\n"
+  echo -e "\n### Installing base software\n"
 
   apps=(
     bat
@@ -51,14 +54,14 @@ install_base() {
     )
   fi
 
-  for app in ${apps[@]}; do
+  for app in "${apps[@]}"; do
     echo "[+] Installing $app"
-    sudo apt-get install -qqy $app
+    sudo apt-get install -qqy "$app"
   done
 
   # Distro specific
-  case "$DISTRO" in
-  "Kali" | "Linuxmint")
+  case "$ID" in
+  "kali" | "linuxmint")
     echo "[+] Installing distro specific packages"
     ;;
   esac
@@ -68,8 +71,6 @@ install_base() {
 
 install_config() {
   echo -e "\n### Installing config files\n"
-
-  git pull -q
 
   SRC=$(realpath etc)
 
@@ -108,24 +109,18 @@ install_config() {
 
   # Distro specific settings
   echo "[+] Deploying distro specific settings"
-  case $DISTRO in
-  "Kali")
+  case $ID in
+  "kali")
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 11'
     sed -i"" "s/TerminalEmulator=.*/TerminalEmulator=terminator/g" helpers.rc
     ;;
-  "Linuxmint")
+  "linuxmint")
     gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
     gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 11'
     ;;
   esac
 
-}
-
-install_dev() {
-  echo "\n### Installing development packages\n"
-  sudo apt-get -y install csstidy
-  sudo apt-get -y install tidy
 }
 
 install_fonts() {
@@ -149,7 +144,7 @@ install_kali() {
 }
 
 install_net() {
-  echo "\n### Installing network packages\n"
+  echo -e "\n### Installing network packages\n"
   sudo apt-get -y install kismet
   sudo apt-get -y install nmap
   if [[ -n $DISPLAY ]]; then
@@ -190,33 +185,28 @@ plugins() {
 
 # PROCESS ARGUMENTS
 usage() {
-  echo "USAGE posix [options]
-    Options
-    =======
-    base    : Install base packages
-    config  : Install configuration files
-    dev     : Install development packages
-    fonts   : Install fonts
-    init    : Initialize from clean install
-    net     : Install network tools
-    vmware  : Install vmware tools
+  cat <<EOF
 
-    PLUGINS
-    =======
-    chrome : Install Chrome web browser
-    docker : Install Docker
-    kali   : Install kali stuff
-    samba  : Install + Configure Samba Server
-    sync   : Sync local settings to repo
-    tmux   : Build TMUX from source
-    vim    : Install + Configure VIM
-    zsh    : Install oh-my-zsh"
+USAGE posix [options]
+
+OPTIONS
+=======
+base    : Install base packages
+config  : Install configuration files
+fonts   : Install fonts
+init    : Initialize from clean install
+net     : Install network tools
+vmware  : Install vmware tools
+
+PLUGINS
+=======
+EOF
 
   ls plugins
 }
 
 [ $# == 0 ] && usage
-for arg in $@; do
+for arg in "$@"; do
   case $arg in
   "base") install_base ;;
   "config") install_config ;;
@@ -228,6 +218,6 @@ for arg in $@; do
   "kali") install_kali ;;
   "net") install_net ;;
   "vmware") install_vmware ;;
-  *) plugins $arg ;;
+  *) plugins "$arg" ;;
   esac
 done
