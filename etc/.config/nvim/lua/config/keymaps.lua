@@ -4,14 +4,16 @@
 
 local map = vim.keymap.set
 local set = vim.opt
-local defaults = { noremap = true, silent = true }
+local noremap = { noremap = true, silent = true }
 local remap = { remap = true, silent = true }
 
 -- Sainer defaults
-map("i", "jj", "<esc>", defaults)
-map("n", "<C-s>", "<cmd> w <CR>", defaults)
---map("n", "Y", "yy", defaults)
-map("v", "<F9>", ":sort<CR>", defaults)
+--map("n", "Y", "yy", noremap)
+map("i", "jj", "<esc>", noremap)
+map("n", "<C-s>", "<cmd> w <CR>", noremap)
+map("n", "VC", "ggVGy", noremap)
+map("n", "VV", "ggVG", noremap)
+map("v", "<F9>", ":sort<CR>", noremap)
 
 -- Comments
 map("n", "<C-/>", "gcc", remap)
