@@ -17,6 +17,7 @@ alias gogh='bash -c  "$(wget -qO- https://git.io/vQgMr)"'
 alias lf='less +F'
 alias nv='nvim'
 alias psa='ps auxf'
+alias r='sudo -e'
 alias rs="sudo xrandr --output Virtual-1 --auto"
 alias sb=subl
 alias v='vim'
@@ -33,7 +34,7 @@ alias aar='sudo apt autoremove -y'
 alias auu='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
 alias uuu='auf && aar'
 alias sc='sudo systemctl'
-alias sc-daemon-reload='sudo systemctl daemon-reload'
+alias scdr='sudo systemctl daemon-reload'
 
 # DOCKER
 alias dcupl='docker compose up -d && docker compose logs -f'
