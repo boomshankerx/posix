@@ -124,7 +124,6 @@ bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
 bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
 bindkey -M menuselect '^M' .accept-line
 
-
 precmd(){
     # Print a newline before the prompt, unless it's the
     # first prompt in the process.
@@ -137,8 +136,12 @@ precmd(){
 
 #OMP
 #export POSH_IP=$(tg-ipfull)
-[[ ! $(tty) =~ ^/dev/tty[1-6] ]] && eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
+[[ ! $(tty) =~ ^/dev/tty/[1-6] ]] && eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
 
 #zoxide
 eval "$(zoxide init zsh)"
 
+#TMUX!
+if [[ -z "$TMUX" ]]; then
+  tmux attach-session -t 0 2>/dev/null || tmux new-session
+fi

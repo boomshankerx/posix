@@ -37,18 +37,18 @@ alias sc='sudo systemctl'
 alias scdr='sudo systemctl daemon-reload'
 
 # DOCKER
+alias de='docker exec -it'
 alias dcupl='docker compose up -d && docker compose logs -f'
 alias dpsl='docker ps --format "table {{.ID}}\t{{.Names}}"'
 alias dpsp='docker ps --format "table {{.Names}},{{.Ports}}"'
 alias dpss='docker ps | less -S'
-
 dpspp (){
     dpsp | awk -F'[ ,]' '/->/{split($1, name, ","); container=name[1]; for(i=2; i<=NF; i++) if($i ~ /->/) {split($i, ports, "->"); split(ports[1], ext, ":"); port=ext[length(ext)]; if (!seen[container,port]++) ports_array[container] = ports_array[container] (ports_array[container]?",":"") port}} END {for (c in ports_array) print c ": " ports_array[c]}' | sort
 }
+alias bind-reload="docker exec -it bind9 rndc reload"
 
 #FZF
 export FZF_DEFAULT_COMMAND='find . -type f'
-#export FZF_COMPLETION_TRIGGER='~~'
 alias f='fzf'
 alias fp='fzf --preview "bat {1}"'
 alias fv='fzf --print0 | xargs -0 -o vim -O'
@@ -61,7 +61,7 @@ alias psync='~/posix/posix sync'
 alias mux=tmuxinator
 . ~/.tmuxinator/tmuxinator.zsh
 
-# HELP
+# HELPERS
 alias help-git="alias | grep git"
 alias help-tmux="less ~/.tmux.conf"
 
