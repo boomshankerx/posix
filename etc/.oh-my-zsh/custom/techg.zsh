@@ -56,6 +56,7 @@ alias fv='fzf --print0 | xargs -0 -o vim -O'
 #POSIX
 alias pconf='~/posix/posix config'
 alias psync='~/posix/posix sync'
+alias px='posix'
 
 # TMUXINATOR
 alias mux=tmuxinator
