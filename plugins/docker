@@ -13,8 +13,7 @@ sudo chmod a+r /etc/apt/keyrings/docker.asc
 . /etc/os-release
 
 case $VERSION_CODENAME in
-kali-rolling | xia) VERSION_CODENAME="trixie" ;;
-*) VERSION_CODENAME="bookworm" ;;
+    kali-rolling | xia) VERSION_CODENAME="trixie" ;;
 esac
 
 echo \
