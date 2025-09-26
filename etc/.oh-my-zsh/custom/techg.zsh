@@ -17,11 +17,13 @@ alias gogh='bash -c  "$(wget -qO- https://git.io/vQgMr)"'
 alias lf='less +F'
 alias nv='nvim'
 alias psa='ps auxf'
-alias r='sudo -e'
+alias r='sudo -E vim'
 alias rs="sudo xrandr --output Virtual-1 --auto"
 alias sb=subl
+alias se='sudo -E'
 alias v='vim'
 alias vi='gvim'
+alias vr='sudo -E vim'
 alias x="clip"
 alias xc='xclip -selection clipboard'
 

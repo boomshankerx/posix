@@ -10,6 +10,7 @@
 - Automatically download docker repo with docker install
 - Fixed bug in docker plugin. Added static-ip plugin
 - Added btop
+- Added tealdeer
 ## [1.1.0] - 2025-08-30
 
 ### 🚀 Features
