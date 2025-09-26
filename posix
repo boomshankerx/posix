@@ -18,6 +18,7 @@ install_base() {
 
   apps=(
     bat
+    btop
     curl
     fzf
     git
