@@ -18,8 +18,7 @@
     editor = vim
     autocrlf = false
 [credential]
-    helper = store --file ~/.gc
-    helper = cache --timeout 3600
+    helper = cache --timeout 28800
 [push]
 	default = simple
 [pull]

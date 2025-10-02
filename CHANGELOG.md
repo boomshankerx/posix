@@ -18,6 +18,7 @@
 - Added btop
 - Added tealdeer
 - Fixed tmux setting for desktop
+- Fixed .gitconfig settings
 
 ### ⚙️ Miscellaneous Tasks
 
