@@ -48,6 +48,7 @@ install_base() {
     apps+=(
       git-gui
       gitk
+      imwheel
       kitty
       terminator
       vim-gtk3

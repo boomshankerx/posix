@@ -143,5 +143,7 @@ eval "$(zoxide init zsh)"
 
 #TMUX!
 if [[ -z "$TMUX" ]]; then
-  tmux attach-session -t 0 2>/dev/null || tmux new-session
+    echo "[+] Starting Tmux..."
+    [[ "$DISPLAY" ]] || tmux attach-session -t 0 2>/dev/null 
+    tmux new-session
 fi
