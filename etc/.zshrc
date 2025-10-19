@@ -136,10 +136,12 @@ precmd(){
 
 #OMP
 #export POSH_IP=$(tg-ipfull)
-[[ ! $(tty) =~ ^/dev/tty/[1-6] ]] && eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
+if [[ -n $(command -v oh-my-posh) ]]; then
+    [[ ! $(tty) =~ ^/dev/tty/[1-6] ]] && eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
+fi
 
 #zoxide
-eval "$(zoxide init zsh)"
+[[ -n $(command -v zoxide ) ]] && eval "$(zoxide init zsh)"
 
 #TMUX!
 if [[ -z "$TMUX" ]]; then

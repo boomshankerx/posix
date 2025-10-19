@@ -111,8 +111,14 @@ install_config() {
     stow -v -d $SRC -t $HOME .
   else
     echo "[+] Copying config files"
-    rsync -anv etc/ $HOME/
+    rsync -av etc/ $HOME/
   fi
+
+  # SSH Keys
+  [[ -d $HOME/.ssh ]] || mkdir -p $HOME/.ssh
+  [[ -L $HOME/.ssh/authorized_keys ]] && rm -f $HOME/.ssh/authorized_keys
+  [[ -f $HOME/.ssh/authorized_keys ]] || touch $HOME/.ssh/authorized_keys
+  grep -q MASTER $HOME/.ssh/authorized_keys || cat .ssh/authorized_keys >>$HOME/.ssh/authorized_keys
 
   # Distro specific settings
   echo "[+] Deploying distro specific settings"

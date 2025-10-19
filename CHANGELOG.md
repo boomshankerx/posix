@@ -19,6 +19,11 @@
 - Added tealdeer
 - Fixed tmux setting for desktop
 - Fixed .gitconfig settings
+- Tmux 3.5a random character bug
+- Reverted tmux timing
+- Bump version of pls
+- Added option to copy config files if stow doesn't exist
+- Moved authorized_keys out of etc
 
 ### ⚙️ Miscellaneous Tasks
 
