@@ -106,8 +106,13 @@ install_config() {
     fi
   done
 
-  echo "[+] Symlinking config files"
-  stow -v -d $SRC -t $HOME .
+  if [ $(command -v stow) ]; then
+    echo "[+] Symlinking config files"
+    stow -v -d $SRC -t $HOME .
+  else
+    echo "[+] Copying config files"
+    rsync -anv etc/ $HOME/
+  fi
 
   # Distro specific settings
   echo "[+] Deploying distro specific settings"
