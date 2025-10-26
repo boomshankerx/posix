@@ -61,6 +61,8 @@ install_base() {
     sudo apt-get install -qqy "$app"
   done
 
+  plugins/git-cliff
+
   # Distro specific
   case "$ID" in
   "kali" | "linuxmint")
