@@ -3,6 +3,7 @@
 ### 🚀 Features
 
 - Added git-cliff
+- Added ghostty
 
 ### 🐛 Bug Fixes
 
