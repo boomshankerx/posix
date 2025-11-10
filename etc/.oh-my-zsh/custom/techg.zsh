@@ -39,8 +39,10 @@ alias sc='sudo systemctl'
 alias scdr='sudo systemctl daemon-reload'
 
 # DOCKER
-alias de='docker exec -it'
+alias dcit='docker compose exec -it'
 alias dcupl='docker compose up -d && docker compose logs -f'
+alias dc='docker compose'
+alias de='docker exec -it'
 alias dip='docker image prune'
 alias dipa='docker image prune -a'
 alias dpsl='docker ps --format "table {{.ID}}\t{{.Names}}" | tail -n +2 | sort -k2'
