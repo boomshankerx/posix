@@ -33,7 +33,6 @@ alias mee="tg-ip-external"
 alias msf="msfconsole -x 'setg LHOST tun0;'"
 alias msfl="msfconsole -x 'setg LHOST eth0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
-alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:latest"
 alias s='sync'
 alias t='target'
 alias sshclean='ssh-keygen -R rhost && ssh'
@@ -49,6 +48,10 @@ alias vpnshow="pgrep -a openvpn"
 alias we="me wg0"
 alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip systeminfo.txt"
 alias x="xclip -selection clipboard"
+
+# --- Docker Alias
+alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:latest"
+alias jwt-tool='docker run -it --network "host" --rm -v "${PWD}:/tmp" -v "${HOME}/.jwt_tool:/root/.jwt_tool" ticarpi/jwt_tool'
 
 #
 # FIND
@@ -139,11 +142,12 @@ target() {
     if [[ "$1" =~ ^https?://* ]] ; then
         echo "URL: $1"
         export RURL="$1"
+    else
+        echo "RHOST: $1"
+        export RHOST="$1"
+        tg-setvar RHOST "$1"
+        add-host
     fi
-    echo "RHOST: $1"
-    export RHOST="$1"
-    tg-setvar RHOST "$1"
-
     if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
         echo "RPORT: $2"
         export RPORT="$2"
@@ -247,8 +251,8 @@ tg-enum4linux() {
 }
 
 tg-ferox(){
-    DEPTH=${1:-1}
-    PORT=${2:-80}
+    PORT=${1:-80}
+    DEPTH=${2:-1}
     WORDLIST=${3:-$LIST_DIR_M}
     EXT=${4:-"php,html,txt,json"}
     HOST=${5:-$RHOST}
@@ -348,11 +352,11 @@ nmap-basic-all()      { sudo nmap -v -n -Pn -T4 -p-                             
 nmap-discover()       { sudo nmap -v -n -T4 -sn -PE                               ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-discover.txt } 
 nmap-full()           { sudo nmap -v -n -Pn -T4 -A                                ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full.txt }
 nmap-full-all()       { sudo nmap -v -n -Pn -T4 -A -p-                            ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-full-all.txt }
-nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
 nmap-script-all()     { sudo nmap -v -n -Pn -T4 -sC -sV -p-                       ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
 nmap-script-vuln()    { sudo nmap -v -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -v -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
-nmap-rust()           { sudo rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                 -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-rust()           { rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                      -oN ${1:-$RHOST}-nmap-script-all.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}
