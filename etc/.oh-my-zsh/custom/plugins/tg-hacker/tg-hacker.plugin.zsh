@@ -34,7 +34,7 @@ alias msf="msfconsole -x 'setg LHOST tun0;'"
 alias msfl="msfconsole -x 'setg LHOST eth0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
 alias s='sync'
-alias t='target'
+alias t='rhost'
 alias sshclean='ssh-keygen -R rhost && ssh'
 alias t1="tree -L 1"
 alias t2="tree -L 2"
@@ -42,9 +42,6 @@ alias t3="tree -L 3"
 alias te="me wg0"
 alias transfer="ls ~/transfer;serve 80 ~/transfer"
 alias ve="me tun0"
-alias vpn="sudo -b openvpn"
-alias vpnkill="sudo pkill openvpn"
-alias vpnshow="pgrep -a openvpn"
 alias we="me wg0"
 alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip systeminfo.txt"
 alias x="xclip -selection clipboard"
@@ -79,7 +76,7 @@ add-host() {
     HOST=${1:="rhost"}
     IP=${2:-$RHOST}
     sudo sed -i /$HOST$/d /etc/hosts
-    echo "$IP $HOST" | sudo tee -a /etc/hosts
+    echo "$IP $HOST" | sudo tee /etc/hosts > /dev/null
 }
 
 del-host(){
@@ -133,26 +130,26 @@ EOF
 # Target
 #
 
-target() {
-    if [[ $# -eq 0 ]]; then
-        echo "Usage: target RHOST [RPORT]"
-        echo "RHOST: $RHOST:$RPORT"
-        return
+rhost() {
+    if [[ $# > 0 ]]; then
+        if [[ "$1" =~ ^https?://* ]] ; then
+            echo "URL: $1"
+            export URL="$1"
+            tg-setvar URL "$1"
+        else
+            echo "RHOST: $1"
+            export RHOST="$1"
+            add-host
+            tg-setvar RHOST "$1"
+        fi
+        if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
+            echo "RPORT: $2"
+            export RPORT="$2"
+            tg-setvar RPORT "$2"
+        fi
     fi
-    if [[ "$1" =~ ^https?://* ]] ; then
-        echo "URL: $1"
-        export RURL="$1"
-    else
-        echo "RHOST: $1"
-        export RHOST="$1"
-        tg-setvar RHOST "$1"
-        add-host
-    fi
-    if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
-        echo "RPORT: $2"
-        export RPORT="$2"
-        tg-setvar RPORT "$2"
-    fi
+    echo $RHOST:$RPORT
+    echo -n $RHOST | xclip -selection clipboard
 }
 
 # Set local callback port
@@ -165,12 +162,6 @@ lport() {
     export LPORT=$1
     tg-setvar LPORT "$LPORT"
     echo "LPORT: $LPORT"
-}
-
-# Copy rhost to clipboard
-rhost() {
-    echo -n $RHOST | xclip -selection clipboard
-    echo $RHOST:$RPORT
 }
 
 listen() {
@@ -227,6 +218,25 @@ sync() {
     cd $BASE
     clear -x
     [[ "$1" == "-v" ]] && cat $TG_CONF
+}
+
+vpn() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: vpn kill|show|FILE"
+        pgrep -a openvpn
+        return
+    fi
+    if [[ "$1" ]]; then
+        if [[ "$1" == "kill" ]]; then
+            pgrep -a openvpn
+            sudo pkill openvpn
+            return
+        fi
+        sudo pkill openvpn
+        sudo -b openvpn "$1"
+    else
+        echo "File not found: $1"
+    fi
 }
 
 #
@@ -356,7 +366,7 @@ nmap-script-all()     { sudo nmap -v -n -Pn -T4 -sC -sV -p-                     
 nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
 nmap-script-vuln()    { sudo nmap -v -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -v -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
-nmap-rust()           { rustscan --ulimit 5000 -a ${1:-$RHOST} -- -sC -sV                      -oN ${1:-$RHOST}-nmap-script-all.txt }
+nmap-rust()           { rustscan -a ${1:-$RHOST} -- -vvv -A | tee rustscan.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}

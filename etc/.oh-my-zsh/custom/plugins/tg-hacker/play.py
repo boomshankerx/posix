@@ -27,6 +27,14 @@ def replace(input, vars):
         output = output.replace(key, vars[key])
     return output
 
+def show_menu(vars):
+    print("Available commands:")
+    i = 0
+    for key in Commands.keys():
+        print(f'{i}) {key : <20} : {replace(Commands[key], vars)}')
+        i += 1
+    
+
 def main(args):
 
     output = ""
@@ -42,26 +50,14 @@ def main(args):
 
     cmd = args.cmd
     if cmd == "":
-        args.list = True
-    if cmd == "a":
-        args.all = True
-    if args.all:
-        print("\n#\n# ALL COMMANDS\n#\n")
-        for key in Commands.keys():
-            print(replace(Commands[key], vars))
-        exit()
-    if args.list:
-        print("\n#\n# COMMAND LIST\n#\n")
-        for key in Commands.keys():
-            print(f'{key : <20} : {Commands[key]}')
-        parser.print_help()
-        exit()
+        show_menu(vars)
+        choice = input("\nChoose a command to play: ")
+        if choice == "":
+            return
+        cmd = list(Commands.keys())[int(choice)]
     if cmd:
         if cmd in Commands:
             output = replace(Commands[cmd], vars)
-            if args.eval:
-                output = f"eval {output}"
-            # print(output)
             p1 = Popen(['xclip', '-selection', 'clipboard', '-f'], stdin=PIPE)
             p1.communicate(input=(output.encode()))
         else:
@@ -71,9 +67,6 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('Command player')
-    parser.add_argument('-a', '--all', dest='all', action='store_true', help='Fill all templates and display')
-    parser.add_argument('-e', '--eval', dest='eval', action='store_true', help='Wrap in eval. DANGER')
-    parser.add_argument('-l', '--list', dest='list', action='store_true', help='List available templates')
     parser.add_argument('-f', '--file', default='', dest='file', action='store', type=str, help='File name')
     parser.add_argument('-u', '--user', default='', dest='user', action='store', type=str, help='Username')
     parser.add_argument('-p', '--password', default='', dest='password', action='store', type=str, help='Password')
