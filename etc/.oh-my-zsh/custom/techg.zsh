@@ -86,9 +86,10 @@ function cd() {
 
 # Copy file to clipboard
 clip() {
-    if [[ -f $1 ]]; then
-        cat $1
-        cat $1 | xclip -selection clipboard
+    if [[ -f "$1" ]]; then
+        printf '%s' "$(cat "$1")" | xclip -selection clipboard
+        # cat "$1" | xclip -selection clipboard
+        cat "$1"
     fi
 
 }
@@ -100,7 +101,7 @@ decomment (){
 
 # Copy empty string to file
 empty(){
-    [[ -f "$1" ]] && echo '' > $1
+    [[ -f "$1" ]] && echo '' > "$1"
 }
 
 tg-ip-external(){

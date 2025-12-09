@@ -189,9 +189,20 @@ init() {
   install_config
 }
 
-sync() {
-  echo -e "\n### Sync Config\n"
-  rsync -vrR --files-from=sync.list --exclude=.git ~/ $POSIX_HOME/etc/
+update() {
+  echo -e "\n### Updating system\n"
+  omz=(
+    fast-syntax-highlighting
+    zsh-autocomplete
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+  )
+  for plugin in "${omz[@]}"; do
+    if [[ -d "$HOME/.oh-my-zsh/custom/plugins/$plugin" ]]; then
+      echo "[+] Updating $plugin"
+      git -C "$HOME/.oh-my-zsh/custom/plugins/$plugin" pull
+    fi
+  done
 }
 
 plugins() {
@@ -229,10 +240,10 @@ for arg in "$@"; do
   "dev") install_dev ;;
   "fonts") install_fonts ;;
   "init") init ;;
-  "sync") sync ;;
   "kali") install_kali ;;
   "net") install_net ;;
   "vmware") install_vmware ;;
+  "update") update ;;
   *) plugins "$arg" ;;
   esac
 done
