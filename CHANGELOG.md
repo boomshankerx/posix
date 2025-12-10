@@ -25,6 +25,14 @@
 - Bump version of pls
 - Added option to copy config files if stow doesn't exist
 - Moved authorized_keys out of etc
+- Update nvim
+- Added docker image prune alias
+- Fix tmux keymaps
+
+### 💼 Other
+
+- Upgraded play.py script
+- Added curl to play
 
 ### ⚙️ Miscellaneous Tasks
 
