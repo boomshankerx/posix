@@ -73,10 +73,10 @@ alias grep-ip='grep -E -o "(2[0-4][0-9]|25[0-5]|1?[0-9]?[0-9])[.](2[0-4][0-9]|25
 #
 
 add-host() {
-    HOST=${1:="rhost"}
-    IP=${2:-$RHOST}
-    sudo sed -i /$HOST$/d /etc/hosts
-    echo "$IP $HOST" | sudo tee /etc/hosts > /dev/null
+    IP=${1:-$RHOST}
+    HOST=${2:="rhost"}
+    sudo sed -ir /[[:space:]]${HOST}/d /etc/hosts
+    echo "$IP $HOST" | sudo tee -a /etc/hosts
 }
 
 del-host(){
@@ -216,6 +216,7 @@ sync() {
     . $TG_CONF
     . ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
     cd $BASE
+    [[ -f vars ]] && . ./vars
     clear -x
     [[ "$1" == "-v" ]] && cat $TG_CONF
 }
