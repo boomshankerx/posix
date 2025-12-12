@@ -62,6 +62,7 @@ install_base() {
   done
 
   plugins/git-cliff
+  plugins/tmux
 
   # Distro specific
   case "$ID" in
