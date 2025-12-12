@@ -34,6 +34,7 @@ alias msf="msfconsole -x 'setg LHOST tun0;'"
 alias msfl="msfconsole -x 'setg LHOST eth0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
 alias s='sync'
+alias sv='sync v'
 alias t='rhost'
 alias sshclean='ssh-keygen -R rhost && ssh'
 alias t1="tree -L 1"
@@ -76,7 +77,7 @@ add-host() {
     IP=${1:-$RHOST}
     HOST=${2:="rhost"}
     sudo sed -ir /[[:space:]]${HOST}/d /etc/hosts
-    echo "$IP $HOST" | sudo tee -a /etc/hosts
+    echo "$IP $HOST" | sudo tee -a /etc/hosts > /dev/null
 }
 
 del-host(){
@@ -216,9 +217,13 @@ sync() {
     . $TG_CONF
     . ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
     cd $BASE
-    [[ -f vars ]] && . ./vars
     clear -x
-    [[ "$1" == "-v" ]] && cat $TG_CONF
+    if [[ -n "$1" ]]; then
+        case "$1" in
+            d) cat $TG_CONF ;;
+            v) . ./vars ;;
+        esac
+    fi
 }
 
 vpn() {
