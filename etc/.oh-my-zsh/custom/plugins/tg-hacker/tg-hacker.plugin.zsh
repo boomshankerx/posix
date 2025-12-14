@@ -221,7 +221,7 @@ sync() {
     if [[ -n "$1" ]]; then
         case "$1" in
             d) cat $TG_CONF ;;
-            v) . ./vars ;;
+            v) . ./.env ;;
         esac
     fi
 }
