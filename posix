@@ -27,6 +27,7 @@ install_base() {
     lnav
     net-tools
     powerline
+    pwgen
     ripgrep
     rsync
     stow

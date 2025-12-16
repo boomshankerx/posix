@@ -14,9 +14,13 @@ alias du='du -hc'
 alias e='echo'
 alias free="free -h"
 alias gogh='bash -c  "$(wget -qO- https://git.io/vQgMr)"'
+alias j='jobs'
+alias jk='kill %'
 alias lf='less +F'
 alias nv='nvim'
 alias psa='ps auxf'
+alias pw='pwgen -s 16 1 | tee /dev/tty | xclip -selection clipboard'
+alias pw32='pwgen -s 32 1 | tee /dev/tty | xclip -selection clipboard'
 alias r='sudo -E vim'
 alias rs="sudo xrandr --output Virtual-1 --auto"
 alias sb=subl
@@ -64,11 +68,13 @@ alias pconf='~/posix/posix config'
 alias psync='~/posix/posix sync'
 alias px='posix'
 
-# TMUXINATOR
+# TMUX
 alias mux=tmuxinator
+alias ta='tmux attach -t'
+alias xx='tmux kill-server'
 . ~/.tmuxinator/tmuxinator.zsh
 
-# HELPERS
+# HELP
 alias help-git="alias | grep git"
 alias help-tmux="less ~/.tmux.conf"
 

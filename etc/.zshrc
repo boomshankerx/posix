@@ -64,6 +64,7 @@ plugins=(
     docker-compose
     fast-syntax-highlighting
     git
+    msfvenom
     systemd
     tg-hacker
     tmux

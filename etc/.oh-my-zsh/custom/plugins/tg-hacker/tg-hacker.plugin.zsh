@@ -149,8 +149,21 @@ rhost() {
             tg-setvar RPORT "$2"
         fi
     fi
-    echo $RHOST:$RPORT
     echo -n $RHOST | xclip -selection clipboard
+    echo $RHOST:$RPORT
+}
+
+lhost() {
+    if [[ $# > 0 ]]; then
+        export LHOST=$1
+        tg-setvar LHOST "$LHOST"
+        if [[ $# == 2 ]]; then
+            export LPORT=$2
+            tg-setvar LPORT "$LPORT"
+        fi
+    fi
+    echo -n $LHOST | xclip -selection clipboard
+    echo "LHOST: $LHOST:$LPORT"
 }
 
 # Set local callback port
@@ -217,11 +230,12 @@ sync() {
     . $TG_CONF
     . ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh
     cd $BASE
+    . ./.env
     clear -x
-    if [[ -n "$1" ]]; then
+    if [[ $# > 0 ]]; then
         case "$1" in
-            d) cat $TG_CONF ;;
-            v) . ./.env ;;
+            -v) cat $TG_CONF;
+                cat ./.env;
         esac
     fi
 }
@@ -372,7 +386,7 @@ nmap-script-all()     { sudo nmap -v -n -Pn -T4 -sC -sV -p-                     
 nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
 nmap-script-vuln()    { sudo nmap -v -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -v -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
-nmap-rust()           { rustscan -a ${1:-$RHOST} -- -vvv -A | tee rustscan.txt }
+nmap-rust()           { rustscan --accessible -a ${1:-$RHOST} -- -n -Pn -sC -sV -T4 | tee rustscan.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}
