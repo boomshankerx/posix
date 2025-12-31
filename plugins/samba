@@ -1,0 +1,7 @@
+# SAMBA
+echo "** Installing samba..."
+sudo apt-get install samba
+sudo apt-get install smbfs
+sudo apt-get install winbind
+sudo sed -i.bak 's/files mdns4_minimal/files wins mdns4_minimal/' /etc/nsswitch.conf
+sudo sed -i.bak 's/workgroup = .*/workgroup = TECHG/' /etc/samba/smb.conf

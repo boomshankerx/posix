@@ -1,0 +1,13 @@
+#!/usr/bin/env bash 
+
+sudo apt install apache2
+sudo systemctl enable --now apache2
+systemctl status apache2
+
+sudo apt install -y mariadb-server
+./php8
+
+cd ~
+git clone https://github.com/osTicket/osTicket.git
+git clone https://github.com/osTicket/osTicket-plugins.git
+

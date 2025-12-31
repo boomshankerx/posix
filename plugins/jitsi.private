@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+sed -i'' 's/anonymous/internal_hashed/' /etc/prosody/conf.avail/meet.techgsolutions.com.cfg.lua
+echo '
+
+VirtualHost "guest.meet.techgsolutions.com"
+    authentication = "anonymous"
+    c2s_require_encryption = false
+' >> /etc/prosody/conf.avail/meet.techgsolutions.com.cfg.lua
+
+echo 'org.jitsi.jicofo.auth.URL=XMPP:meet.techgsolutions.com' >> /etc/jitsi/jicofo/sip-communicator.properties
+sed -i'' "/domain: '$HOSTNAME',/a anonymousdomain: 'guest.$DOMAIN'," /etc/jitsi/meet/$HOSTNAME-config.js

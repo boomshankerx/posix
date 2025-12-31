@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+# This script is used to install the obsidian plugin
+
+# Get the latest release url
+url=$(curl -sL https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest | jq -r '.assets[] | select(.browser_download_url | contains("deb"))| .browser_download_url')
+
+# Download deb file
+curl -Lo $HOME/obsidian.deb $url
+# Install deb file
+sudo apt install $HOME/obsidian.deb
+# Remove deb file
+rm $HOME/obsidian.deb

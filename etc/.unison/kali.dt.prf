@@ -1,0 +1,15 @@
+# Roots
+root=/home/lorne
+root=ssh://dt-kali.techg.ca//home/lorne
+
+# auto=true
+backupdir=/home/lorne/.unison-backups
+backuplocation=central
+# batch = true
+maxbackups=5
+rsync=true
+
+path   = .oh-my.zsh
+path   = posix
+path   = vimrc
+ignore = Name .git
