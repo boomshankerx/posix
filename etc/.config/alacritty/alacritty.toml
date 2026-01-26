@@ -1,0 +1,33 @@
+[window]
+opacity = 0.95
+
+[font]
+size = 12
+
+[font.normal]
+family = "FiraCode Nerd Font Mono"
+style = "Regular"
+
+[colors.primary]
+background = "#1E2127"
+foreground = "#5C6370"
+
+[colors.normal]
+black = "#000000"
+red = "#E06C75"
+green = "#98C379"
+yellow = "#D19A66"
+blue = "#61AFEF"
+magenta = "#C678DD"
+cyan = "#56B6C2"
+white = "#ABB2BF"
+
+[colors.bright]
+black = "#5C6370"
+red = "#E06C75"
+green = "#98C379"
+yellow = "#D19A66"
+blue = "#61AFEF"
+magenta = "#C678DD"
+cyan = "#56B6C2"
+white = "#FFFEFE"

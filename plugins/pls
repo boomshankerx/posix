@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+curl -L -o ~/pls.zip https://github.com/pls-rs/pls/releases/download/v0.0.1-beta.9/pls-x86_64-unknown-linux-musl.zip
+sudo unzip -d /usr/local/bin ~/pls.zip
+sudo chmod +x /usr/local/bin/pls
+rm -f ~/pls.zip

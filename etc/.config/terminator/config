@@ -1,0 +1,23 @@
+[global_config]
+[keybindings]
+  zoom_in = <Primary>equal
+[profiles]
+  [[default]]
+    background_color = "#272A34"
+    background_darkness = 0.95
+    background_type = transparent
+    font = FiraCode Nerd Font Mono 11
+    foreground_color = "#FFFFFF"
+    show_titlebar = False
+    scrollback_lines = 10000
+    palette = "#1f2229:#d41919:#5ebdab:#fea44c:#367bf0:#bf2e5d:#49aee6:#e6e6e6:#8c42ab:#ec0101:#47d4b9:#ff8a18:#277fff:#d71655:#05a1f7:#ffffff"
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]

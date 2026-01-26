@@ -1,0 +1,13 @@
+# TMUX
+sudo apt-get -y install automake bison build-essential pkg-config libevent-dev libncurses-dev
+rm -fr /tmp/tmux
+git clone https://github.com/tmux/tmux.git /tmp/tmux
+cd /tmp/tmux
+git checkout 3.4
+sh autogen.sh
+./configure && make
+sudo make install
+cd -
+
+# TMUXINATOR
+sudo gem install tmuxinator

@@ -1,0 +1,27 @@
+[user]                                                                      
+    email = boomshankerx@hotmail.com
+    name = Lorne Guse
+[alias]
+    br = branch
+    ci = commit
+    cm = commit -m
+    cma = commit -a -m
+    co = checkout
+    dump = cat-file -p
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    last = log -l HEAD'
+    lga = log --all --decorate --graph --oneline
+    st = status
+    type = cat-file -t
+    unstage = reset HEAD --
+[core]
+    editor = vim
+    autocrlf = false
+[credential]
+    helper = cache --timeout 28800
+[push]
+	default = simple
+[pull]
+	rebase = false
+[init]
+	defaultBranch = main

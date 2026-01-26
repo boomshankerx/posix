@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+LOCAL=$HOME/.local/bin
+
+# cheat.sh
+curl https://cht.sh/:cht.sh > "$LOCAL/cht.sh"
+chmod +x "$LOCAL/cht.sh"

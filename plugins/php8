@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+[[ -f /usr/local/share/keyrings ]] || mkdir -m 0755 /etc/apt/keyrings
+curl -fsSL https://packages.sury.org/php/apt.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/sury-php/apt.gpg
+echo "deb [signed-by=/etc/apt/keyrings/sury-php/apt.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/sury-php.list

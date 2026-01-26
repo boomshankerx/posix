@@ -1,0 +1,259 @@
+#!/usr/bin/env bash
+
+POSIX_PATH=$(realpath "$0")
+POSIX_HOME=$(dirname "$POSIX_PATH")
+cd "$POSIX_HOME" || exit
+lsb_release -sa 2>/dev/null
+
+. /etc/os-release
+
+git pull --rebase
+
+# Configure
+[[ -d ~/.local/bin ]] || mkdir -p ~/.local/bin
+[[ -L ~/.local/bin/posix ]] || ln -s ~/posix/posix ~/.local/bin/posix
+
+install_base() {
+  echo -e "\n### Installing base software\n"
+
+  apps=(
+    bat
+    btop
+    curl
+    fastfetch
+    fzf
+    git
+    htop
+    jq
+    lnav
+    net-tools
+    powerline
+    pwgen
+    ripgrep
+    rsync
+    stow
+    sudo
+    tealdeer
+    tmux
+    tmuxinator
+    tree
+    wget
+    zoxide
+  )
+
+  # Check if gui environment
+  if [[ -z $DISPLAY ]]; then
+    apps+=(
+      vim-nox
+    )
+  else
+    apps+=(
+      git-gui
+      gitk
+      imwheel
+      terminator
+      vim-gtk3
+      xclip
+    )
+  fi
+
+  # Distro specific
+  case "$ID" in
+  "kali" | "linuxmint")
+    echo "[+] Installing distro specific packages"
+    apps+=(
+      rlwrap
+    )
+    ;;
+  esac
+
+  for app in "${apps[@]}"; do
+    echo "[*] Installing $app"
+    # sudo apt-get -y -qq "$app"
+    sudo apt-get -y -qq install -o Dpkg::Progress-Fancy="0" -o APT::Color="0" -o Dpkg::Use-Pty="0" "$app"
+  done
+
+  plugins/git-cliff
+  plugins/tmux
+
+  ln -s /usr/bin/batcat ~/.local/bin/bat
+}
+
+install_config() {
+  echo -e "\n### Installing config files\n"
+
+  SRC=$(realpath etc)
+
+  # Cleanup existing
+
+  rm -fr $HOME/.config/kitty
+  rm -fr $HOME/.config/nvim
+  rm -fr $HOME/.config/terminator
+  rm -fr $HOME/.tmuxinator
+  rm -fr $HOME/scripts
+
+  mkdir -p $HOME/.ssh
+  mkdir -p $HOME/.config/autostart
+
+  echo "[+] Backing up existing config"
+  re="s|^$SRC/|$HOME/|"
+  find $SRC -type f | sed "$re" | while read -r file; do
+    temp="$file"
+    linked=false
+    while [ -n "$temp" ] && [ "$temp" != "$HOME" ]; do
+      if [ -L "$temp" ]; then
+        linked=true
+      fi
+      temp=$(dirname "$temp")
+    done
+
+    if [[ -f $file ]] && [[ ! -L $file ]] && [[ $linked == false ]]; then
+      echo "[+] Backing up: $file"
+      echo -n "  "
+      mv -v "$file" "$file.bak"
+    fi
+  done
+
+  if [ $(command -v stow) ]; then
+    echo "[+] Symlinking config files"
+    stow -v -d $SRC -t $HOME .
+  else
+    echo "[+] Copying config files"
+    rsync -av etc/ $HOME/
+  fi
+
+  # SSH Keys
+  [[ -d $HOME/.ssh ]] || mkdir -p $HOME/.ssh
+  [[ -f $HOME/.ssh/authorized_keys ]] || touch $HOME/.ssh/authorized_keys
+  grep -q MASTER $HOME/.ssh/authorized_keys || cat .ssh/authorized_keys >>$HOME/.ssh/authorized_keys
+
+  # Distro specific settings
+  echo "[+] Deploying distro specific settings"
+  case $ID in
+  "kali")
+    gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 11'
+    touch $HOME/.config/xfce4/helpers.rc
+    sed -i "/TerminalEmulator=.*/d" $HOME/.config/xfce4/helpers.rc 
+    echo "TerminalEmulator=terminator" >> $HOME/.config/xfce4/helpers.rc
+    ;;
+  "linuxmint")
+    gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
+    gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
+    gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 11'
+    ;;
+  esac
+
+}
+
+install_fonts() {
+  # Powerline fonts
+  sudo apt-get -y install fonts-powerline
+  git clone https://github.com/powerline/fonts.git ~/fonts --depth=1
+  ~/fonts/install.sh
+  rm -fr ~/fonts
+  # Nerd Font
+  wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip
+  sudo unzip FiraCode.zip -d /usr/local/share/fonts
+  rm FiraCode.zip
+  fc-cache -fv
+}
+
+install_kali() {
+  echo -e "\n### Installing Kali Tools\n"
+  plugins/docker
+  plugins/kalitools
+  plugins/syncthing
+}
+
+install_net() {
+  echo -e "\n### Installing network packages\n"
+  sudo apt-get -y install kismet
+  sudo apt-get -y install nmap
+  if [[ -n $DISPLAY ]]; then
+    sudo apt-get -y install zenmap
+    sudo apt-get -y install wireshark
+  fi
+}
+
+install_vmware() {
+  echo -e "\n#### Installing vmware tools\n"
+  sudo apt-get -y install open-vm-tools
+  if [[ -n $DISPLAY ]]; then
+    sudo apt-get -y install open-vm-tools-desktop
+  fi
+}
+
+init() {
+  echo -e "\n### Initializing base system\n"
+  sudo apt update
+  install_base
+  plugins/vim
+  plugins/zsh
+  plugins/omp
+  if [[ -n $DISPLAY ]]; then
+    install_fonts
+  fi
+  install_config
+}
+
+update() {
+  echo -e "\n### Updating system\n"
+  # Update git repos
+  repos=(
+    $HOME/.oh-my-zsh/custom/plugins/fast-syntax-highlighting
+    $HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete
+    $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+  )
+  for repo in "${repos[@]}"; do
+    if [[ -d "" ]]; then
+      echo "[+] Updating $repo"
+      git -C "$repo" pull
+    fi
+  done
+}
+
+plugins() {
+  [[ -f "plugins/$1" ]] && . plugins/$1
+}
+
+# PROCESS ARGUMENTS
+usage() {
+  cat <<EOF
+
+USAGE posix [options]
+
+OPTIONS
+=======
+base    : Install base packages
+config  : Install configuration files
+fonts   : Install fonts
+init    : Initialize from clean install
+kali    : Install kali specific software
+net     : Install network tools
+vmware  : Install vmware tools
+update  : Update non-apt software
+
+PLUGINS
+=======
+EOF
+
+  ls plugins
+}
+
+[ $# == 0 ] && usage
+for arg in "$@"; do
+  case $arg in
+  "base") install_base ;;
+  "config") install_config ;;
+  "conf") install_conf ;;
+  "dev") install_dev ;;
+  "fonts") install_fonts ;;
+  "init") init ;;
+  "kali") install_kali ;;
+  "net") install_net ;;
+  "vmware") install_vmware ;;
+  "update") update ;;
+  *) plugins "$arg" ;;
+  esac
+done

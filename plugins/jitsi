@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+HOST="meet"
+DOMAIN="techg.ca"
+HOSTNAME="$HOST.$DOMAIN"
+
+function install(){
+    hostnamectl set-hostname $HOST
+    sed -i'' "s/^127.0.0.1.*$/127.0.0.1 localhost $HOSTNAME $HOST/" /etc/hosts 
+
+    echo "INSTALLING JITSI $HOSTNAME"
+    sudo apt update
+    sudo apt-get install -y wget apt-transport-https gnupg
+
+    # JAVA
+    wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
+    echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb buster main" | sudo tee /etc/apt/sources.list.d/adoptopenjdk.list
+    sudo apt update
+    sudo apt install -y adoptopenjdk-8-hotspot
+
+    # JITSI
+    curl https://download.jitsi.org/jitsi-key.gpg.key | sudo sh -c 'gpg --dearmor > /usr/share/keyrings/jitsi-keyring.gpg'
+    echo 'deb [signed-by=/usr/share/keyrings/jitsi-keyring.gpg] https://download.jitsi.org stable/' | sudo tee /etc/apt/sources.list.d/jitsi-stable.list > /dev/null
+    sudo apt update
+    sudo apt -y install jitsi-meet
+    sudo /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
+
+    echo "org.jitsi.jicofo.ALWAYS_TRUST_MODE_ENABLED=true" >> /etc/jitsi/jicofo/sip-communicator.properties
+    echo "org.jitsi.videobridge.xmpp.user.shard.DISABLE_CERTIFICATE_VERIFICATION=true" >> /etc/jitsi/videobridge/sip-communicator.properties
+}
+
+# SECURE DOMAIN
+function secure(){
+    sed -i'' "s/anonymous/internal_plain/" /etc/prosody/conf.avail/$HOSTNAME.cfg.lua
+    echo -e "\nVirtualHost \"guest.$HOSTNAME\"\n    authentication = \"anonymous\"\n    c2s_require_encryption = false" >> /etc/prosody/conf.avail/$HOSTNAME.cfg.lua
+    echo "org.jitsi.jicofo.auth.URL=XMPP:$HOSTNAME" >> /etc/jitsi/jicofo/sip-communicator.properties
+    sed -e -i'' "s/\/\/ anonymousdomain:.*$/anonymousdomain: 'guest.$HOSTNAME'," /etc/jitsi/meet/$HOSTNAME-config.js
+
+    sudo prosodyctl register admin $HOSTNAME
+
+    systemctl restart prosody
+    systemctl restart jicofo
+    systemctl restart jitsi-videobridge2
+}
+
+PARAMS=""
+while (( "$#" )); do
+    case "$1" in
+        -i|--install)
+            install
+            shift
+            ;;
+        -s|--secure)
+            secure
+            shift
+            ;;
+        -r|--restart)
+            echo "Restarting Services..."
+            systemctl restart prosody
+            systemctl restart jicofo
+            systemctl restart jitsi-videobridge2
+            shift
+            ;;
+        -*|--*=) # unsupported flags
+            echo "Error: Unsupported flag $1" >&2
+            exit 1
+            ;;
+        *) # preserve positional arguments
+            PARAMS="$PARAMS $1"
+            shift
+            ;;
+    esac
+done
+
+# set positional arguments in their proper place
+eval set -- "$PARAMS"

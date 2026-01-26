@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+echo "[+] Installing neovim"
+
+# Only works on ubuntu and is bleeding edge
+#sudo add-apt-repository ppa:neovim-ppa/unstable -y
+#sudo apt update
+
+cd ~
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo rm -rf /opt/nvim
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+[[ -L /usr/local/bin/nvim ]] || sudo ln -s /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+rm -f nvim-linux-x86_64.tar.gz
+cd -
+
+sudo apt install -qqy \
+  fd-find \
+  luarocks \
+  npm \
+  ripgrep

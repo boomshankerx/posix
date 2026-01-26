@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+#
+# Volatility3
+#
+
+cd /opt
+git clone https://github.com/volatilityfoundation/volatility3.git
+pip3 install -r /opt/volatility3/requirements-minimal.txt
+[[ -L /usr/local/bin/vol.py ]] || ln -s /opt/volatility3/vol.py /usr/local/bin/vol.py
+
