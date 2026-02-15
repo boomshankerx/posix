@@ -10,5 +10,5 @@ Components: pbs-no-subscription
 Signed-By: /etc/apt/keyrings/proxmox-release-trixie.gpg
 EOF
 
-sudo apt update && apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 sudo apt install proxmox-backup-server
