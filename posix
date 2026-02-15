@@ -19,10 +19,12 @@ install_base() {
   apps=(
     bat
     btop
+    ca-certificates
     curl
     fastfetch
     fzf
     git
+    gnupg2
     htop
     jq
     lnav
@@ -133,8 +135,8 @@ install_config() {
   "kali")
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 11'
     touch $HOME/.config/xfce4/helpers.rc
-    sed -i "/TerminalEmulator=.*/d" $HOME/.config/xfce4/helpers.rc 
-    echo "TerminalEmulator=terminator" >> $HOME/.config/xfce4/helpers.rc
+    sed -i "/TerminalEmulator=.*/d" $HOME/.config/xfce4/helpers.rc
+    echo "TerminalEmulator=terminator" >>$HOME/.config/xfce4/helpers.rc
     ;;
   "linuxmint")
     gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
