@@ -60,6 +60,7 @@ alias bind-reload="docker exec -it bind9 rndc reload"
 #FZF
 export FZF_DEFAULT_COMMAND='find . -type f'
 alias f='fzf'
+alias fa='alias | fzf'
 alias fb='bat $(fzf)'
 alias fc='cat $(fzf)'
 alias fp='fzf --preview "bat {1}"'
