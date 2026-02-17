@@ -14,6 +14,7 @@ alias du='du -hc'
 alias e='echo'
 alias free="free -h"
 alias gogh='bash -c  "$(wget -qO- https://git.io/vQgMr)"'
+alias ipb='ip --brief -4'
 alias j='jobs'
 alias jk='kill %'
 alias lf='less +F'
