@@ -55,7 +55,7 @@ alias dpss='docker ps | less -S'
 dpspp (){
     dpsp | awk -F'[ ,]' '/->/{split($1, name, ","); container=name[1]; for(i=2; i<=NF; i++) if($i ~ /->/) {split($i, ports, "->"); split(ports[1], ext, ":"); port=ext[length(ext)]; if (!seen[container,port]++) ports_array[container] = ports_array[container] (ports_array[container]?",":"") port}} END {for (c in ports_array) print c ": " ports_array[c]}' | sort
 }
-alias bind-reload="docker exec -it bind9 rndc reload"
+alias bind9-reload="docker exec -it bind9 rndc reload"
 
 #FZF
 export FZF_DEFAULT_COMMAND='find . -type f'
