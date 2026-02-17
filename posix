@@ -7,7 +7,7 @@ lsb_release -sa 2>/dev/null
 
 . /etc/os-release
 
-git pull --rebase
+git pull
 
 # Configure
 [[ -d ~/.local/bin ]] || mkdir -p ~/.local/bin
