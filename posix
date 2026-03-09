@@ -196,6 +196,9 @@ init() {
   if [[ -n $DISPLAY ]]; then
     install_fonts
   fi
+  if [[ "$ID" == "kali" ]] ; then
+    install_kali
+  fi
   install_config
 }
 
