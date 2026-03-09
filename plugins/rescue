@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+apps=(
+  chntpw
+  gparted
+  photorec
+  testdisk
+  tcpdump
+  keepassxc
+)
+
+for app in "${apps[@]}"; do
+  echo "[*] Installing $app"
+  # sudo apt-get -y -qq "$app"
+  sudo apt-get -y -qq install "$app"
+done

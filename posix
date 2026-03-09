@@ -3,8 +3,9 @@
 POSIX_PATH=$(realpath "$0")
 POSIX_HOME=$(dirname "$POSIX_PATH")
 cd "$POSIX_HOME" || exit
-lsb_release -sa 2>/dev/null
 
+lsb_release -sa 2>/dev/null
+# cat /etc/os-release 2>/dev/null
 . /etc/os-release
 
 git pull
