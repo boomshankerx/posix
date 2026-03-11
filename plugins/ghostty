@@ -11,5 +11,6 @@ Enabled: yes
 Signed-By: /etc/apt/keyrings/ghostty.gpg
 EOF
 
+sudo apt update
 sudo apt install -y ghostty
 
