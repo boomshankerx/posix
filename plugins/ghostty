@@ -27,7 +27,7 @@ case $XDG_CURRENT_DESKTOP in
     # Insert the new action right after the opening <actions> tag (prepends to top)
     sed -i '/<actions>/a \
     <action>\
-      <icon>utilities-terminal</icon>\
+      <icon>com.mitchellh.ghostty</icon>\
       <name>Open Ghostty Here</name>\
       <description>Open Ghostty in this directory</description>\
       <command>ghostty --working-directory=%f</command>\
