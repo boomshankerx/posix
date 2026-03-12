@@ -132,21 +132,23 @@ install_config() {
 
   # Distro specific settings
   echo "[+] Deploying distro specific settings"
-  case $ID in
-  "kali")
-    command -v ghostty >/dev/null && _TERMINAL=debian-x-terminal-emulator || _TERMINAL=terminator
+  case $XDG_CURRENT_DESKTOP in
+  "XFCE")
+    command -v ghostty >/dev/null 2>&1 && _TERMINAL=debian-x-terminal-emulator || _TERMINAL=terminator
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
     touch $HOME/.config/xfce4/helpers.rc
     sed -i "/TerminalEmulator=.*/d" $HOME/.config/xfce4/helpers.rc
     echo "TerminalEmulator=$_TERMINAL" >>$HOME/.config/xfce4/helpers.rc
     ;;
+  esac
+
+  case $ID in
   "linuxmint")
     gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
     gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
     ;;
   esac
-
 }
 
 install_fonts() {
