@@ -150,3 +150,5 @@ if [[ -z "$TMUX" ]]; then
     [[ "$DISPLAY" ]] || tmux attach-session -t 0 2>/dev/null 
     tmux new-session
 fi
+
+. $HOME/.zshrc_custom
