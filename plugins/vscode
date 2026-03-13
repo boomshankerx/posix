@@ -1,6 +1,46 @@
 #!/usr/bin/env bash
-cd ~
+
+(
+cd /tmp
 curl -OLJ "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-sudo dpkg -i ~/code*.deb
+sudo dpkg -i code*.deb
 rm code*.deb
-cd -
+)
+
+case $XDG_CURRENT_DESKTOP in
+"XFCE")
+  # Ensure the file and directory exist
+  mkdir -p ~/.config/Thunar
+  touch ~/.config/Thunar/uca.xml   # creates empty file if missing
+
+  # Open VSCode Here action (for directories)
+  if ! grep -q "Open VSCode Here" ~/.config/Thunar/uca.xml; then
+    # Insert the new action right after the opening <actions> tag (prepends to top)
+    sed -i '/<actions>/a \
+    <action>\
+      <icon>vscode</icon>\
+      <name>Open VSCode Here</name>\
+      <description>Open VSCode in this directory</description>\
+      <command>code %f</command>\
+      <patterns>*</patterns>\
+      <range>*</range>\
+      <directories/>\
+    </action>' ~/.config/Thunar/uca.xml
+  fi
+
+  # Open in VSCode action (for files)
+  if ! grep -q "Open with VSCode" ~/.config/Thunar/uca.xml; then
+  sed -i '/<actions>/a \
+  <action>\
+    <icon>vscode</icon>\
+    <name>Open with VSCode</name>\
+    <description>Open selected files with VSCode</description>\
+    <command>code %F</command>\
+    <patterns>*</patterns>\
+    <range>*</range>\
+    <directories/>\
+    <other-files/>\
+    <text-files/>\
+  </action>' ~/.config/Thunar/uca.xml
+  fi  
+esac  
