@@ -23,8 +23,9 @@ alias jk='kill %'
 alias lf='less +F'
 alias nv='nvim'
 alias psa='ps auxf'
-alias pw='pwgen -s 16 1'
-alias pw32='pwgen -s 32 1'
+alias pw='pwgen -s -1'
+alias pw32='pwgen -s -1 32'
+alias pw36='pwgen -s -1 36'
 alias r='sudo -E vim'
 alias rs="sudo xrandr --output Virtual-1 --auto"
 alias sb=subl
@@ -47,18 +48,23 @@ alias sc='sudo systemctl'
 alias scdr='sudo systemctl daemon-reload'
 
 # DOCKER
+alias dc='docker compose'
 alias dcit='docker compose exec -it'
 alias dcupl='docker compose up -d && docker compose logs -f'
-alias dc='docker compose'
 alias de='docker exec -it'
 alias dip='docker image prune'
 alias dipa='docker image prune -a'
 alias dpsl='docker ps --format "table {{.ID}}\t{{.Names}}" | tail -n +2 | sort -k2'
 alias dpsp='docker ps --format "table {{.Names}},{{.Ports}}"'
 alias dpss='docker ps | less -S'
+alias dsp='docker system prune'
+alias dspa='docker system prune -a'
+
 dpspp (){
     dpsp | awk -F'[ ,]' '/->/{split($1, name, ","); container=name[1]; for(i=2; i<=NF; i++) if($i ~ /->/) {split($i, ports, "->"); split(ports[1], ext, ":"); port=ext[length(ext)]; if (!seen[container,port]++) ports_array[container] = ports_array[container] (ports_array[container]?",":"") port}} END {for (c in ports_array) print c ": " ports_array[c]}' | sort
 }
+
+# CONTAINERS
 alias bind9-reload="docker exec -it bind9 rndc reload"
 
 #FZF
