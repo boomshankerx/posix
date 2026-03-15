@@ -134,11 +134,11 @@ install_config() {
   echo "[+] Deploying distro specific settings"
   case $XDG_CURRENT_DESKTOP in
   "XFCE")
-    command -v ghostty >/dev/null 2>&1 && _TERMINAL=debian-x-terminal-emulator || _TERMINAL=terminator
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
     touch $HOME/.config/xfce4/helpers.rc
     sed -i "/TerminalEmulator=.*/d" $HOME/.config/xfce4/helpers.rc
-    echo "TerminalEmulator=$_TERMINAL" >>$HOME/.config/xfce4/helpers.rc
+    echo "TerminalEmulator=debian-x-terminal-emulator" >>$HOME/.config/xfce4/helpers.rc
+    sudo update-alternatives --auto x-terminal-emulator
     ;;
   esac
 
