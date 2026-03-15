@@ -85,7 +85,7 @@ alias px='posix'
 # TMUX
 alias mux=tmuxinator
 alias ta='tmux attach -t'
-alias xx='tmux kill-server'
+alias tk='tmux kill-server'
 . ~/.tmuxinator/tmuxinator.zsh
 
 # HELP

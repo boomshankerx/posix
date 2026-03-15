@@ -1,10 +1,6 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-#
-# KALITOOLS
-#
-
-echo -e "#\n# Installing kalitools\n#\n\n"
+echo -e "=== KALITOOLS ==="
 
 mkdir ~/transfer
 
@@ -24,7 +20,7 @@ apps=(
 
 for app in "${apps[@]}"; do
   echo "[*] Installing $app"
-  sudo apt-get install -y "$app"
+  sudo apt-get install -y -qq "$app"
 done
 
 # Git Repos

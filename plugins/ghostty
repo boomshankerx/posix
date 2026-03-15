@@ -11,5 +11,29 @@ Enabled: yes
 Signed-By: /etc/apt/keyrings/ghostty.gpg
 EOF
 
+sudo apt update
 sudo apt install -y ghostty
+
+sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/ghostty 100
+sudo update-alternatives --auto x-terminal-emulator
+
+case $XDG_CURRENT_DESKTOP in
+"XFCE")
+  # Ensure the file and directory exist
+  mkdir -p ~/.config/Thunar
+  touch ~/.config/Thunar/uca.xml   # creates empty file if missing
+
+  if ! grep -q "Open Ghostty Here" ~/.config/Thunar/uca.xml; then
+    # Insert the new action right after the opening <actions> tag (prepends to top)
+    sed -i '/<actions>/a \
+    <action>\
+      <icon>com.mitchellh.ghostty</icon>\
+      <name>Open Ghostty Here</name>\
+      <description>Open Ghostty in this directory</description>\
+      <command>ghostty --working-directory=%f</command>\
+      <patterns>*</patterns>\
+      <directories/>\
+    </action>' ~/.config/Thunar/uca.xml
+  fi
+esac  
 

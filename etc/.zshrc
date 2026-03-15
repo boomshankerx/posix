@@ -109,13 +109,14 @@ export LC_COLLATE=C
 #unsetopt auto_cd
 export EDITOR=vim
 export TERM=xterm-256color
-export GOPATH=$HOME/go
+
+# PATH
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH=$HOME/.local/bin:$PATH
+export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
 # zsh-autosuggestions
-#export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 # zsh-autocomplete
@@ -126,8 +127,6 @@ bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
 bindkey -M menuselect '^M' .accept-line
 
 precmd(){
-    # Print a newline before the prompt, unless it's the
-    # first prompt in the process.
     if [ -z "$NEW_LINE_BEFORE_PROMPT" ]; then
         NEW_LINE_BEFORE_PROMPT=1
     elif [ "$NEW_LINE_BEFORE_PROMPT" -eq 1 ]; then
@@ -135,18 +134,25 @@ precmd(){
     fi
 }
 
-#OMP
-#export POSH_IP=$(tg-ipfull)
-if [[ -n $(command -v oh-my-posh) ]]; then
-    [[ ! $(tty) =~ ^/dev/tty/[1-6] ]] && eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
+# Custom .zshrc additions
+[[ -f ~/.zshrc_custom ]] || touch ~/.zshrc_custom
+. ~/.zshrc_custom
+
+# OH-MY-POSH
+if [[ $(command -v oh-my-posh) ]] && [[ $POSH_OFF != true ]] ; then
+    [[ ! $(tty) =~ ^/dev/tty[1-6] ]] && eval "$(oh-my-posh init zsh --config '~/.oh-my-zsh/custom/themes/techg.omp.json')"
 fi
 
-#zoxide
-[[ -n $(command -v zoxide ) ]] && eval "$(zoxide init zsh)"
+# Zoxide
+[[ $(command -v zoxide ) ]] && eval "$(zoxide init zsh)"
 
-#TMUX!
+# TMUX
 if [[ -z "$TMUX" ]]; then
     echo "[+] Starting Tmux..."
-    [[ "$DISPLAY" ]] || tmux attach-session -t 0 2>/dev/null 
-    tmux new-session
+    if [[ -z "$DISPLAY" ]]; then
+        tmux attach-session -t 0 2>/dev/null || tmux new-session
+    else
+        tmux new-session
+    fi
 fi
+
