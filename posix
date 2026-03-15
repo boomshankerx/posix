@@ -95,7 +95,6 @@ install_config() {
   rm -fr $HOME/.config/terminator
   rm -fr $HOME/scripts
 
-  mkdir -p $HOME/.ssh
   mkdir -p $HOME/.config/autostart
 
   echo "[+] Backing up existing config"
@@ -126,27 +125,27 @@ install_config() {
   fi
 
   # SSH Keys
-  [[ -d $HOME/.ssh ]] || mkdir -p $HOME/.ssh
-  [[ -f $HOME/.ssh/authorized_keys ]] || touch $HOME/.ssh/authorized_keys
+  mkdir -p $HOME/.ssh
+  touch $HOME/.ssh/authorized_keys
   grep -q MASTER $HOME/.ssh/authorized_keys || cat .ssh/authorized_keys >>$HOME/.ssh/authorized_keys
 
   # Distro specific settings
   echo "[+] Deploying distro specific settings"
   case $XDG_CURRENT_DESKTOP in
   "XFCE")
+    echo "[+] XFCE Config"
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
     touch $HOME/.config/xfce4/helpers.rc
     sed -i "/TerminalEmulator=.*/d" $HOME/.config/xfce4/helpers.rc
     echo "TerminalEmulator=debian-x-terminal-emulator" >>$HOME/.config/xfce4/helpers.rc
     sudo update-alternatives --auto x-terminal-emulator
+    ~/scripts/xfce4-config.py
     ;;
-  esac
-
-  case $ID in
-  "linuxmint")
+  "X-Cinnamon")
+    echo "[+] Cinnamon Config"
+    gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
     gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
     gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
-    gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
     ;;
   esac
 }

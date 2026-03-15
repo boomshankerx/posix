@@ -1,9 +1,7 @@
 export EDITOR=vim
 export NCURSES_NO_UTF8_ACS=1
 
-#
-# ALIASES
-#
+# === ALIASES ===
 
 # COMMON
 alias b=bat
@@ -36,6 +34,9 @@ alias vr='sudo -E vim'
 alias x="clip"
 alias xc='xclip -selection clipboard'
 
+# CONTAINERS
+alias bind9-reload="docker exec -it bind9 rndc reload"
+
 # DEBIAN
 alias ag='sudo apt'
 alias ai='sudo apt install -y'
@@ -64,10 +65,10 @@ dpspp (){
     dpsp | awk -F'[ ,]' '/->/{split($1, name, ","); container=name[1]; for(i=2; i<=NF; i++) if($i ~ /->/) {split($i, ports, "->"); split(ports[1], ext, ":"); port=ext[length(ext)]; if (!seen[container,port]++) ports_array[container] = ports_array[container] (ports_array[container]?",":"") port}} END {for (c in ports_array) print c ": " ports_array[c]}' | sort
 }
 
-# CONTAINERS
-alias bind9-reload="docker exec -it bind9 rndc reload"
+# GIT
+alias gcanf='git commit --all --verbose --no-edit --amend && git push -f'
 
-#FZF
+# FZF
 export FZF_DEFAULT_COMMAND='find . -type f'
 alias f='fzf'
 alias fa='alias | fzf'
@@ -77,7 +78,7 @@ alias fp='fzf --preview "bat {1}"'
 alias fps='ps aux | fzf'
 alias fv='fzf --print0 | xargs -0 -o vim -O'
 
-#POSIX
+# POSIX
 alias pconf='~/posix/posix config'
 alias psync='~/posix/posix sync'
 alias px='posix'
@@ -86,15 +87,14 @@ alias px='posix'
 alias mux=tmuxinator
 alias ta='tmux attach -t'
 alias tk='tmux kill-server'
+alias tn='tmux new'
 . ~/.tmuxinator/tmuxinator.zsh
 
 # HELP
 alias help-git="alias | grep git"
 alias help-tmux="less ~/.tmux.conf"
 
-#
-# FUNCTIONS
-#
+# === FUNCTIONS ===
 
 # Auto-activate when cd'ing into a directory with a venv
 function cd() {

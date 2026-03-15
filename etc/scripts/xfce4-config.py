@@ -67,8 +67,7 @@ for key, cmd in want.items():
 
 if changed:
     tree.write(FILE, encoding="utf-8", xml_declaration=True)
-    print("\nFile updated.")
-    print("Apply changes:   log out/in   or")
+    print("[+] XFCE Keyboard Shortcuts updated.")
     print("  xfce4-panel --restart &  xfwm4 --replace &")
 else:
-    print("No changes needed.")
+    print("[-] XFCE Keyboard Shortcuts. No changes needed.")
