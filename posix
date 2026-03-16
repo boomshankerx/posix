@@ -214,7 +214,7 @@ update() {
     $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
   )
   for repo in "${repos[@]}"; do
-    if [[ -d "" ]]; then
+    if [[ -d "$repo" ]]; then
       echo "[+] Updating $repo"
       git -C "$repo" pull
     fi
