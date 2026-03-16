@@ -6,4 +6,4 @@ font-thicken          = true
 shell-integration     = detect
 theme                 = One Half Dark
 window-height         = 40
-window-width          = 120
+window-width          = 100
