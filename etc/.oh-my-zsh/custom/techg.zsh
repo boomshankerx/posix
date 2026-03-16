@@ -106,12 +106,12 @@ function cd() {
 
 # Copy file to clipboard
 clip() {
-    if [[ -f "$1" ]]; then
-        printf '%s' "$(cat "$1")" | xclip -selection clipboard
-        # cat "$1" | xclip -selection clipboard
-        cat "$1"
+    if [[ ! -f "$1" ]]; then
+        echo "clip: not a file: ${1:-(none)}" >&2
+        return 1
     fi
-
+    printf '%s' "$(cat "$1")" | xclip -sel clipboard -f | xclip -sel primary
+    cat "$1"
 }
 
 # Remove hash comments from file and output to stdout

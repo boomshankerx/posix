@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+sudo apt install -y -qq wireguard curl jq net-tools
+sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
+
+curl https://raw.githubusercontent.com/sfiorini/NordVPN-Wireguard/refs/heads/master/NordVpnToWireguard.sh -o ~/scripts/NordVpnToWireguard.sh
+
+nordvpn set technology NordLynx
+nordvpn login
