@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+sudo apt install -y -qq bat
+ln -s /usr/bin/batcat ~/.local/bin/bat
