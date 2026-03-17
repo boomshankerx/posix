@@ -17,7 +17,6 @@ base() {
   echo -e "\n### Installing base software\n"
 
   apps=(
-    bat
     btop
     ca-certificates
     curl
@@ -63,7 +62,7 @@ base() {
 
   # Distro specific
   case "$ID" in
-  "kali" | "linuxmint")
+  "kali")
     echo "[+] Installing distro specific packages"
     apps+=(
       rlwrap
@@ -77,10 +76,17 @@ base() {
     sudo apt-get -y -qq install -o Dpkg::Progress-Fancy="0" -o APT::Color="0" -o Dpkg::Use-Pty="0" "$app"
   done
 
+  # Default Plugins
+  plugins/batcat
   plugins/git-cliff
   plugins/tmux
 
-  ln -s /usr/bin/batcat ~/.local/bin/bat
+  if [[ -n $DISPLAY ]]; then
+    plugins/chrome
+    plugins/vscode
+    plugins/ghostty
+  fi
+
 }
 
 config() {

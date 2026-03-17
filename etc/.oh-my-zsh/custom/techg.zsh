@@ -79,9 +79,9 @@ alias fps='ps aux | fzf'
 alias fv='fzf --print0 | xargs -0 -o vim -O'
 
 # POSIX
-alias pconf='~/posix/posix config'
-alias psync='~/posix/posix sync'
 alias px='posix'
+alias pxb='posix base'
+alias pxc='posix config'
 
 # TMUX
 alias mux=tmuxinator
