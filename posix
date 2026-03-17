@@ -5,16 +5,15 @@ POSIX_HOME=$(dirname "$POSIX_PATH")
 cd "$POSIX_HOME" || exit
 
 lsb_release -sa 2>/dev/null
-# cat /etc/os-release 2>/dev/null
 . /etc/os-release
 
-git pull
+git pull --rebase
 
 # Configure
 [[ -d ~/.local/bin ]] || mkdir -p ~/.local/bin
 [[ -L ~/.local/bin/posix ]] || ln -s ~/posix/posix ~/.local/bin/posix
 
-install_base() {
+base() {
   echo -e "\n### Installing base software\n"
 
   apps=(
@@ -22,6 +21,7 @@ install_base() {
     btop
     ca-certificates
     curl
+    du-dust
     fastfetch
     fzf
     git
@@ -30,6 +30,7 @@ install_base() {
     jq
     lnav
     net-tools
+    nmap
     powerline
     pwgen
     ripgrep
@@ -82,7 +83,7 @@ install_base() {
   ln -s /usr/bin/batcat ~/.local/bin/bat
 }
 
-install_config() {
+config() {
   echo -e "\n### Installing config files\n"
 
   SRC=$(realpath etc)
@@ -132,6 +133,7 @@ install_config() {
   # Distro specific settings
   echo "[+] Deploying distro specific settings"
   case $XDG_CURRENT_DESKTOP in
+
   "XFCE")
     echo "[+] XFCE Config"
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
@@ -141,6 +143,7 @@ install_config() {
     sudo update-alternatives --auto x-terminal-emulator
     ~/scripts/xfce4-config.py
     ;;
+    
   "X-Cinnamon")
     echo "[+] Cinnamon Config"
     gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
@@ -150,7 +153,7 @@ install_config() {
   esac
 }
 
-install_fonts() {
+fonts() {
   # Powerline fonts
   sudo apt-get -y install fonts-powerline
   git clone https://github.com/powerline/fonts.git ~/fonts --depth=1
@@ -163,14 +166,14 @@ install_fonts() {
   fc-cache -fv
 }
 
-install_kali() {
+kali() {
   echo -e "\n### Installing Kali Tools\n"
   plugins/docker
   plugins/kalitools
   plugins/syncthing
 }
 
-install_net() {
+net() {
   echo -e "\n### Installing network packages\n"
   sudo apt-get -y install kismet
   sudo apt-get -y install nmap
@@ -180,7 +183,7 @@ install_net() {
   fi
 }
 
-install_vmware() {
+vmware() {
   echo -e "\n#### Installing vmware tools\n"
   sudo apt-get -y install open-vm-tools
   if [[ -n $DISPLAY ]]; then
@@ -191,17 +194,17 @@ install_vmware() {
 init() {
   echo -e "\n### Initializing base system\n"
   sudo apt update
-  install_base
+  base
   plugins/vim
   plugins/zsh
   plugins/omp
   if [[ -n $DISPLAY ]]; then
-    install_fonts
+    fonts
   fi
   if [[ "$ID" == "kali" ]] ; then
-    install_kali
+    kali
   fi
-  install_config
+  config
 }
 
 update() {
@@ -252,16 +255,15 @@ EOF
 [ $# == 0 ] && usage
 for arg in "$@"; do
   case $arg in
-  "base") install_base ;;
-  "config") install_config ;;
-  "conf") install_conf ;;
-  "dev") install_dev ;;
-  "fonts") install_fonts ;;
-  "init") init ;;
-  "kali") install_kali ;;
-  "net") install_net ;;
-  "vmware") install_vmware ;;
-  "update") update ;;
-  *) plugins "$arg" ;;
+  "base"   ) base ;;
+  "config" ) config ;;
+  "dev"    ) dev ;;
+  "fonts"  ) fonts ;;
+  "init"   ) init ;;
+  "kali"   ) kali ;;
+  "net"    ) net ;;
+  "vmware" ) vmware ;;
+  "update" ) update ;;
+  *        ) plugins "$arg" ;;
   esac
 done
