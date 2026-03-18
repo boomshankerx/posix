@@ -30,6 +30,7 @@ case $XDG_CURRENT_DESKTOP in
       <icon>com.mitchellh.ghostty</icon>\
       <name>Open Ghostty Here</name>\
       <description>Open Ghostty in this directory</description>\
+      <unique-id>ghostty</unique-id>\
       <command>ghostty --working-directory=%f</command>\
       <patterns>*</patterns>\
       <directories/>\

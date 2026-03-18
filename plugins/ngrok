@@ -4,7 +4,7 @@ curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
   | sudo tee /etc/apt/keyrings/ngrok.asc >/dev/null \
 
 cat << EOF | sudo tee /etc/apt/sources.list.d/ngrok.sources 
-Types: deb deb-src
+Types: deb
 URIs: https://ngrok-agent.s3.amazonaws.com
 Suites: bookworm
 Architectures: amd64

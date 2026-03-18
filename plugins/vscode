@@ -18,6 +18,7 @@ case $XDG_CURRENT_DESKTOP in
       <icon>vscode</icon>\
       <name>Open VSCode Here</name>\
       <description>Open VSCode in this directory</description>\
+      <unique-id>vscode-folder</unique-id>\
       <command>code %f</command>\
       <patterns>*</patterns>\
       <range>*</range>\
@@ -32,6 +33,7 @@ case $XDG_CURRENT_DESKTOP in
     <icon>vscode</icon>\
     <name>Open with VSCode</name>\
     <description>Open selected files with VSCode</description>\
+    <unique-id>vscode-file</unique-id>\
     <command>code %F</command>\
     <patterns>*</patterns>\
     <range>*</range>\
