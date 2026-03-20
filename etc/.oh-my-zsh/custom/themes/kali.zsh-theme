@@ -1,25 +1,6 @@
 #!/bin/zsh
 
-#############################################################################
-#                                                                           #
-#                    KALI-LIKE THEME for Oh-My-Zsh                          #
-#                                                                           #
-#############################################################################
-#                                                                           #
-#  For better "kali-like" experience, use FiraCode font for your terminal   #
-#  and install zsh-syntax-highlighting and zsh-autosuggestions packages     #
-#                                                                           #
-#############################################################################
-#                                                                           #
-# CREDITS :                                                                 #
-# Some parts of this code was directly ripped from Kali Linux .zshrc        #
-#                                                                           #
-#############################################################################
-# (C) 2023 Cyril LAMY under the MIT License                                 #
-#############################################################################
-
-#####   OPTIONS     #####
-
+# === OPTIONS ===
 USE_SYNTAX_HIGHLIGHTING=yes
 AUTO_DOWNLOAD_SYNTAX_HIGHLIGHTING_PLUGIN=no
 
@@ -28,8 +9,7 @@ AUTO_DOWNLOAD_ZSH_AUTOSUGGESTIONS_PLUGIN=no
 
 PROMPT_ALTERNATIVE=twoline
 NEWLINE_BEFORE_PROMPT=yes
-
-#### END OF OPTIONS #####
+# === END OF OPTIONS ===
 
 setopt autocd              # change directory just by typing its name
 setopt interactivecomments # allow comments in interactive mode
