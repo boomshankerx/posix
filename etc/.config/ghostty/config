@@ -1,7 +1,7 @@
-background-opacity    = 0.9
+background-opacity    = 0.95
 confirm-close-surface = false
 font-family           = FiraCode Nerd Font Mono
-font-size             = 13
+font-size             = 14
 font-thicken          = true
 shell-integration     = detect
 theme                 = One Half Dark
