@@ -137,26 +137,27 @@ config() {
   grep -q MASTER $HOME/.ssh/authorized_keys || cat .ssh/authorized_keys >>$HOME/.ssh/authorized_keys
 
   # Distro specific settings
-  echo "[+] Deploying distro specific settings"
-  case $XDG_CURRENT_DESKTOP in
-
-  "XFCE")
-    echo "[+] XFCE Config"
-    gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
-    touch $HOME/.config/xfce4/helpers.rc
-    sed -i "/TerminalEmulator=.*/d" $HOME/.config/xfce4/helpers.rc
-    echo "TerminalEmulator=debian-x-terminal-emulator" >>$HOME/.config/xfce4/helpers.rc
-    sudo update-alternatives --auto x-terminal-emulator
-    ~/scripts/xfce4-config.py
-    ;;
-    
-  "X-Cinnamon")
-    echo "[+] Cinnamon Config"
-    gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
-    gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
-    gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
-    ;;
-  esac
+  if [[ EUID -ne 0 ]]; then
+    echo "[+] Deploying distro specific settings"
+    case $XDG_CURRENT_DESKTOP in
+    "XFCE")
+      echo "[+] XFCE Config"
+      gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
+      touch $HOME/.config/xfce4/helpers.rc
+      sed -i "/TerminalEmulator=.*/d" $HOME/.config/xfce4/helpers.rc
+      echo "TerminalEmulator=debian-x-terminal-emulator" >>$HOME/.config/xfce4/helpers.rc
+      sudo update-alternatives --auto x-terminal-emulator
+      ~/scripts/xfce4-config.py
+      ;;
+      
+    "X-Cinnamon")
+      echo "[+] Cinnamon Config"
+      gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode Nerd Font Mono 13'
+      gsettings set org.cinnamon.desktop.default-applications.terminal exec 'terminator'
+      gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
+      ;;
+    esac
+  fi
 }
 
 fonts() {
@@ -213,6 +214,13 @@ init() {
   config
 }
 
+root() {
+  sudo ln -s "$POSIX_HOME" /root/posix
+  sudo plugins/zsh
+  sudo plugins/omp
+  sudo /root/posix/posix config
+}
+
 update() {
   echo -e "\n### Updating system\n"
   # Update git repos
@@ -248,8 +256,9 @@ fonts   : Install fonts
 init    : Initialize from clean install
 kali    : Install kali specific software
 net     : Install network tools
-vmware  : Install vmware tools
+root    : Install posix for root user
 update  : Update non-apt software
+vmware  : Install vmware tools
 
 PLUGINS
 =======
@@ -268,6 +277,7 @@ for arg in "$@"; do
   "init"   ) init ;;
   "kali"   ) kali ;;
   "net"    ) net ;;
+  "root"   ) root ;;
   "vmware" ) vmware ;;
   "update" ) update ;;
   *        ) plugins "$arg" ;;
