@@ -1,5 +1,7 @@
 background-opacity    = 0.95
 confirm-close-surface = false
+cursor-style          = bar
+cursor-style-blink    = true
 font-family           = FiraCode Nerd Font Mono
 font-size             = 14
 font-thicken          = true

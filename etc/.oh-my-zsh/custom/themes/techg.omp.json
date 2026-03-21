@@ -30,9 +30,9 @@
         {
           "background": "#ef5350",
           "foreground": "#FFFB38",
-          "powerline_symbol": "/ue0c6",
+          "powerline_symbol": "\ue0c6",
           "style": "powerline",
-          "template": "<parentBackground>\ue0b0</> \uf292 ",
+          "template": " 💀 ",
           "type": "root"
         },
         {
