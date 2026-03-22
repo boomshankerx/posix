@@ -1,5 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "upgrade": {
+    "source": "cdn",
+    "auto": true,
+    "notice": true
+  },
   "blocks": [
     {
       "alignment": "left",
