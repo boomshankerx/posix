@@ -60,20 +60,10 @@ base() {
     )
   fi
 
-  # Distro specific
-  case "$ID" in
-  "kali")
-    echo "[+] Installing distro specific packages"
-    apps+=(
-      rlwrap
-    )
-    ;;
-  esac
-
+  # Install packages
   for app in "${apps[@]}"; do
     echo "[*] Installing $app"
-    # sudo apt-get -y -qq "$app"
-    sudo apt-get -y -qq install -o Dpkg::Progress-Fancy="0" -o APT::Color="0" -o Dpkg::Use-Pty="0" "$app"
+    sudo apt-get -y -qq install "$app"
   done
 
   # Default Plugins
@@ -98,10 +88,12 @@ config() {
 
   rm -fr $HOME/.config/kitty
   rm -fr $HOME/.config/nvim
-  rm -fr $HOME/.tmuxinator
   rm -fr $HOME/.config/terminator
+  rm -fr $HOME/.tmuxinator
+  rm -fr $HOME/.vimrc
   rm -fr $HOME/scripts
 
+  mkdir -p $HOME/.vim
   mkdir -p $HOME/.config/autostart
 
   echo "[+] Backing up existing config"
@@ -202,7 +194,7 @@ init() {
   echo -e "\n### Initializing base system\n"
   sudo apt update
   base
-  plugins/vim
+  # plugins/vim
   plugins/zsh
   plugins/omp
   if [[ -n $DISPLAY ]]; then

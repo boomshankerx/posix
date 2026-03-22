@@ -1,5 +1,3 @@
-# VIM BUILD
-sudo apt-get -y install python3 -dev
-sudo apt-get -y install vim-youcompleteme
-git clone https://github.com/boomshankerx/vimrc ~/vimrc
-~/vimrc/vimrc
+#!/usr/bin/env bash
+sudo apt-get -y -qq install python3-dev
+sudo apt-get -y -qq install vim-youcompleteme

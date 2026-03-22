@@ -1,0 +1,10 @@
+doctype: strict
+indent-spaces: 2
+indent: auto
+output-xhtml: yes
+quiet: yes
+show-errors: 0
+show-warnings: no
+sort-attributes: alpha
+tidy-mark: no
+wrap: 0

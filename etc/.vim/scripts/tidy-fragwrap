@@ -1,0 +1,9 @@
+indent-spaces: 2
+indent: auto
+output-xhtml: yes
+quiet: yes
+show-body-only: yes
+show-errors: 0
+show-warnings: no
+sort-attributes: alpha
+wrap: 0

@@ -1,0 +1,23 @@
+snippet hd  "Org file header" b
+Name        :  
+Discription :  
+Date        :  
+Author      : Lorne Guse
+Email       : lorne@techgsolutions.com
+endsnippet
+
+snippet # "Comment Header" b
+#
+# ${1:COMMENT }
+#
+${2}
+
+endsnippet
+
+snippet "##" "Comment Header Inline" r
+echo "#\n# ${1}\n#\n\n"
+endsnippet
+
+snippet "###" "Compact Header Inline" r
+echo "#\n### ${1}\n"
+endsnippet

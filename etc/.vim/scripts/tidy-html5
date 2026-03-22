@@ -1,0 +1,10 @@
+doctype: "html" 
+indent-spaces: 2
+indent: auto
+new-blocklevel-tags: article,aside,footer,header,nav,section,small
+quiet: yes
+show-errors: 0
+show-warnings: no
+sort-attributes: alpha
+tidy-mark: no
+wrap: 0

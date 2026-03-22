@@ -1,0 +1,151 @@
+# ============================================================================
+
+BOX star-hdr
+
+sample
+*** HEADER ***
+ends
+
+shapes {
+	w ("*** ")  e (" ***")
+}
+
+padding { left 1 }
+
+elastic(w,e)
+
+END star-hdr
+
+# ============================================================================
+
+BOX pound-cmt
+
+sample
+    #
+    #  regular comments used in Perl, Shell scripts, etc.
+    #
+ends
+
+shapes {
+     w ("#")
+}
+
+padding { left 1}
+
+elastic (w)
+
+END pound-cmt
+
+# ============================================================================
+
+BOX vim-cmt
+
+sample
+    "
+    " comments used in the vim editor's config file (.vimrc)
+    "
+ends
+
+shapes {
+     w ("\"")
+}
+
+padding {
+    left 1
+}
+
+elastic ( w )
+
+END vim-cmt
+
+# ============================================================================
+
+BOX simple
+
+sample
+    *************
+    *           *
+    *           *
+    *************
+ends
+
+shapes { nw ("*") ne ("*") sw ("*") se ("*")
+         n  ("*") e  ("*") s  ("*") w  ("*")
+}
+
+padding { horiz 1 }
+
+elastic (n,e,s,W)
+
+END simple
+
+# ============================================================================
+
+BOX hash
+
+sample
+    #############
+    #           #
+    #           #
+    #############
+ends
+
+shapes {
+    nw ("#") n ("#") ne ("#")
+     w ("#")         e ("#")
+    sw ("#") s ("#") se ("#") 
+}
+
+padding { h 1 }
+
+elastic (n,s,e, w)
+
+END hash
+
+# ============================================================================
+
+BOX hash-vim
+
+sample
+   "#############
+   "#           #
+   "#           #
+   "#############
+ends
+
+shapes {
+    nw ("\" #") n ("#") ne ("#")
+     w ("\" #")          e ("#")
+    sw ("\" #") s ("#") se ("#") 
+}
+
+padding { h 1 }
+
+elastic (n,s,e, w)
+
+END hash-vim
+
+# ============================================================================
+
+BOX hash-slash
+
+sample
+    #############
+    #           #
+    #           #
+    #############
+ends
+
+shapes {
+    nw ("// #") n ("#") ne ("#")
+	   w ("// #")          e ("#")
+	  sw ("// #") s ("#") se ("#") 
+}
+
+
+padding { h 1 }
+
+elastic (n,s,e, w)
+
+END hash-slash
+

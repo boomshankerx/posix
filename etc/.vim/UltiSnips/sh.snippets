@@ -1,0 +1,56 @@
+snippet args "Basic argument processing" b
+PARAMS=""
+while (( "$#" )); do
+    case "\$1" in
+        -a|--my-boolean-flag)
+            MY_FLAG=0
+            shift
+            ;;
+        -b|--my-flag-with-argument)
+            if [ -n "\$2" ] && [ \${2:0:1} != "-" ]; then
+                MY_FLAG_ARG=\$2
+                shift 2
+            else
+                exit 1
+                echo "Error: Argument for \$1 is missing" >&2
+            fi
+            ;;
+        -*|--*=) # unsupported flags
+            echo "Error: Unsupported flag \$1" >&2
+            exit 1
+            ;;
+        *) # preserve positional arguments
+            PARAMS="$PARAMS \$1"
+            shift
+            ;;
+    esac
+done
+# set positional arguments in their proper place
+eval set -- "\$PARAMS"
+endsnippet
+
+snippet confirm "Confirmation function" b
+confirm() {
+# call with a prompt string or use a default
+	read -r -p "\${1:-Are you sure? [y/N]} " response
+	case "$response" in
+		[yY][eE][sS]|[yY])
+			true
+				;;
+		*)
+			false
+			;;
+		esac
+}
+endsnippet
+
+snippet parse_filename "Extract filename" b 
+file=$(basename "$i")
+name="${file%.*}"
+ext="${file##*.}"
+endsnippet
+
+snippet zsh "zsh she bang" b
+#!/usr/bin/env zsh
+endsnippet
+
