@@ -57,7 +57,7 @@ alias scdr='sudo systemctl daemon-reload'
 # DOCKER
 alias dc='docker compose'
 alias dcit='docker compose exec -it'
-alias dcupdate='docker compose pull && docker compose up -d'
+alias dcupdate='docker compose up -d --pull always'
 alias dcupl='docker compose up -d && docker compose logs -f'
 alias de='docker exec -it'
 alias dip='docker image prune'
