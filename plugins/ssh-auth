@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+sudo apt install -y libpam-ssh-agent-auth
+echo 'Defaults:%sudo env_keep += "SSH_AUTH_SOCK"' | sudo tee /etc/sudoers.d/ssh-agent
+sudo cp /etc/pam.d/sudo /etc/pam.d/sudo.bak && \
+sudo sed -i '/^#%PAM-1.0/a auth sufficient pam_ssh_agent_auth.so file=~/.ssh/authorized_keys' /etc/pam.d/sudo

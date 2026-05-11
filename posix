@@ -123,9 +123,11 @@ config() {
     rsync -av etc/ $HOME/
   fi
 
-  # SSH Keys
+  # SSH
   mkdir -p $HOME/.ssh
   touch $HOME/.ssh/authorized_keys
+  chmod 700 $HOME/.ssh
+  chmod 600 $HOME/.ssh/authorized_keys
   grep -q MASTER $HOME/.ssh/authorized_keys || cat .ssh/authorized_keys >>$HOME/.ssh/authorized_keys
 
   # Distro specific settings
