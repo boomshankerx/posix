@@ -167,6 +167,16 @@ fonts() {
   fc-cache -fv
 }
 
+hostname() {
+  echo -e "\n### Setting hostname\n"
+  read -rp "Enter new hostname: " new_hostname
+  if [[ -n $new ]]; then
+    old=$(hostname)
+    sudo hostnamectl hostname "$new"
+    sudo sed -i s/"$old"/"$new"/g /etc/hosts
+  fi
+}
+
 kali() {
   echo -e "\n### Installing Kali Tools\n"
   plugins/docker
@@ -244,15 +254,16 @@ USAGE posix [options]
 
 OPTIONS
 =======
-base    : Install base packages
-config  : Install configuration files
-fonts   : Install fonts
-init    : Initialize from clean install
-kali    : Install kali specific software
-net     : Install network tools
-root    : Install posix for root user
-update  : Update non-apt software
-vmware  : Install vmware tools
+base     : Install base packages
+config   : Install configuration files
+fonts    : Install fonts
+hostname : Set system hostname
+init     : Initialize from clean install
+kali     : Install kali specific software
+net      : Install network tools
+root     : Install posix for root user
+update   : Update non-apt software
+vmware   : Install vmware tools
 
 PLUGINS
 =======
@@ -264,16 +275,17 @@ EOF
 [ $# == 0 ] && usage
 for arg in "$@"; do
   case $arg in
-  "base"   ) base ;;
-  "config" ) config ;;
-  "dev"    ) dev ;;
-  "fonts"  ) fonts ;;
-  "init"   ) init ;;
-  "kali"   ) kali ;;
-  "net"    ) net ;;
-  "root"   ) root ;;
-  "vmware" ) vmware ;;
-  "update" ) update ;;
-  *        ) plugins "$arg" ;;
+  "base"     ) base ;;
+  "config"   ) config ;;
+  "dev"      ) dev ;;
+  "fonts"    ) fonts ;;
+  "hostname" ) hostname ;;
+  "init"     ) init ;;
+  "kali"     ) kali ;;
+  "net"      ) net ;;
+  "root"     ) root ;;
+  "vmware"   ) vmware ;;
+  "update"   ) update ;;
+  *          ) plugins "$arg" ;;
   esac
 done
