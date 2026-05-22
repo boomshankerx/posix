@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+sudo rm /etc/ssh/ssh_host_*
+sudo dpkg-reconfigure openssh-server
+sudo systemctl restart ssh
