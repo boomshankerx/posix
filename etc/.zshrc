@@ -135,8 +135,14 @@ precmd(){
 }
 
 # Custom .zshrc additions
-[[ -f ~/.zshrc_custom ]] || touch ~/.zshrc_custom
-. ~/.zshrc_custom
+source ~/.zshrc_custom
+# Load all custom configurations from ~/.zshrc.d
+mkdir -p ~/.zshrc.d
+if [[ -d ~/.zshrc.d ]]; then
+  for config in ~/.zshrc.d/*.zsh(N); do
+    source "$config"
+  done
+fi
 
 # OH-MY-POSH
 if [[ $(command -v oh-my-posh) ]] && [[ $POSH_OFF != true ]] ; then

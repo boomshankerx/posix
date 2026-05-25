@@ -21,9 +21,6 @@ alias j='jobs'
 alias jk='kill %'
 alias lf='less +F'
 alias nv='nvim'
-alias oc='openclaw'
-alias ocg='openclaw gateway'
-alias ocgr='openclaw gateway restart'
 alias omp='oh-my-posh'
 alias psa='ps auxf'
 alias pw='pwgen -s -1'
@@ -39,6 +36,13 @@ alias vi='gvim'
 alias vr='sudo -E vim'
 alias x="clip"
 alias xc='xclip -selection clipboard'
+
+# === AI ===
+alias oc='openclaw'
+alias ocg='openclaw gateway'
+alias ocgr='openclaw gateway restart'
+alias he='hermes'
+alias heg='hermes gateway'
 
 # CONTAINERS
 alias bind9-reload="docker exec -it bind9 rndc reload"
