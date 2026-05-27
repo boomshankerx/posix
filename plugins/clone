@@ -1,0 +1,27 @@
+#!/bin/bash
+# Debian VM Clone First-Boot Setup - Safe & No Root Required
+# Run as normal user (it will ask for sudo password when needed)
+
+set -euo pipefail
+
+echo "=== Debian VM Clone Setup (Safe Minimal) ==="
+
+echo "Regenerating SSH host keys..."
+sudo rm -f /etc/ssh/ssh_host_* || true
+sudo dpkg-reconfigure openssh-server -f noninteractive
+sudo systemctl restart ssh
+
+echo "Regenerating machine-id..."
+sudo rm -f /etc/machine-id /var/lib/dbus/machine-id 2>/dev/null || true
+sudo systemd-machine-id-setup
+
+echo
+echo "=== Setup Complete! ==="
+echo "SSH keys and machine ID have been updated."
+echo "Please reboot the system."
+read -p "Reboot now? (y/N): " REBOOT
+
+if [[ "$REBOOT" =~ ^[Yy]$ ]]; then
+    echo "Rebooting..."
+    sudo reboot
+fi
