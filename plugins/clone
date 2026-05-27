@@ -1,29 +1,24 @@
 #!/bin/bash
-# Debian VM Clone First-Boot Setup - Safe Minimal + Hostname
-# Run as normal user (uses sudo when needed)
+# Debian VM Clone First-Boot Setup - Safe + Optional Hostname
+# Run as normal user
 
 set -euo pipefail
 
 echo "=== Debian VM Clone Setup ==="
 
-# === Set New Hostname ===
-if [ -z "$1" ]; then
-    read -p "Enter new short hostname: " NEW_HOSTNAME
+# === Prompt for Hostname ===
+read -p "Enter new short hostname (press Enter to keep current): " NEW_HOSTNAME
+
+if [ -n "$NEW_HOSTNAME" ]; then
+    echo "Setting hostname to: $NEW_HOSTNAME"
+    sudo hostnamectl set-hostname "$NEW_HOSTNAME"
+    
+    # Update /etc/hosts
+    echo "Updating /etc/hosts..."
+    sudo sed -i "s/127.0.1.1.*/127.0.1.1\t$NEW_HOSTNAME/" /etc/hosts
 else
-    NEW_HOSTNAME="$1"
+    echo "No hostname entered. Keeping current hostname."
 fi
-
-if [ -z "$NEW_HOSTNAME" ]; then
-    echo "Error: Hostname cannot be empty"
-    exit 1
-fi
-
-echo "Setting hostname to: $NEW_HOSTNAME"
-sudo hostnamectl set-hostname "$NEW_HOSTNAME"
-
-# Update /etc/hosts (preserves existing domain if set)
-echo "Updating /etc/hosts..."
-sudo sed -i "s/127.0.1.1.*/127.0.1.1\t$NEW_HOSTNAME/" /etc/hosts
 
 # === Regenerate SSH Host Keys ===
 echo "Regenerating SSH host keys..."
@@ -38,7 +33,11 @@ sudo systemd-machine-id-setup
 
 echo
 echo "=== Setup Complete! ==="
-echo "New hostname : $NEW_HOSTNAME"
+if [ -n "$NEW_HOSTNAME" ]; then
+    echo "New hostname : $NEW_HOSTNAME"
+else
+    echo "Hostname unchanged."
+fi
 echo "Please reboot the system."
 read -p "Reboot now? (y/N): " REBOOT
 
