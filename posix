@@ -167,10 +167,11 @@ fonts() {
   fc-cache -fv
 }
 
-hostname() {
+change_host() {
   echo -e "\n### Setting hostname\n"
-  read -rp "Enter new hostname: " new_hostname
+  read -rp "Enter new hostname: " new
   if [[ -n $new ]]; then
+    echo "[+] Setting hostname to $new"
     old=$(hostname)
     sudo hostnamectl hostname "$new"
     sudo sed -i s/"$old"/"$new"/g /etc/hosts
@@ -279,7 +280,7 @@ for arg in "$@"; do
   "config"   ) config ;;
   "dev"      ) dev ;;
   "fonts"    ) fonts ;;
-  "hostname" ) hostname ;;
+  "hostname" ) change_host ;;
   "init"     ) init ;;
   "kali"     ) kali ;;
   "net"      ) net ;;
