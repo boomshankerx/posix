@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Enable unattended security upgrades on Debian.
+
+set -euo pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
+DEFAULT="/etc/apt/apt.conf.d/50unattended-upgrades"
+OVERRIDE="/etc/apt/apt.conf.d/52unattended-upgrades"
+
+sudo apt-get update
+sudo apt-get install -y unattended-upgrades apt-listchanges
+
+sed '/^\s*\/\//d; /^\s*$/d' "$DEFAULT" | sudo tee "$OVERRIDE" >/dev/null
+
+sudo tee /etc/apt/apt.conf.d/20auto-upgrades >/dev/null <<'EOF'
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::AutocleanInterval "7";
+APT::Periodic::Unattended-Upgrade "1";
+EOF
+
+sudo unattended-upgrade --dry-run >/dev/null
+
+sudo systemctl enable --now apt-daily.timer apt-daily-upgrade.timer
+
+echo "Auto-updates enabled. Override file: $OVERRIDE"
+echo "Logs: /var/log/unattended-upgrades/"

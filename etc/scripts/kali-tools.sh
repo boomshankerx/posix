@@ -1,26 +1,26 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 BASE=~/tools
 [[ -d $BASE ]] || mkdir $BASE
 (
 cd $BASE
 # Linux
-ln -s /usr/share/peass/linpeas/linpeas.sh
+ln -s /usr/share/peass/linpeas/linpeas.sh .
 ln -s /usr/share/peass/linpeas/linpeas_linux_amd64 linpeas
 
 # Windows
-ln -s /usr/share/peass/winpeas/winPEAS.ps1
-ln -s /usr/share/peass/winpeas/winPEASx64.exe
-ln -s /usr/share/peass/winpeas/winPEASx86.exe
-ln -s /usr/share/sharphound/SharpHound.exe
-ln -s /usr/share/sharphound/SharpHound.ps1
-ln -s /usr/share/windows-binaries
-ln -s /usr/share/windows-resources
-ln -s /usr/share/windows-resources/ncat/ncat.exe
-ln -s /usr/share/windows-resources/mimikatz
-ln -s /usr/share/windows-resources/mimikatz/x64/mimikatz.exe
-ln -s /usr/share/windows-resources/powersploit/Recon/PowerView.ps1
-curl -LOs https://github.com/itm4n/PrivescCheck/releases/latest/download/PrivescCheck.ps1
+ln -s /usr/share/peass/winpeas/winPEAS.ps1 .
+ln -s /usr/share/peass/winpeas/winPEASx64.exe .
+ln -s /usr/share/peass/winpeas/winPEASx86.exe .
+ln -s /usr/share/sharphound/SharpHound.exe .
+ln -s /usr/share/sharphound/SharpHound.ps1 .
+ln -s /usr/share/windows-binaries .
+ln -s /usr/share/windows-resources .
+ln -s /usr/share/windows-resources/ncat/ncat.exe .
+ln -s /usr/share/windows-resources/mimikatz .
+ln -s /usr/share/windows-resources/mimikatz/x64/mimikatz.exe .
+ln -s /usr/share/windows-resources/powersploit/Recon/PowerView.ps1 .
+curl -LOs https://github.com/itm4n/PrivescCheck/releases/latest/download/PrivescCheck.ps1 .
 
 # Sysinternals
 curl -LOs https://download.sysinternals.com/files/SysinternalsSuite.zip
