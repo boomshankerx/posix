@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+# Install UniFi OS Server on Debian / Ubuntu.
+#
+# Always resolves the latest release URL from Ubiquiti's public firmware API.
+
+set -euo pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
+UOS_WEBUI_PORT="${UOS_WEBUI_PORT:-11443}"
+API="https://fw-update.ubnt.com/api/firmware-latest?filter=eq~~product~~unifi-os-server&filter=eq~~channel~~release"
+
+case "$(uname -m)" in
+    x86_64|amd64)   PLATFORM="linux-x64"   ;;
+    aarch64|arm64)  PLATFORM="linux-arm64" ;;
+    *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
+esac
+
+echo -e "#\n# Installing UniFi OS Server ($PLATFORM)\n#\n"
+
+# Prereqs - podman 4.3.1+, slirp4netns and uidmap for rootless networking,
+# jq to parse the firmware API.
+sudo apt-get update
+sudo apt-get install -y curl ca-certificates jq podman slirp4netns uidmap
+
+echo "Resolving latest release from Ubiquiti firmware API ..."
+JSON="$(curl -fsSL "$API")"
+FILTER="._embedded.firmware[] | select(.platform == \"$PLATFORM\")"
+UOS_URL="$(jq -r "$FILTER | ._links.data.href" <<<"$JSON" | head -n1)"
+UOS_SHA="$(jq -r "$FILTER | .sha256_checksum"    <<<"$JSON" | head -n1)"
+UOS_VER="$(jq -r "$FILTER | .version"            <<<"$JSON" | head -n1)"
+
+if [[ -z "$UOS_URL" || "$UOS_URL" == "null" ]]; then
+    echo "ERROR: no $PLATFORM release found in API response." >&2
+    exit 1
+fi
+echo "Found UniFi OS Server $UOS_VER"
+
+INSTALLER="/tmp/unifi-os-server.bin"
+echo "Downloading installer ..."
+sudo curl -fL --progress-bar -o "$INSTALLER" "$UOS_URL"
+
+if [[ -n "$UOS_SHA" && "$UOS_SHA" != "null" ]]; then
+    echo "Verifying SHA256 ..."
+    echo "$UOS_SHA  $INSTALLER" | sudo sha256sum -c -
+fi
+
+sudo chmod +x "$INSTALLER"
+
+# The installer wires up the uosserver and uosserver-updater systemd
+# units, imports the Podman image and creates the uosserver group.
+sudo "$INSTALLER"
+
+sudo rm -f "$INSTALLER"
+
+# Add the invoking user to the uosserver group so the `uosserver` CLI
+# works without sudo. Takes effect after the next login.
+TARGET_USER="${SUDO_USER:-$USER}"
+if id -u "$TARGET_USER" >/dev/null 2>&1; then
+    sudo usermod -aG uosserver "$TARGET_USER"
+fi
+
+echo
+echo "UniFi OS Server installed."
+sudo systemctl is-active uosserver         || true
+sudo systemctl is-active uosserver-updater || true
+echo
+echo "Web UI: https://$(hostname -I | awk '{print $1}'):${UOS_WEBUI_PORT}/"
+echo "Log out and back in for uosserver group membership to take effect."
