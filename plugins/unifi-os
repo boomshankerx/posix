@@ -50,7 +50,7 @@ sudo chmod +x "$INSTALLER"
 
 # The installer wires up the uosserver and uosserver-updater systemd
 # units, imports the Podman image and creates the uosserver group.
-sudo "$INSTALLER"
+sudo "$INSTALLER" --non-interactive
 
 sudo rm -f "$INSTALLER"
 
