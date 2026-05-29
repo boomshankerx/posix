@@ -79,7 +79,7 @@ dpspp (){
 }
 
 # GIT
-alias gcanf='git commit --all --verbose --no-edit --amend && git push -f'
+alias gcan!p='git commit --all --verbose --no-edit --amend && git push -f'
 
 # FZF
 export FZF_DEFAULT_COMMAND='find . -type f'
