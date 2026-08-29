@@ -9,6 +9,7 @@ ln -s /usr/share/peass/linpeas/linpeas.sh .
 ln -s /usr/share/peass/linpeas/linpeas_linux_amd64 linpeas
 
 # Windows
+ln -s /usr/share/peass/winpeas .
 ln -s /usr/share/peass/winpeas/winPEAS.ps1 .
 ln -s /usr/share/peass/winpeas/winPEASx64.exe .
 ln -s /usr/share/peass/winpeas/winPEASx86.exe .
@@ -24,16 +25,16 @@ curl -LOs https://github.com/itm4n/PrivescCheck/releases/latest/download/Privesc
 
 # Sysinternals
 curl -LOs https://download.sysinternals.com/files/SysinternalsSuite.zip
-unzip SysinternalsSuite.zip PsExec64.exe
+unzip -o SysinternalsSuite.zip PsExec64.exe
 
 # Chisel
 VER=$(curl -s https://api.github.com/repos/jpillora/chisel/releases/latest | jq -r .tag_name | sed 's/v//')
 curl -LOs https://github.com/jpillora/chisel/releases/download/v${VER}/chisel_${VER}_windows_amd64.zip
 curl -LOs https://github.com/jpillora/chisel/releases/download/v${VER}/chisel_${VER}_linux_amd64.gz
-gunzip chisel_${VER}_linux_amd64.gz
+gunzip -f chisel_${VER}_linux_amd64.gz
 mv chisel_${VER}_linux_amd64 chisel
 chmod +x chisel
-unzip chisel_${VER}_windows_amd64.zip
+unzip -o chisel_${VER}_windows_amd64.zip
 rm -f chisel_${VER}_windows_amd64.zip
 
 # ligolo-ng
@@ -44,6 +45,13 @@ curl -LOs "https://github.com/nicocha30/ligolo-ng/releases/download/v{$VER}/ligo
 tar -xzf ligolo-ng_agent_${VER}_linux_amd64.tar.gz agent
 chmod +x agent
 rm -f ligolo-ng_agent_${VER}_linux_amd64.tar.gz
-unzip ligolo-ng_agent_${VER}_windows_amd64.zip agent.exe
+unzip -o ligolo-ng_agent_${VER}_windows_amd64.zip agent.exe
 rm -f ligolo-ng_agent_${VER}_windows_amd64.zip
+
+#socat
+curl -LOs "https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat"
+chmod +x socat
+curl -Ls -o "socat.exe" "https://sourceforge.net/projects/unix-utils/files/socat/1.7.3.2/socat-1.7.3.2-1-x86_64.zip/download"
+chmod +x socat.exe
+
 )

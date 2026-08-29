@@ -31,6 +31,7 @@ alias hrock="hydra -VI -P $LIST_ROCK"
 alias jrock="john --wordlist=$LIST_ROCK"
 alias jshow="john --show"
 alias lg="sudo ligolo-proxy --selfcert"
+alias mcs="TERM=dumb mcs"
 alias mee="tg-ip-external"
 alias msf="msfconsole -x 'setg LHOST tun0;'"
 alias msfl="msfconsole -x 'setg LHOST eth0;'"
@@ -43,7 +44,6 @@ alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
 alias te="me wg0"
-alias transfer="ls ~/tools;serve 80 ~/tools"
 alias var="tg-setlocal"
 alias ve="me tun0"
 alias we="me wg0"
@@ -176,6 +176,18 @@ rhost() {
     echo $URL
 }
 
+# Set remote port
+rport() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: rport RPORT"
+        echo "RPORT: $RPORT"
+        return
+    fi
+    export RPORT=$1
+    tg-setvar RPORT "$RPORT"
+    echo "RPORT: $RPORT"
+}
+
 lhost() {
     if [[ $# > 0 ]]; then
         export LHOST=$1
@@ -266,6 +278,15 @@ sync() {
                 ;;
         esac
     fi
+}
+
+tools() {
+    PORT=${1:-80}
+    for tool in $(ls ~/tools); do
+        echo "http://$LHOST:$PORT/$tool"
+    done
+    ls ~/tools
+    serve "$PORT" ~/tools
 }
 
 vpn() {
