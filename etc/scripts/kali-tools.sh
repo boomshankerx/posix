@@ -29,6 +29,7 @@ unzip -o SysinternalsSuite.zip PsExec64.exe
 
 # Chisel
 VER=$(curl -s https://api.github.com/repos/jpillora/chisel/releases/latest | jq -r .tag_name | sed 's/v//')
+echo "Installing chisel version $VER"
 curl -LOs https://github.com/jpillora/chisel/releases/download/v${VER}/chisel_${VER}_windows_amd64.zip
 curl -LOs https://github.com/jpillora/chisel/releases/download/v${VER}/chisel_${VER}_linux_amd64.gz
 gunzip -f chisel_${VER}_linux_amd64.gz
@@ -37,11 +38,18 @@ chmod +x chisel
 unzip -o chisel_${VER}_windows_amd64.zip
 rm -f chisel_${VER}_windows_amd64.zip
 
+#Kerbrute
+VER=$(curl -s https://api.github.com/repos/ropnop/kerbrute/releases/latest | jq -r .tag_name | sed 's/v//')
+echo "Installing kerbrute version $VER"
+curl -LOs https://github.com/ropnop/kerbrute/releases/download/v${VER}/kerbrute_linux_amd64
+chmod +x kerbrute_linux_amd64
+mv kerbrute_linux_amd64 ~/.local/bin/kerbrute
+
 # ligolo-ng
 VER=$(curl -s https://api.github.com/repos/nicocha30/ligolo-ng/releases/latest | jq -r .tag_name | sed 's/v//')
+echo "Installing ligolo-ng version $VER"
 curl -LOs "https://github.com/nicocha30/ligolo-ng/releases/download/v{$VER}/ligolo-ng_agent_${VER}_linux_amd64.tar.gz"
 curl -LOs "https://github.com/nicocha30/ligolo-ng/releases/download/v{$VER}/ligolo-ng_agent_${VER}_windows_amd64.zip"
-
 tar -xzf ligolo-ng_agent_${VER}_linux_amd64.tar.gz agent
 chmod +x agent
 rm -f ligolo-ng_agent_${VER}_linux_amd64.tar.gz

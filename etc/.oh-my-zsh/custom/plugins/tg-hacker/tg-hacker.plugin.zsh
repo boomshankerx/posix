@@ -36,13 +36,14 @@ alias mee="tg-ip-external"
 alias msf="msfconsole -x 'setg LHOST tun0;'"
 alias msfl="msfconsole -x 'setg LHOST eth0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
+alias rust="nmap-rust"
 alias s='sync'
-alias t='rhost'
 alias sshc='ssh-keygen -R'
 alias sshclean='ssh-keygen -R rhost && ssh'
 alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
+alias t='rhost'
 alias te="me wg0"
 alias var="tg-setlocal"
 alias ve="me tun0"
@@ -51,7 +52,7 @@ alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip syste
 alias x="xclip -selection clipboard"
 
 # --- Docker Alias
-alias rustscan="docker run -it --rm --name rustscan rustscan/rustscan:latest"
+alias rustscan="docker run -it --rm --ulimit nofile=8192:8192 --name rustscan rustscan/rustscan:latest"
 alias jwt-tool='docker run -it --network "host" --rm -v "${PWD}:/tmp" -v "${HOME}/.jwt_tool:/root/.jwt_tool" ticarpi/jwt_tool'
 
 #
@@ -404,8 +405,9 @@ msfhandle() {
         "linux/x64/shell_reverse_tcp" \
         "linux/x86/meterpreter/reverse_tcp" \
         "linux/x86/shell_reverse_tcp" \
-        "windows/shell_reverse_tcp"
         "windows/meterpreter/reverse_tcp" \
+        "windows/shell/reverse_tcp" \
+        "windows/shell_reverse_tcp"
         "windows/x64/meterpreter/reverse_tcp" \
         "windows/x64/shell_reverse_tcp" \
     )
@@ -433,7 +435,7 @@ nmap-script-all()     { sudo nmap -v -n -Pn -T4 -sC -sV -p-                     
 nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
 nmap-script-vuln()    { sudo nmap -v -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -v -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
-nmap-rust()           { rustscan --accessible -a ${1:-$RHOST} -- -n -Pn -sC -sV -T4 | tee rustscan.txt }
+nmap-rust()           { rustscan --accessible -a ${1:-$RHOST} -- -n -Pn -sC -sV -T4 | tee rustscan_$RHOST.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}

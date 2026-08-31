@@ -15,6 +15,7 @@ apps=(
     ncat-w32
     remmina
     rlwrap
+    seclists
     sliver
 )
 
