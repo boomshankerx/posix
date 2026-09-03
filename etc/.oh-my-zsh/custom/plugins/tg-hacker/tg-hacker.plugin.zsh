@@ -77,17 +77,6 @@ alias grep-ip='grep -E -o "(2[0-4][0-9]|25[0-5]|1?[0-9]?[0-9])[.](2[0-4][0-9]|25
 # HELPERS
 #
 
-add-host() {
-    IP=${1:-$RHOST}
-    HOST=${2:="rhost"}
-    sudo sed -ir /[[:space:]]${HOST}/d /etc/hosts
-    echo "$IP $HOST" | sudo tee -a /etc/hosts > /dev/null
-}
-
-del-host(){
-    HOST="$1"
-    sudo sed -i /$HOST$/d /etc/hosts
-}
 
 base() {
     if [[ "$1" == "set" ]]; then
@@ -98,6 +87,25 @@ base() {
     cd $BASE
 }
 
+hosts(){    
+    case "$1" in
+        add)
+            IP=${2:-$RHOST}
+            HOST=${3:="rhost"}
+            sudo sed -ir /[[:space:]]${HOST}/d /etc/hosts
+            echo "$IP $HOST" | sudo tee -a /etc/hosts > /dev/null
+            ;;
+        del)
+            HOST="$1"
+            sudo sed -i /$HOST$/d /etc/hosts
+            ;;
+        *)
+            cat /etc/hosts
+            ;;
+    esac
+
+}
+
 # Initialize ctf folder
 tg-init() {
     BASE=${1:-$(pwd)}
@@ -105,7 +113,7 @@ tg-init() {
     cd $BASE
     BASE=$(pwd)
     tg-setvar BASE $BASE
-    touch notes.txt
+    touch notes.md
     touch ./.env
 }
 
@@ -159,8 +167,8 @@ rhost() {
         else
             echo "RHOST: $1"
             export RHOST="$1"
+            hosts add
             tg-setvar RHOST "$1"
-            add-host
         fi
         if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
             echo "RPORT: $2"
@@ -168,6 +176,7 @@ rhost() {
             tg-setvar RPORT "$2"
         fi
     fi
+
     SUBNET=$(echo -n $RHOST | sed 's/\([0-9]*\.[0-9]*\.[0-9]*\.\)[0-9]*/\10\/24/')
     export RSUB=$SUBNET
     tg-setvar RSUB "$SUBNET"
@@ -219,11 +228,6 @@ listen() {
     rlwrap nc -lvnp $LPORT
 }
 
-listen-rlwrap(){
-    [[ -n "$1" ]] && lport "$1"
-    rlwrap nc -lvnp $LPORT
-}
-
 listen-file() {
     FILE=${1:-""}
     PORT=${2:-$LPORT}
@@ -235,7 +239,7 @@ me() {
     if [[ "$1" ]]; then
         dev="$1"
     else
-        dev="(eth|ens)[[:digit:]]"
+        dev="(eth|ens)[[:digit:]]+"
     fi
     LHOST=$(ip a | grep -E "$dev$" | grep "inet " | awk '{ print $2 }' | head -1)
 
@@ -326,7 +330,7 @@ tg-dirsearch(){
 
 tg-enum4linux() {
     HOST=${1:-$RHOST}
-    OUTPUT="$HOST-enum4linux"
+    OUTPUT="enum4linux-$HOST.txt"
     enum4linux-ng $HOST -oY $OUTPUT 
 }
 
@@ -336,7 +340,7 @@ tg-ferox(){
     WORDLIST=${3:-$LIST_DIR_M}
     EXT=${4:-"php,html,txt,json"}
     HOST=${5:-$RHOST}
-    OUTPUT="$HOST-$PORT-ferox.txt"
+    OUTPUT="ferox-$HOST-$PORT.txt"
     touch $OUTPUT
     feroxbuster -d $DEPTH -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT --no-state 
 }
@@ -345,7 +349,7 @@ tg-ffuf(){
     PORT=${1:-80}
     HOST=${2:-$RHOST}
     WORDLIST=${3:-$LIST_DIR_M}
-    OUTPUT="$HOST-$PORT-ffuf.txt"
+    OUTPUT="ffuf-$HOST-$PORT.txt"
     touch $OUTPUT
     ffuf -w $WORDLIST -t 40 -c -u http://$HOST:$PORT/FUZZ -o $OUTPUT -of csv -recursion -recursion-depth 2
 }
@@ -355,7 +359,7 @@ tg-gobuster(){
     HOST=${2:-$RHOST}
     WORDLIST=${3:-$LIST_DIR_M}
     EXT=${4:-"php,html,txt"}
-    OUTPUT="$HOST-$PORT-gobuster.txt"
+    OUTPUT="gobuster-$HOST-$PORT.txt"
     touch $OUTPUT
     echo "gobuster dir -t 40 -o $OUTPUT -w $WORDLIST -u http://$HOST:$PORT -x $EXT"
     gobuster dir -t 40 -w "$WORDLIST" -o $OUTPUT -u http://$HOST:$PORT -x $EXT
@@ -391,8 +395,8 @@ tg-web() {
     HOST=${2:-$RHOST}
     OUTPUT="$HOST-$PORT"
     touch $OUTPUT
-    whatweb -v -a 3 "$HOST:$PORT" | tee $OUTPUT-whatweb.txt 
-    nikto -host "$HOST" -port "$PORT" -output $OUTPUT-nikto.txt -Format txt
+    whatweb -v -a 3 "$HOST:$PORT" | tee whatweb-$OUTPUT.txt 
+    nikto -host "$HOST" -port "$PORT" -output nikto-$OUTPUT.txt -Format txt
 }
 
 #
@@ -435,7 +439,7 @@ nmap-script-all()     { sudo nmap -v -n -Pn -T4 -sC -sV -p-                     
 nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
 nmap-script-vuln()    { sudo nmap -v -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -v -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
-nmap-rust()           { rustscan --accessible -a ${1:-$RHOST} -- -n -Pn -sC -sV -T4 | tee rustscan_$RHOST.txt }
+nmap-rust()           { rustscan --accessible -a ${1:-$RHOST} -- -n -Pn -sC -sV -T4 | tee rustscan-$RHOST.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}
