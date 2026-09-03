@@ -1,0 +1,7 @@
+matches:
+  - trigger: :stab
+    replace: | 
+      stty raw -echo; fg
+      TERM=xterm-256color
+  - trigger: ":xterm"
+    replace: TERM=xterm-256color
