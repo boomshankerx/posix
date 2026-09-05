@@ -4,6 +4,7 @@
 # VARIABLES
 #
 
+export LIST_DIR_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
 export LIST_DIR_L="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories.txt"
 export LIST_DIR_M="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt"
 export LIST_DIR_S="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-directories.txt"
@@ -13,6 +14,7 @@ export LIST_PW_M="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-pa
 export LIST_PW_S="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt"
 export LIST_ROCK="/usr/share/wordlists/rockyou.txt"
 export LIST_SECLISTS="/usr/share/wordlists/seclists"
+export LIST_SUBD="/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt"
 export TG_CONF=~/.tg-hacker
 
 #
@@ -101,6 +103,7 @@ hosts(){
             ;;
         *)
             cat /etc/hosts
+            echo "Usage: hosts add|del [IP] [HOST]"
             ;;
     esac
 
@@ -170,10 +173,14 @@ rhost() {
             hosts add
             tg-setvar RHOST "$1"
         fi
-        if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
-            echo "RPORT: $2"
-            export RPORT="$2"
-            tg-setvar RPORT "$2"
+        if [[ $# == 2 ]]; then
+            if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
+                echo "RPORT: $2"
+                export RPORT="$2"
+                tg-setvar RPORT "$2"
+            else
+                hosts add "$1" "$2"
+            fi
         fi
     fi
 

