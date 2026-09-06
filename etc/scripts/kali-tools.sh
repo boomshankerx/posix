@@ -23,12 +23,14 @@ ln -s /usr/share/windows-resources/mimikatz/x64/mimikatz.exe .
 ln -s /usr/share/windows-resources/powersploit/Recon/PowerView.ps1 .
 
 echo "Installing PrivescCheck"
-curl -#LO https://github.com/itm4n/PrivescCheck/releases/latest/download/PrivescCheck.ps1 .
+curl -#LO https://github.com/itm4n/PrivescCheck/releases/latest/download/PrivescCheck.ps1
+echo
 
 # Sysinternals
 echo "Installing SysinternalsSuite"
 curl -#LO https://download.sysinternals.com/files/SysinternalsSuite.zip
 unzip -o SysinternalsSuite.zip PsExec64.exe
+echo
 
 # Chisel
 VER=$(curl -s https://api.github.com/repos/jpillora/chisel/releases/latest | jq -r .tag_name | sed 's/v//')
@@ -40,6 +42,7 @@ mv chisel_${VER}_linux_amd64 chisel
 chmod +x chisel
 unzip -o chisel_${VER}_windows_amd64.zip
 rm -f chisel_${VER}_windows_amd64.zip
+echo
 
 #Kerbrute
 VER=$(curl -s https://api.github.com/repos/ropnop/kerbrute/releases/latest | jq -r .tag_name | sed 's/v//')
@@ -47,6 +50,7 @@ echo "Installing kerbrute version $VER"
 curl -#LO https://github.com/ropnop/kerbrute/releases/download/v${VER}/kerbrute_linux_amd64
 chmod +x kerbrute_linux_amd64
 mv kerbrute_linux_amd64 ~/.local/bin/kerbrute
+echo
 
 # ligolo-ng
 VER=$(curl -s https://api.github.com/repos/nicocha30/ligolo-ng/releases/latest | jq -r .tag_name | sed 's/v//')
@@ -58,6 +62,12 @@ chmod +x agent
 rm -f ligolo-ng_agent_${VER}_linux_amd64.tar.gz
 unzip -o ligolo-ng_agent_${VER}_windows_amd64.zip agent.exe
 rm -f ligolo-ng_agent_${VER}_windows_amd64.zip
+echo
+
+echo "Installing linux-smart-enumeration"
+curl -#LO https://github.com/diego-treitos/linux-smart-enumeration/releases/latest/download/lse.sh
+chmod +x lse.sh
+echo
 
 # === peass-ng ===
 VER=$(curl -s https://api.github.com/repos/peass-ng/PEASS-ng/releases/latest | jq -r .tag_name | sed 's/v//')
@@ -68,11 +78,14 @@ curl -#LO https://github.com/peass-ng/PEASS-ng/releases/download/$VER/winPEAS.ba
 curl -#LO https://github.com/peass-ng/PEASS-ng/releases/download/$VER/winPEASx64.exe
 curl -#LO https://github.com/peass-ng/PEASS-ng/releases/download/$VER/winPEASx64_ofs.exe
 chmod +x linpeas
+echo
 
 #socat
+echo "Installing socat"
 curl -#LO "https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat"
 chmod +x socat
 curl -\# "https://sourceforge.net/projects/unix-utils/files/socat/1.7.3.2/socat-1.7.3.2-1-x86_64.zip/download" -o "socat.exe" 
 chmod +x socat.exe
+echo
 
 )
