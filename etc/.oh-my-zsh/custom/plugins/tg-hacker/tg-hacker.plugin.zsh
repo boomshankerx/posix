@@ -164,11 +164,9 @@ EOF
 rhost() {
     if [[ $# > 0 ]]; then
         if [[ "$1" =~ ^https?://* ]] ; then
-            echo "URL: $1"
             export URL="$1"
             tg-setvar URL "$1"
         else
-            echo "RHOST: $1"
             export RHOST="$1"
             hosts add
             tg-setvar RHOST "$1"
@@ -349,6 +347,7 @@ tg-ferox(){
     HOST=${5:-$RHOST}
     OUTPUT="ferox-$HOST-$PORT.txt"
     touch $OUTPUT
+    echo "feroxbuster -d $DEPTH -w \"$WORDLIST\" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT --no-state"
     feroxbuster -d $DEPTH -w "$WORDLIST" -o $(pwd)/$OUTPUT -u http://$HOST:$PORT -x $EXT --no-state 
 }
 
@@ -390,6 +389,12 @@ tg-hashcatshow() {
 }
 
 tg-hydra() {
+    HOST=${1:-$RHOST}
+    USERLIST=${2:-"users.txt"}
+    PASSLIST=${3:-"$LIST_ROCK"}
+    OUTPUT="hydra-$HOST.txt"
+    echo "hydra -L $USERLIST -P $PASSLIST $HOST -o $OUTPUT"
+    hydra -L $USERLIST -P $PASSLIST $HOST -o $OUTPUT
 }
 
 tg-ssh() {
@@ -401,7 +406,6 @@ tg-web() {
     PORT=${1:-80}
     HOST=${2:-$RHOST}
     OUTPUT="$HOST-$PORT"
-    touch $OUTPUT
     whatweb -v -a 3 "$HOST:$PORT" | tee whatweb-$OUTPUT.txt 
     nikto -host "$HOST" -port "$PORT" -output nikto-$OUTPUT.txt -Format txt
 }

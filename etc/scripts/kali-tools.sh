@@ -78,7 +78,13 @@ curl -#LO https://github.com/peass-ng/PEASS-ng/releases/download/$VER/winPEAS.ba
 curl -#LO https://github.com/peass-ng/PEASS-ng/releases/download/$VER/winPEASx64.exe
 curl -#LO https://github.com/peass-ng/PEASS-ng/releases/download/$VER/winPEASx64_ofs.exe
 chmod +x linpeas
+chmod +x linpeas.sh
 echo
+
+VER=$(curl -s https://api.github.com/repos/DominicBreuker/pspy/releases/latest | jq -r .tag_name)
+echo "Installing pspy version $VER"
+curl -#LO https://github.com/DominicBreuker/pspy/releases/download/$VER/pspy64
+curl -#LO https://github.com/DominicBreuker/pspy/releases/download/$VER/pspy64s
 
 #socat
 echo "Installing socat"
