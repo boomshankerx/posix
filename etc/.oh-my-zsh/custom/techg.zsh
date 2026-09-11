@@ -33,6 +33,7 @@ alias sb=subl
 alias se='sudo -E'
 alias v='vim'
 alias vi='gvim'
+alias vm-shrink='sudo vmware-toolbox-cmd disk shrink /'
 alias vr='sudo -E vim'
 alias x="clip"
 alias xc='xclip -selection clipboard'

@@ -26,7 +26,7 @@ alias _strip='tr -d "[:space:]"'
 alias cc="cyberchef"
 alias hcat="tg-hashcat"
 alias hcati="hashcat --hash-info"
-alias hcats="hashcat -hh | grep"
+alias hcatf="hashcat -hh | fzf"
 alias help-tg-hacker='less ~/.oh-my-zsh/custom/plugins/tg-hacker/tg-hacker.plugin.zsh'
 alias hi="tg-init"
 alias hrock="hydra -VI -P $LIST_ROCK"
@@ -40,8 +40,7 @@ alias msfl="msfconsole -x 'setg LHOST eth0;'"
 alias p="~/.oh-my-zsh/custom/plugins/tg-hacker/play.py"
 alias rust="nmap-rust"
 alias s='sync'
-alias sshc='ssh-keygen -R'
-alias sshclean='ssh-keygen -R rhost && ssh'
+alias sshclean="tg-sshclean"
 alias t1="tree -L 1"
 alias t2="tree -L 2"
 alias t3="tree -L 3"
@@ -97,13 +96,17 @@ hosts(){
             sudo sed -ir /[[:space:]]${HOST}/d /etc/hosts
             echo "$IP $HOST" | sudo tee -a /etc/hosts > /dev/null
             ;;
+        clean)
+            sudo sed -i '/ff02::2[[:space:]]\+ip6-allrouters/q' /etc/hosts
+            echo >> /etc/hosts
+            ;;
         del)
             HOST="$1"
             sudo sed -i /$HOST$/d /etc/hosts
             ;;
         *)
+            echo "Usage: hosts add|del [IP] [HOST]\n"
             cat /etc/hosts
-            echo "Usage: hosts add|del [IP] [HOST]"
             ;;
     esac
 
@@ -173,7 +176,6 @@ rhost() {
         fi
         if [[ $# == 2 ]]; then
             if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
-                echo "RPORT: $2"
                 export RPORT="$2"
                 tg-setvar RPORT "$2"
             else
@@ -301,20 +303,18 @@ tools() {
 
 vpn() {
     if [[ $# -eq 0 ]]; then
-        echo "Usage: vpn kill|show|FILE"
+        echo "Usage: vpn FILE"
         pgrep -a openvpn
-        return
-    fi
-    if [[ "$1" ]]; then
-        if [[ "$1" == "kill" ]]; then
-            pgrep -a openvpn
+
+        echo -n "Kill openvpn? [y/N]: "
+        read -r  killvpn
+        killvpn=${killvpn:-n}
+        if [[ "$killvpn" == "y" || "$killvpn" == "Y" ]]; then
             sudo pkill openvpn
-            return
         fi
+    else
         sudo pkill openvpn
         sudo -b openvpn "$1"
-    else
-        echo "File not found: $1"
     fi
 }
 
@@ -397,8 +397,8 @@ tg-hydra() {
     hydra -L $USERLIST -P $PASSLIST $HOST -o $OUTPUT
 }
 
-tg-ssh() {
-    sshclean
+tg-sshclean() {
+    echo "" > ~/.ssh/known_hosts
     ssh "$@"
 }
 

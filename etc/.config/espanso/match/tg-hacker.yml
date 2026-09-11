@@ -5,3 +5,7 @@ matches:
       TERM=xterm-256color
   - trigger: ":xterm"
     replace: TERM=xterm-256color
+  - trigger: ":em"
+    replace: bob@example.com
+  - trigger: ":pw"
+    replace: password
