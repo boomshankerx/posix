@@ -3,11 +3,12 @@
 #
 # VARIABLES
 #
+export TG_CONF=~/.tg-hacker
 
 export LIST_DIR_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
-export LIST_DIR_L="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories.txt"
-export LIST_DIR_M="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt"
-export LIST_DIR_S="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-directories.txt"
+export LIST_DIR_L="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories-lowercase.txt"
+export LIST_DIR_M="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt"
+export LIST_DIR_S="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-directories-lowercase.txt"
 export LIST_FILES_M="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt"
 export LIST_PW_L="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-1000000.txt"
 export LIST_PW_M="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-100000.txt"
@@ -15,13 +16,11 @@ export LIST_PW_S="/usr/share/wordlists/seclists/Passwords/xato-net-10-million-pa
 export LIST_ROCK="/usr/share/wordlists/rockyou.txt"
 export LIST_SECLISTS="/usr/share/wordlists/seclists"
 export LIST_SUBD="/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt"
-export TG_CONF=~/.tg-hacker
 
 #
 # ALIASES
 #
 
-#alias ngrok="ngrok http 80"
 alias _strip='tr -d "[:space:]"'
 alias cc="cyberchef"
 alias hcat="tg-hashcat"
@@ -109,55 +108,6 @@ hosts(){
             cat /etc/hosts
             ;;
     esac
-
-}
-
-# Initialize ctf folder
-tg-init() {
-    BASE=${1:-$(pwd)}
-    [[ -d $BASE ]] || mkdir -p $BASE
-    cd $BASE
-    BASE=$(pwd)
-    tg-setvar BASE $BASE
-    touch notes.md
-    touch ./.env
-}
-
-tg-setlocal(){
-    if [[ $# < 2 ]]; then
-        echo "Usage: tg-setlocal VAR VALUE"
-        cat ./.env
-        return
-    fi
-    local var="$1"
-    local value="$2"
-    export $var="$value"
-    sed -i "/$var=/d" ./.env
-    echo "export $var=$value" >> ./.env
-}
-
-tg-setvar(){
-    if [[ $# < 2 ]]; then
-        echo "Usage: tg-setvar VAR VALUE"
-        cat $TG_CONF
-        return
-    fi
-    local var="$1"
-    local value="$2"
-    sed -i "/$var=/d" $TG_CONF
-    echo "export $var=$value" >> $TG_CONF
-}
-
-tg-init-config(){
-    cat << EOF > $TG_CONF
-#!/usr/bin/env zsh
-export LHOST=
-export LPORT=4444
-export RHOST=
-export RPORT=
-export URL=
-export BASE=
-EOF
 }
 
 #
@@ -304,13 +254,15 @@ tools() {
 vpn() {
     if [[ $# -eq 0 ]]; then
         echo "Usage: vpn FILE"
-        pgrep -a openvpn
-
-        echo -n "Kill openvpn? [y/N]: "
-        read -r  killvpn
-        killvpn=${killvpn:-n}
-        if [[ "$killvpn" == "y" || "$killvpn" == "Y" ]]; then
-            sudo pkill openvpn
+        VPN=$(pgrep -a openvpn)
+        if [[ -n "$VPN" ]]; then
+            echo "$VPN"
+            echo -n "Kill openvpn? [y/N]: "
+            read -r  killvpn
+            killvpn=${killvpn:-n}
+            if [[ "$killvpn" == "y" || "$killvpn" == "Y" ]]; then
+                sudo pkill openvpn
+            fi
         fi
     else
         sudo pkill openvpn
@@ -396,6 +348,56 @@ tg-hydra() {
     echo "hydra -L $USERLIST -P $PASSLIST $HOST -o $OUTPUT"
     hydra -L $USERLIST -P $PASSLIST $HOST -o $OUTPUT
 }
+
+# Initialize ctf folder
+tg-init() {
+    BASE=${1:-$(pwd)}
+    [[ -d $BASE ]] || mkdir -p $BASE
+    cd $BASE
+    BASE=$(pwd)
+    tg-setvar BASE $BASE
+    touch notes.md
+    touch ./.env
+}
+
+tg-init-config(){
+    cat << EOF > $TG_CONF
+#!/usr/bin/env zsh
+export LHOST=
+export LPORT=4444
+export RHOST=
+export RPORT=
+export URL=
+export BASE=
+EOF
+}
+
+tg-setlocal(){
+    if [[ $# < 2 ]]; then
+        echo "Usage: tg-setlocal VAR VALUE"
+        cat ./.env
+        return
+    fi
+    local var="$1"
+    local value="$2"
+    export $var="$value"
+    sed -i "/$var=/d" ./.env
+    echo "export $var=$value" >> ./.env
+}
+
+tg-setvar(){
+    if [[ $# < 2 ]]; then
+        echo "Usage: tg-setvar VAR VALUE"
+        cat $TG_CONF
+        return
+    fi
+    local var="$1"
+    local value="$2"
+    sed -i "/$var=/d" $TG_CONF
+    echo "export $var=$value" >> $TG_CONF
+}
+
+
 
 tg-sshclean() {
     echo "" > ~/.ssh/known_hosts
