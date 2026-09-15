@@ -52,6 +52,7 @@ alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip syste
 alias x="xclip -selection clipboard"
 
 # --- Docker Alias
+alias capa="docker run -it --rm -v \".:/samples:ro\" capa:latest"
 alias rustscan="docker run -it --rm --ulimit nofile=8192:8192 --name rustscan rustscan/rustscan:latest"
 alias jwt-tool='docker run -it --network "host" --rm -v "${PWD}:/tmp" -v "${HOME}/.jwt_tool:/root/.jwt_tool" ticarpi/jwt_tool'
 

@@ -28,17 +28,17 @@ done
 cd ~
 git clone https://github.com/Dewalt-arch/pimpmykali ~/pimpmykali
 
-# pipx tools
-echo -e "#\n# volatility3\n#\n\n"
+# Python Tools
+echo -e "=== Python Tools ==="
 pipx install volatility3
 pipx install git+https://github.com/brightio/penelope
 
+# Ruby Tools
+echo -e "=== Ruby Tools ==="
+sudo gem install haiti-hash
 
 (
 cd /opt
-
-echo -e "#\n# hiati-hash\n#\n\n"
-sudo gem install haiti-hash
 
 echo -e "#\n# Windows Exploit Suggester\n#\n\n"
 sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git
