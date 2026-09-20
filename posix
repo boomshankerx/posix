@@ -228,6 +228,9 @@ root() {
 
 update() {
   echo -e "\n### Updating system\n"
+
+  oh-my-posh upgrade -f
+  
   # Update git repos
   repos=(
     $HOME/.oh-my-zsh/custom/plugins/fast-syntax-highlighting
