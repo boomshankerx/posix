@@ -5,6 +5,8 @@ BASE=~/tools
 (
 cd $BASE
 
+rm -fr *
+
 # === Links ===
 
 # Windows
