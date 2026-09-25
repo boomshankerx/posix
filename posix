@@ -236,7 +236,6 @@ update() {
     $HOME/.oh-my-zsh/custom/plugins/fast-syntax-highlighting
     $HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete
     $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
   )
   for repo in "${repos[@]}"; do
     if [[ -d "$repo" ]]; then
@@ -244,6 +243,14 @@ update() {
       git -C "$repo" pull
     fi
   done
+
+  #Temporary fix for zsh-autocomplete
+  git -C "$HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete" checkout 7633bc7
+
+  # Cleanup
+  rm -fr $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+
 }
 
 plugins() {
