@@ -5,6 +5,7 @@
 #
 export TG_CONF=~/.tg-hacker
 
+export LIST_API="/usr/share/seclists/Discovery/Web-Content/api/api-endpoints-res.txt"
 export LIST_DIR_COMMON="/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt"
 export LIST_DIR_L="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories-lowercase.txt"
 export LIST_DIR_M="/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt"
