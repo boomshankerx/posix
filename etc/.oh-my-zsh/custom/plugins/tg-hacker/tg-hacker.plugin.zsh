@@ -125,6 +125,7 @@ rhost() {
             export RHOST="$1"
             hosts add
             tg-setvar RHOST "$1"
+            tg-setvar URL "http://$RHOST"
         fi
         if [[ $# == 2 ]]; then
             if [[ "$2" =~ ^[0-9]{1,5}$ ]] ; then
