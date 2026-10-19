@@ -57,7 +57,9 @@ alias aar='sudo apt autoremove -y'
 alias auu='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
 alias uuu='auf && aar'
 alias sc='sudo systemctl'
-alias scdr='sudo systemctl daemon-reload'
+alias scr='sudo systemctl daemon-reload'
+alias scu='systemctl --user'
+alias scur='systemctl --user daemon-reload'
 
 # DOCKER
 alias dc='docker compose'
