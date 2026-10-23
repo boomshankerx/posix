@@ -247,7 +247,9 @@ update() {
   #Temporary fix for zsh-autocomplete
   (
   cd "$HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete" 
-  curl -fsSL https://github.com/marlonrichert/zsh-autocomplete/pull/903.patch | git apply -
+  git checkout main
+  git reset --hard
+  curl -fsSL https://github.com/marlonrichert/zsh-autocomplete/pull/903.patch | git apply -v -
   )
 
   # Cleanup
