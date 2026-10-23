@@ -14,7 +14,7 @@ git pull --rebase
 [[ -L ~/.local/bin/posix ]] || ln -s ~/posix/posix ~/.local/bin/posix
 
 base() {
-  echo -e "\n### Installing base software\n"
+  echo -e "\n=== Installing base software ===\n"
 
   apps=(
     btop
@@ -80,7 +80,7 @@ base() {
 }
 
 config() {
-  echo -e "\n### Installing config files\n"
+  echo -e "\n=== Installing config files ===\n"
 
   SRC=$(realpath etc)
 
@@ -156,6 +156,7 @@ config() {
 
 fonts() {
   # Powerline fonts
+  echo -e "\n=== Installing fonts ===\n"
   sudo apt-get -y install fonts-powerline
   git clone https://github.com/powerline/fonts.git ~/fonts --depth=1
   ~/fonts/install.sh
@@ -168,7 +169,7 @@ fonts() {
 }
 
 change_host() {
-  echo -e "\n### Setting hostname\n"
+  echo -e "\n=== Setting hostname ===\n"
   read -rp "Enter new hostname: " new
   if [[ -n $new ]]; then
     echo "[+] Setting hostname to $new"
@@ -179,14 +180,14 @@ change_host() {
 }
 
 kali() {
-  echo -e "\n### Installing Kali Tools\n"
+  echo -e "\n=== Installing Kali Tools ===\n"
   plugins/docker
   plugins/kalitools
   plugins/syncthing
 }
 
 net() {
-  echo -e "\n### Installing network packages\n"
+  echo -e "\n=== Installing network packages ===\n"
   sudo apt-get -y install kismet
   sudo apt-get -y install nmap
   if [[ -n $DISPLAY ]]; then
@@ -196,7 +197,7 @@ net() {
 }
 
 vmware() {
-  echo -e "\n#### Installing vmware tools\n"
+  echo -e "\n=== Installing vmware tools ===\n"
   sudo apt-get -y install open-vm-tools
   if [[ -n $DISPLAY ]]; then
     sudo apt-get -y install open-vm-tools-desktop
@@ -204,7 +205,7 @@ vmware() {
 }
 
 init() {
-  echo -e "\n### Initializing base system\n"
+  echo -e "\n=== Initializing base system ===\n"
   sudo apt update
   base
   # plugins/vim
@@ -227,7 +228,7 @@ root() {
 }
 
 update() {
-  echo -e "\n### Updating system\n"
+  echo -e "\n=== Updating system ===\n"
 
   oh-my-posh upgrade -f
   
