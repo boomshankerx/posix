@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+echo -e "=== KALITOOLS ==="
+
+apps=(
+    bloodyad
+    cyberchef  
+    dirsearch
+    enum4linux-ng
+    feroxbuster
+    ligolo-ng
+    name-that-hash
+    ncat-w32
+    remmina
+    rlwrap
+    seclists
+    sliver
+)
+
+for app in "${apps[@]}"; do
+  echo "[*] Installing $app"
+  sudo apt-get install -y -qq "$app"
+done
+
+# Git Repos
+cd ~
+git clone https://github.com/Dewalt-arch/pimpmykali ~/pimpmykali
+
+# Python Tools
+echo -e "=== Python Tools ==="
+pipx install volatility3
+pipx install git+https://github.com/brightio/penelope
+
+# Ruby Tools
+echo -e "=== Ruby Tools ==="
+sudo gem install haiti-hash
+
+(
+cd /opt
+
+echo -e "#\n# Windows Exploit Suggester\n#\n\n"
+sudo git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester.git
+
+echo -e "#\n# Windows Exploit Suggester NG\n#\n\n"
+sudo git clone https://github.com/bitsadmin/wesng.git
+)

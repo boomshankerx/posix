@@ -1,15 +1,22 @@
 #!/usr/bin/env zsh
 
-#
-# Syncthing
-#
+# === Syncthing ===
 
-echo -e "#\n# Installing Syncthing\n#\n\n"
+echo -e "\n=== Installing Syncthing ===\n"
 
 # Add the release PGP keys:
-sudo curl -s -o /etc/apt/keyrings/syncthing.gpg https://syncthing.net/release-key.gpg
+sudo curl -fsSL  https://syncthing.net/release-key.gpg | sudo gpg --dearmor --yes -o /etc/apt/keyrings/syncthing.gpg
+
 # Add the "stable" channel to your APT sources:
-echo "deb [signed-by=/etc/apt/keyrings/syncthing.gpg] https://apt.syncthing.net/ syncthing stable-v2" | sudo tee /etc/apt/sources.list.d/syncthing.list
+cat << EOF | sudo tee /etc/apt/sources.list.d/syncthing.sources
+Types: deb
+URIs: https://apt.syncthing.net/
+Suites: syncthing
+Components: stable-v2
+Enabled: yes
+Signed-By: /etc/apt/keyrings/syncthing.gpg
+EOF
+
 # Increase preference of Syncthing's packages ("pinning")
 printf "Package: *\nPin: origin apt.syncthing.net\nPin-Priority: 990\n" | sudo tee /etc/apt/preferences.d/syncthing
 # Update and install syncthing:
