@@ -245,11 +245,13 @@ update() {
   done
 
   #Temporary fix for zsh-autocomplete
-  git -C "$HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete" checkout 7633bc7
+  (
+  cd "$HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete" 
+  curl -fsSL https://github.com/marlonrichert/zsh-autocomplete/pull/903.patch | git apply -
+  )
 
   # Cleanup
   rm -fr $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-
 
 }
 
