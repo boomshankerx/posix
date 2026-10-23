@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-curl -sS https://debian.griffo.io/EA0F721D231FDD3A0A17B9AC7808B4DD62C41256.asc | sudo gpg --dearmor --yes -o /etc/apt/keyrings/ghostty.gpg
+curl -fsSL https://deb-free.griffo.io/EA0F721D231FDD3A0A17B9AC7808B4DD62C41256.asc | sudo gpg --dearmor --yes -o /etc/apt/keyrings/griffo.gpg
 
 cat <<EOF | sudo tee /etc/apt/sources.list.d/ghostty.sources
 Types: deb
-URIs: https://debian.griffo.io/apt
+URIs: https://deb-free.griffo.io/apt
 Suites: trixie
 Components: main
 Enabled: yes
-Signed-By: /etc/apt/keyrings/ghostty.gpg
+Signed-By: /etc/apt/keyrings/griffo.gpg
 EOF
 
 sudo apt update
