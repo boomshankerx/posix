@@ -6,26 +6,8 @@ set -euo pipefail
 
 echo "=== Debian VM Clone Setup ==="
 
-# === Prompt for Hostname ===
-read -p "Enter new short hostname (press Enter to keep current): " NEW_HOSTNAME
-
-if [ -n "$NEW_HOSTNAME" ]; then
-    OLD_HOSTNAME=$(hostname)
-    echo "Setting hostname to: $NEW_HOSTNAME"
-    sudo hostnamectl set-hostname "$NEW_HOSTNAME"
-
-    # Update /etc/hosts: replace every occurrence of the old hostname
-    echo "Updating /etc/hosts ($OLD_HOSTNAME -> $NEW_HOSTNAME)..."
-    OLD_ESCAPED=$(printf '%s' "$OLD_HOSTNAME" | sed 's/[.[\*^$/]/\\&/g')
-    [ "$OLD_HOSTNAME" != "$NEW_HOSTNAME" ] && sudo sed -i -E ":a; s/(^|[[:space:]])${OLD_ESCAPED}([.[:space:]]|$)/\1${NEW_HOSTNAME}\2/; ta" /etc/hosts
-
-    # Ensure a 127.0.1.1 entry exists for the new hostname
-    if ! grep -qE "^127\.0\.1\.1[[:space:]].*\b${NEW_HOSTNAME}\b" /etc/hosts; then
-        echo -e "127.0.1.1\t$NEW_HOSTNAME" | sudo tee -a /etc/hosts >/dev/null
-    fi
-else
-    echo "No hostname entered. Keeping current hostname."
-fi
+# === Hostname ===
+"$(dirname "$0")/hostname"
 
 # === Regenerate SSH Host Keys ===
 echo "Regenerating SSH host keys..."
@@ -40,11 +22,7 @@ sudo systemd-machine-id-setup
 
 echo
 echo "=== Setup Complete! ==="
-if [ -n "$NEW_HOSTNAME" ]; then
-    echo "New hostname : $NEW_HOSTNAME"
-else
-    echo "Hostname unchanged."
-fi
+echo "Hostname : $(command hostname)"
 echo "Please reboot the system."
 read -p "Reboot now? (y/N): " REBOOT
 
