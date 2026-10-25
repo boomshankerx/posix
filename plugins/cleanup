@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+sudo -v
+
+echo "Cleaning package caches..."
+sudo apt clean && sudo apt autoremove --purge -y
+
+echo "Cleaning temp files..."
+sudo systemd-tmpfiles --clean
+
+echo "Vacuuming journal..."
+sudo journalctl --vacuum-time=7d
+
+echo "Clearing shell history..."
+[[ -f ~/.bash_history ]] && : > ~/.bash_history
+[[ -f ~/.zsh_history ]] && : > ~/.zsh_history
+
+echo "Clearing user caches..."
+rm -rf ~/.cache/* ~/.cache/.[!.]* 2>/dev/null || true

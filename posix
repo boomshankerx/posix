@@ -79,6 +79,13 @@ base() {
 
 }
 
+cleanup() {
+  plugins/cleanup
+  : > ~/.bash_history
+  : > ~/.zsh_history
+  exec zsh
+}
+
 config() {
   echo -e "\n=== Installing config files ===\n"
 
@@ -168,6 +175,22 @@ fonts() {
   fc-cache -fv
 }
 
+init() {
+  echo -e "\n=== Initializing base system ===\n"
+  sudo apt update
+  base
+  # plugins/vim
+  plugins/zsh
+  plugins/omp
+  if [[ -n $DISPLAY ]]; then
+    fonts
+  fi
+  if [[ "$ID" == "kali" ]] ; then
+    kali
+  fi
+  config
+}
+
 kali() {
   echo -e "\n=== Installing Kali Tools ===\n"
   plugins/docker
@@ -183,30 +206,6 @@ net() {
     sudo apt-get -y install zenmap
     sudo apt-get -y install wireshark
   fi
-}
-
-vmware() {
-  echo -e "\n=== Installing vmware tools ===\n"
-  sudo apt-get -y install open-vm-tools
-  if [[ -n $DISPLAY ]]; then
-    sudo apt-get -y install open-vm-tools-desktop
-  fi
-}
-
-init() {
-  echo -e "\n=== Initializing base system ===\n"
-  sudo apt update
-  base
-  # plugins/vim
-  plugins/zsh
-  plugins/omp
-  if [[ -n $DISPLAY ]]; then
-    fonts
-  fi
-  if [[ "$ID" == "kali" ]] ; then
-    kali
-  fi
-  config
 }
 
 root() {
@@ -247,6 +246,14 @@ update() {
 
 }
 
+vmware() {
+  echo -e "\n=== Installing vmware tools ===\n"
+  sudo apt-get -y install open-vm-tools
+  if [[ -n $DISPLAY ]]; then
+    sudo apt-get -y install open-vm-tools-desktop
+  fi
+}
+
 plugins() {
   [[ -f "plugins/$1" ]] && "plugins/$1" "${@:2}"
 }
@@ -280,6 +287,7 @@ EOF
 [ $# == 0 ] && usage
 case $1 in
   "base"     ) base ;;
+  "cleanup"  ) cleanup ;;
   "config"   ) config ;;
   "dev"      ) dev ;;
   "fonts"    ) fonts ;;
