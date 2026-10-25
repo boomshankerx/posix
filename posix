@@ -168,17 +168,6 @@ fonts() {
   fc-cache -fv
 }
 
-change_host() {
-  echo -e "\n=== Setting hostname ===\n"
-  read -rp "Enter new hostname: " new
-  if [[ -n $new ]]; then
-    echo "[+] Setting hostname to $new"
-    old=$(hostname)
-    sudo hostnamectl hostname "$new"
-    sudo sed -i s/"$old"/"$new"/g /etc/hosts
-  fi
-}
-
 kali() {
   echo -e "\n=== Installing Kali Tools ===\n"
   plugins/docker
@@ -259,7 +248,7 @@ update() {
 }
 
 plugins() {
-  [[ -f "plugins/$1" ]] && . plugins/$1
+  [[ -f "plugins/$1" ]] && "plugins/$1" "${@:2}"
 }
 
 # PROCESS ARGUMENTS
@@ -289,19 +278,16 @@ EOF
 }
 
 [ $# == 0 ] && usage
-for arg in "$@"; do
-  case $arg in
+case $1 in
   "base"     ) base ;;
   "config"   ) config ;;
   "dev"      ) dev ;;
   "fonts"    ) fonts ;;
-  "hostname" ) change_host ;;
   "init"     ) init ;;
   "kali"     ) kali ;;
   "net"      ) net ;;
   "root"     ) root ;;
   "vmware"   ) vmware ;;
   "update"   ) update ;;
-  *          ) plugins "$arg" ;;
-  esac
-done
+  *          ) plugins "$@" ;;
+esac

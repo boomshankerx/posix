@@ -5,9 +5,13 @@
 
 set -euo pipefail
 
+echo "Args: $@"
+
+OLD_HOSTNAME=$(command hostname)
 NEW_HOSTNAME="${1:-}"
 if [ -z "$NEW_HOSTNAME" ]; then
-    read -p "Enter new short hostname (press Enter to keep current): " NEW_HOSTNAME
+    echo "Hostname: $OLD_HOSTNAME"
+    read -p "Enter new hostname (press Enter to keep current): " NEW_HOSTNAME
 fi
 
 if [ -z "$NEW_HOSTNAME" ]; then
@@ -15,7 +19,6 @@ if [ -z "$NEW_HOSTNAME" ]; then
     exit 0
 fi
 
-OLD_HOSTNAME=$(command hostname)
 echo "Setting hostname to: $NEW_HOSTNAME"
 sudo hostnamectl set-hostname "$NEW_HOSTNAME"
 
