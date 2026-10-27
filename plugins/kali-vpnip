@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
 [ "$(id -u)" -eq 0 ] || exec sudo "$0" "$@"
-S=/usr/share/kali-themes/xfce4-panel-genmon-vpnip.sh
-patch -b -l -F3 "$S" <<'EOF'
+file=/usr/share/kali-themes/xfce4-panel-genmon-vpnip.sh
+patch=$(cat <<'EOF'
 --- a
 +++ b
 @@ -3 +3,2 @@
@@ -9,3 +10,10 @@ patch -b -l -F3 "$S" <<'EOF'
 +[ -z "$interface" ] && interface="$(ip -o link show up \
 +        | awk '/link\/none/ {sub(/:$/,"",$2); print $2; exit}')"
 EOF
+)
+
+if patch --dry-run -R -s -f -l -F3 "$file" <<<"$patch" >/dev/null 2>&1; then
+    echo "Patch already applied: $file"
+    exit 0
+fi
+patch -b -l -F3 "$file" <<<"$patch"

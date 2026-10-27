@@ -158,6 +158,11 @@ config() {
       gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg ''
       ;;
     esac
+
+    if [[ "$ID" == "kali" ]]; then
+      echo "[+] Applying Kali specific settings"
+      plugins/kali-vpnip
+    fi
   fi
 }
 
