@@ -135,7 +135,8 @@ config() {
   touch $HOME/.ssh/authorized_keys
   chmod 700 $HOME/.ssh
   chmod 600 $HOME/.ssh/authorized_keys
-  grep -q MASTER $HOME/.ssh/authorized_keys || cat .ssh/authorized_keys >>$HOME/.ssh/authorized_keys
+  grep -vxFf "$HOME/.ssh/authorized_keys" .ssh/authorized_keys >> $HOME/.ssh/authorized_keys || true
+  # grep -q MASTER $HOME/.ssh/authorized_keys || cat .ssh/authorized_keys >>$HOME/.ssh/authorized_keys
 
   # Distro specific settings
   if [[ EUID -ne 0 ]]; then
