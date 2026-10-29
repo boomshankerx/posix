@@ -1,6 +1,7 @@
 *.swp
+.vim/after*/
 .vim/autoload
 .vim/bundle
-.vim/after*/
 .vim/ftplugins*/
 /_vimrc
+__pycache__

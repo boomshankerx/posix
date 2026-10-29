@@ -1,0 +1,6 @@
+---
+tool: template
+description: This is a template tool.
+actions:
+  - title: example
+    command: echo "This is an example template"

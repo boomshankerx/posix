@@ -1,0 +1,19 @@
+---
+tool: ad
+description: Active Directory and authenticated access
+
+actions:
+  - title: bloodhound
+    command: "bloodhound-ce-python -u '{{un}}' -p '{{pw}}' -dc '{{dc}}' -d '{{dn}}' -ns '{{ns}}' --collectionmethod ALL"
+  - title: bloodyAD
+    command: "bloodyAD -d '{{dn}}' -u '{{un}}' -p '{{pw}}'"
+  - title: evil-winrm
+    command: "evil-winrm -i '{{rhost}}' -u '{{un}}' -p '{{pw}}'"
+  - title: nxc-ldap
+    command: "nxc ldap {{rhost}} -u '{{un}}' -p '{{pw}}'"
+  - title: nxc-rdp
+    command: "nxc rdp {{rhost}} -u '{{un}}' -p '{{pw}}'"
+  - title: nxc-smb
+    command: "nxc smb {{rhost}} -u '{{un}}' -p '{{pw}}'"
+  - title: xfreerdp
+    command: "xfreerdp3 /dynamic-resolution  +clipboard /v:'{{rhost}}' /u:'{{un}}' /p:'{{pw}}' /d:'{{dn}}' /drive:share,. /drive:tools,/home/lorne/tools /cert:ignore /auth-pkg-list:'!kerberos'"

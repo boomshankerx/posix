@@ -1,0 +1,15 @@
+---
+tool: hashcat
+description: Offline password cracking with hashcat
+
+actions:
+  - title: wordlist
+    command: "hashcat -m {{ hashcat_mode | default('0') }} hash.txt {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }}"
+  - title: wordlist-rules
+    command: "hashcat -m {{ hashcat_mode | default('0') }} hash.txt {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} -r /usr/share/hashcat/rules/best64.rule"
+  - title: bruteforce
+    command: "hashcat -m {{ hashcat_mode | default('0') }} -a 3 hash.txt '?a?a?a?a?a?a'"
+  - title: show
+    command: "hashcat -m {{ hashcat_mode | default('0') }} hash.txt --show"
+  - title: identify
+    command: "hashcat --identify hash.txt"

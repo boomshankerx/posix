@@ -1,0 +1,21 @@
+---
+tool: ffuf
+description: Web fuzzing with ffuf
+
+actions:
+  - title: dir
+    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }}"
+  - title: dir-ext
+    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -e .php,.html,.txt,.aspx"
+  - title: recursion
+    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt') }} -recursion -recursion-depth 2"
+  - title: vhost
+    command: "ffuf -u http://{{rhost}}/ -H 'Host: FUZZ.{{dn}}' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt') }} -fs 0"
+  - title: subdomain
+    command: "ffuf -u 'http://FUZZ.{{dn}}/' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt') }}"
+  - title: param-get
+    command: "ffuf -u 'http://{{rhost}}/?FUZZ=1' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt') }} -fs 0"
+  - title: param-post
+    command: "ffuf -u http://{{rhost}}/ -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'FUZZ=1' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt') }} -fs 0"
+  - title: login
+    command: "ffuf -u http://{{rhost}}/login -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'username={{un}}&password=FUZZ' -w {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} -fc 401"

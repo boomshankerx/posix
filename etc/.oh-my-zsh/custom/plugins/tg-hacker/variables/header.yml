@@ -1,0 +1,17 @@
+---
+# Common HTTP headers as curl -H fragments. Referenced from templates as
+# {{header}} and inserted straight into a curl command line.
+- title: content-type-json
+  value: "-H 'Content-Type: application/json'"
+- title: content-type-form
+  value: "-H 'Content-Type: application/x-www-form-urlencoded'"
+- title: accept-json
+  value: "-H 'Accept: application/json'"
+- title: ajax
+  value: "-H 'X-Requested-With: XMLHttpRequest'"
+- title: x-forwarded-for
+  value: "-H 'X-Forwarded-For: 127.0.0.1'"
+- title: auth-bearer
+  value: "-H 'Authorization: Bearer <TOKEN>'"
+- title: cookie
+  value: "-H 'Cookie: <NAME>=<VALUE>'"

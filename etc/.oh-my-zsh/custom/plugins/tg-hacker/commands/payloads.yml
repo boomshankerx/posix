@@ -1,0 +1,7 @@
+---
+tool: payloads
+description: Payload generation
+
+actions:
+  - title: msfvenom
+    command: "msfvenom LHOST={{lhost}} LPORT={{lport}}"

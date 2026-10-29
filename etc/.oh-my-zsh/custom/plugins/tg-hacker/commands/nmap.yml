@@ -1,0 +1,17 @@
+---
+tool: nmap
+description: Network and port scanning with nmap
+
+actions:
+  - title: quick
+    command: "nmap -sC -sV -oA nmap/{{rhost}} {{rhost}}"
+  - title: all-ports
+    command: "nmap -p- --min-rate 10000 -oA nmap/{{rhost}}-allports {{rhost}}"
+  - title: full
+    command: "nmap -p- -sC -sV -oA nmap/{{rhost}}-full {{rhost}}"
+  - title: udp
+    command: "sudo nmap -sU --top-ports 100 -oA nmap/{{rhost}}-udp {{rhost}}"
+  - title: vuln
+    command: "nmap --script vuln -oA nmap/{{rhost}}-vuln {{rhost}}"
+  - title: ping-sweep
+    command: "nmap -sn {{ subnet | default('10.10.10.0/24') }}"
