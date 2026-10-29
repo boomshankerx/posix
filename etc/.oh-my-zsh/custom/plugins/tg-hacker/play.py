@@ -164,10 +164,6 @@ def main(args):
             return
         template = commands[cmd]
 
-    # Resolve any variable the template needs that wasn't already provided:
-    # a file comes from the tools dir, anything with a variables/<name> list
-    # comes from an fzf selection. Vars left unset fall back to Jinja defaults.
-    # Sorted so multiple prompts appear in a stable order (the AST gives a set).
     compiled = env.from_string(template)
     referenced = meta.find_undeclared_variables(env.parse(template))
     for name in sorted(referenced):
@@ -204,6 +200,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--rhost", default="", dest="rhost", action="store", type=str, help="remote port")
     parser.add_argument("-t", "--template", default="", dest="template", action="store", type=str, help="Process a custom template instead of a saved command")
     parser.add_argument("-un", "--user", default="", dest="user", action="store", type=str, help="Username")
+    parser.add_argument("cmd", default="", nargs="?", type=str, help="Choose a command to play")
     args = parser.parse_args()
     commands = load_commands()
     main(args)
