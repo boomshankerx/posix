@@ -255,16 +255,16 @@ tools() {
 }
 
 vpn() {
-    local vpn_file
+    local vpn_file header
 
     if [[ $# -eq 0 ]]; then
         if pgrep -x openvpn >/dev/null; then
-            pgrep -a openvpn
+            header=$(printf 'Current: %s\nESC to disconnect' "$(pgrep -a openvpn)")
+        else
+            header="No active OpenVPN"
         fi
-        echo "Usage: vpn FILE"
-        vpn_file=$(find ~ -type f -name '*.ovpn' 2>/dev/null | fzf)
+        vpn_file=$(find ~ -type f -name '*.ovpn' 2>/dev/null | fzf --header="$header")
         if [[ -z $vpn_file ]]; then
-            # empty selection → disconnect
             sudo pkill openvpn 2>/dev/null
             return
         fi
@@ -279,7 +279,6 @@ vpn() {
         return 1
     fi
 
-    tg-setvar VPN "$vpn_file"
     sudo -b openvpn --config "$vpn_file"
 }
 
