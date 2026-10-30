@@ -1,24 +1,24 @@
 ---
-# Each item is either a plain path, or a {title, value} mapping for a nicer
-# label in the picker. Referenced from templates as {{wordlist}}.
 - title: api-endpoints-res
   value: /usr/share/seclists/Discovery/Web-Content/api/api-endpoints-res.txt
-- title: dir-common
+- title: directories-common
   value: /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt
-- title: raft-large-dirs-lower
+- title: directories-raft-large
   value: /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories-lowercase.txt
-- title: raft-medium-dirs-lower
+- title: directories-raft-medium
   value: /usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt
-- title: raft-small-dirs-lower
+- title: directories-raft-small
   value: /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-directories-lowercase.txt
-- title: raft-medium-files
+- title: files-raft-medium
   value: /usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt
-- title: xato-pw-1m
+- title: passwords-xato-1m
   value: /usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
-- title: xato-pw-100k
+- title: passwords-xato-100k
   value: /usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-100000.txt
-- title: xato-pw-10k
+- title: passwords-xato-10k
   value: /usr/share/wordlists/seclists/Passwords/xato-net-10-million-passwords-10000.txt
+- title: passwords-common
+  value: /usr/share/wordlists/seclists/Passwords/Common-Credentials/10k-most-common.txt
 - title: rockyou
   value: /usr/share/wordlists/rockyou.txt
 - title: subdomains-top20k

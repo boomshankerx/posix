@@ -256,7 +256,7 @@ tools() {
 
 vpn() {
     if [[ $# -eq 0 ]]; then
-        echo "Usage: vpn FILE"
+        # Check if openvpn is running and offer to kill it
         VPN=$(pgrep -a openvpn)
         if [[ -n "$VPN" ]]; then
             echo "$VPN"
@@ -265,12 +265,19 @@ vpn() {
             killvpn=${killvpn:-n}
             if [[ "$killvpn" == "y" || "$killvpn" == "Y" ]]; then
                 sudo pkill openvpn
+                return
             fi
+        else
+            # No openvpn process found
+            echo "Usage: vpn FILE"
+            VPN=$(find ~/ -type f -name "*.ovpn" | fzf)
         fi
     else
         sudo pkill openvpn
-        sudo -b openvpn "$1"
+        VPN="$1"
     fi
+    tg-setvar VPN "$VPN"
+    sudo -b openvpn "$VPN"
 }
 
 #
