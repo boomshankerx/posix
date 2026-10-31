@@ -1,6 +1,30 @@
 ---
 tool: ffuf
 description: Web fuzzing with ffuf
+notes: |
+  NAME
+      ffuf - fast web fuzzer
+
+  SYNOPSIS
+      ffuf -u http://host/FUZZ -w WORDLIST [filters]
+
+  DESCRIPTION
+      Fast web fuzzer. FUZZ is the injection marker; place it in the
+      URL, a header, or the body to discover content, parameters, or
+      virtual hosts. Responses are narrowed with filters.
+
+  OPTIONS
+      -w    wordlist file
+      -e    extensions, e.g. .php,.html
+      -H    header, e.g. 'Host: FUZZ.dn'
+      -fs   filter by response size
+      -fc   filter by status code
+      -fw   filter by word count
+      -fr   filter by regex
+
+  EXAMPLES
+      ffuf -u http://host/FUZZ -w common.txt -e .php
+      ffuf -u http://host/ -H 'Host: FUZZ.dn' -fs 0
 
 actions:
   - title: dir
@@ -18,4 +42,6 @@ actions:
   - title: param-post
     command: "ffuf -u http://{{rhost}}/ -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'FUZZ=1' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt') }} -fs 0"
   - title: login
-    command: "ffuf -u http://{{rhost}}/login -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'username={{un}}&password=FUZZ' -w {{ wordlist | default('/usr/share/wordlists/rockyou.txt') }} -fc 401"
+    command: "ffuf -u http://{{rhost}}/ -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'username={{un}}&password=FUZZ' -w {{ wordlist | default('/usr/share/wordlists/seclists/Passwords/Common-Credentials/10k-most-common.txt') }} -fr '{{ filter | default('') }}'"
+  - title: request
+    command: "ffuf -request {{ request | default('request.txt') }} -request-proto {{ proto | default('http') }} -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -fr '{{ filter | default('') }}'"

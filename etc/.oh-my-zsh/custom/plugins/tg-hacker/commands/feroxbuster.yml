@@ -3,14 +3,14 @@ tool: feroxbuster
 description: Recursive content discovery with feroxbuster
 actions:
   - title: dir
-    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }}"
+    command: "feroxbuster -u http://{{rhost}}:{{ port | default('80') }}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -o ferox-{{rhost}}-{{ port | default('80') }}.txt"
   - title: dir-ext
-    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -x php,html,txt,aspx"
+    command: "feroxbuster -u http://{{rhost}}:{{ port | default('80') }}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -x php,html,txt,aspx -o ferox-{{rhost}}-{{ port | default('80') }}.txt"
   - title: recursion
-    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt') }} --depth 2"
+    command: "feroxbuster -u http://{{rhost}}:{{ port | default('80') }}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt') }} --depth 2 -o ferox-{{rhost}}-{{ port | default('80') }}.txt"
   - title: no-recursion
-    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} --no-recursion"
+    command: "feroxbuster -u http://{{rhost}}:{{ port | default('80') }}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} --no-recursion -o ferox-{{rhost}}-{{ port | default('80') }}.txt"
   - title: https
-    command: "feroxbuster -u https://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -k"
+    command: "feroxbuster -u https://{{rhost}}:{{ port | default('443') }}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -k -o ferox-{{rhost}}-{{ port | default('443') }}.txt"
   - title: filter-status
-    command: "feroxbuster -u http://{{rhost}}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -C 404,403"
+    command: "feroxbuster -u http://{{rhost}}:{{ port | default('80') }}/ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -C 404,403 -o ferox-{{rhost}}-{{ port | default('80') }}.txt"
