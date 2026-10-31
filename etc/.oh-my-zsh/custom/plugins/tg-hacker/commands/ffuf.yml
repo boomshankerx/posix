@@ -28,20 +28,20 @@ notes: |
 
 actions:
   - title: dir
-    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }}"
+    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -o ffuf-{{rhost}}-dir.json"
   - title: dir-ext
-    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -e .php,.html,.txt,.aspx"
+    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -e .php,.html,.txt,.aspx -o ffuf-{{rhost}}-dir-ext.json"
   - title: recursion
-    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt') }} -recursion -recursion-depth 2"
+    command: "ffuf -u http://{{rhost}}/FUZZ -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt') }} -recursion -recursion-depth 2 -o ffuf-{{rhost}}-recursion.json"
   - title: vhost
-    command: "ffuf -u http://{{rhost}}/ -H 'Host: FUZZ.{{dn}}' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt') }} -fs 0"
+    command: "ffuf -u http://{{rhost}}/ -H 'Host: FUZZ.{{dn}}' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt') }} -fs 0 -o ffuf-{{dn}}-vhost.json"
   - title: subdomain
-    command: "ffuf -u 'http://FUZZ.{{dn}}/' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt') }}"
+    command: "ffuf -u 'http://FUZZ.{{dn}}/' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt') }} -o ffuf-{{dn}}-subdomain.json"
   - title: param-get
-    command: "ffuf -u 'http://{{rhost}}/?FUZZ=1' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt') }} -fs 0"
+    command: "ffuf -u 'http://{{rhost}}/?FUZZ=1' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt') }} -fs 0 -o ffuf-{{rhost}}-param-get.json"
   - title: param-post
-    command: "ffuf -u http://{{rhost}}/ -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'FUZZ=1' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt') }} -fs 0"
+    command: "ffuf -u http://{{rhost}}/ -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'FUZZ=1' -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-files.txt') }} -fs 0 -o ffuf-{{rhost}}-param-post.json"
   - title: login
-    command: "ffuf -u http://{{rhost}}/ -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'username={{un}}&password=FUZZ' -w {{ wordlist | default('/usr/share/wordlists/seclists/Passwords/Common-Credentials/10k-most-common.txt') }} -fr '{{ filter | default('') }}'"
+    command: "ffuf -u http://{{rhost}}/ -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'username={{un}}&password=FUZZ' -w {{ wordlist | default('/usr/share/wordlists/seclists/Passwords/Common-Credentials/10k-most-common.txt') }} -fr '{{ filter | default('') }}' -o ffuf-{{rhost}}-login.json"
   - title: request
-    command: "ffuf -request {{ request | default('request.txt') }} -request-proto {{ proto | default('http') }} -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -fr '{{ filter | default('') }}'"
+    command: "ffuf -request {{ request | default('request.txt') }} -request-proto {{ proto | default('http') }} -w {{ wordlist | default('/usr/share/wordlists/seclists/Discovery/Web-Content/common.txt') }} -fr '{{ filter | default('') }}' -o ffuf-{{rhost}}-request.json"
