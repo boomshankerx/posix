@@ -1,0 +1,27 @@
+---
+tool: nikto
+description: Web server scanning with nikto
+notes: |
+  NAME
+      nikto - web server scanner
+
+  DESCRIPTION
+      Audits a web server for known issues, outdated software, and
+      misconfigurations against a host:port.
+
+  OPTIONS
+      -h       target host or URL
+      -p       port
+      -ssl     force TLS
+      -Tuning  limit test types, e.g. -Tuning 123b
+      -o       output file (format by extension)
+
+  EXAMPLES
+      nikto -h http://10.10.10.1:80
+      nikto -h 10.10.10.1 -p 443 -ssl
+
+actions:
+  - title: http
+    command: "nikto -h http://{{rhost}}:{{ port | default('80') }}/ -o nikto-{{rhost}}-{{ port | default('80') }}.txt"
+  - title: https
+    command: "nikto -h https://{{rhost}}:{{ port | default('443') }}/ -ssl -o nikto-{{rhost}}-{{ port | default('443') }}.txt"

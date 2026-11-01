@@ -1,17 +1,51 @@
 ---
 tool: nmap
 description: Network and port scanning with nmap
+notes: |
+  NAME
+      nmap - network and port scanner
+
+  SYNOPSIS
+      nmap [scan type] [options] {target}
+
+  DESCRIPTION
+      Discovers hosts, open ports, services, and versions. Pair a
+      host-discovery/port selection with detection scripts, then save
+      output in all formats for later parsing.
+
+  OPTIONS
+      -sC   run default NSE scripts
+      -sV   detect service/version
+      -sU   UDP scan (slow; needs root)
+      -sn   ping sweep, no port scan
+      -p-   scan all 65535 ports
+      -p    specific ports, e.g. -p 80,443
+      -A    aggressive: -sC -sV -O --traceroute
+      -O    OS detection (needs root)
+      -Pn   skip host discovery, treat as up
+      -n    no DNS resolution (faster)
+      -T4   faster timing template
+      --min-rate N   send at least N packets/sec
+      --top-ports N  scan N most common ports
+      --script X     run NSE script/category, e.g. vuln
+      -oA base       save .nmap/.gnmap/.xml with prefix
+
+  EXAMPLES
+      nmap -sC -sV -oA nmap-host 10.10.10.1
+      nmap -p- --min-rate 10000 -Pn 10.10.10.1
 
 actions:
   - title: quick
-    command: "nmap -sC -sV -oA nmap/{{rhost}} {{rhost}}"
+    command: "nmap -n -Pn -T4 -sC -sV -oA nmap-{{rhost}} {{rhost}}"
   - title: all-ports
-    command: "nmap -p- --min-rate 10000 -oA nmap/{{rhost}}-allports {{rhost}}"
+    command: "nmap -n -Pn -T4 -p- --min-rate 10000 -oA nmap-{{rhost}}-allports {{rhost}}"
   - title: full
-    command: "nmap -p- -sC -sV -oA nmap/{{rhost}}-full {{rhost}}"
+    command: "nmap -n -Pn -T4 -p- -sC -sV -oA nmap-{{rhost}}-full {{rhost}}"
   - title: udp
-    command: "sudo nmap -sU --top-ports 100 -oA nmap/{{rhost}}-udp {{rhost}}"
+    command: "sudo nmap -n -Pn -T4 -sU --top-ports 100 -oA nmap-{{rhost}}-udp {{rhost}}"
   - title: vuln
-    command: "nmap --script vuln -oA nmap/{{rhost}}-vuln {{rhost}}"
+    command: "nmap -n -Pn -T4 --script vuln -oA nmap-{{rhost}}-vuln {{rhost}}"
   - title: ping-sweep
-    command: "nmap -sn {{ subnet | default('10.10.10.0/24') }}"
+    command: "nmap -sn -T4 {{ subnet | default('10.10.10.0/24') }}"
+  - title: rustscan
+    command: "rustscan --accessible -a {{rhost}} -- -n -Pn -T4 -sC -sV -oA rustscan-{{rhost}}"
