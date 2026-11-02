@@ -464,7 +464,7 @@ nmap-script-all()     { sudo nmap -v -n -Pn -T4 -sC -sV -p-                     
 nmap-script()         { sudo nmap -v -n -Pn -T4 -sC -sV                           ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script.txt }
 nmap-script-vuln()    { sudo nmap -v -n -Pn -T4 -sV --script vuln                 ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vuln.txt }
 nmap-script-vulscan() { sudo nmap -v -n -Pn -T4 -sV --script vulscan/vulscan.nse  ${1:-$RHOST} -oN ${1:-$RHOST}-nmap-script-vulscan.txt }
-nmap-rust()           { rustscan --accessible -a ${1:-$RHOST} -- -n -Pn -sC -sV -T4 | tee rustscan-$RHOST.txt }
+nmap-rust()           { rustscan --accessible -b 8192 -a ${1:-$RHOST} -- -n -Pn -sC -sV -T4 | tee rustscan-$RHOST.txt }
 
 nmap-ports(){
     HOST=${1:-"$RHOST"}

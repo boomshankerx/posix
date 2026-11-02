@@ -1,0 +1,43 @@
+---
+tool: smbclient
+description: SMB share access and enumeration with smbclient
+notes: |
+  NAME
+      smbclient - ftp-like client to access SMB/CIFS shares
+
+  SYNOPSIS
+      smbclient //host/share [options]
+      smbclient -L //host [options]
+
+  DESCRIPTION
+      Lists and browses SMB shares, then transfers files. Use -N for
+      a null session, or -U user for authenticated access. Once in a
+      share, common prompts: ls, cd, get, put, mget, prompt, recurse.
+
+  OPTIONS
+      -L      list shares on the host
+      -N      no password (null/anonymous session)
+      -U      username, e.g. -U 'DOMAIN\user%password'
+      -c      run semicolon-separated commands, then exit
+      -p      port (default 445)
+      --pw-nt-hash   treat the password as an NT hash (pass-the-hash)
+
+  EXAMPLES
+      smbclient -L //10.10.10.1 -N
+      smbclient //10.10.10.1/share -U 'user%pass' -c 'ls'
+
+actions:
+  - title: list-null
+    command: "smbclient -L //{{rhost}}/ -N"
+  - title: list-auth
+    command: "smbclient -L //{{rhost}}/ -U '{{un}}%{{pw}}'"
+  - title: connect-null
+    command: "smbclient //{{rhost}}/{{ share | default('share') }} -N"
+  - title: connect-auth
+    command: "smbclient //{{rhost}}/{{ share | default('share') }} -U '{{un}}%{{pw}}'"
+  - title: ls
+    command: "smbclient //{{rhost}}/{{ share | default('share') }} -U '{{un}}%{{pw}}' -c 'ls'"
+  - title: download-all
+    command: "smbclient //{{rhost}}/{{ share | default('share') }} -U '{{un}}%{{pw}}' -c 'prompt OFF; recurse ON; mget *'"
+  - title: pass-the-hash
+    command: "smbclient //{{rhost}}/{{ share | default('share') }} -U '{{un}}' --pw-nt-hash '{{hash}}'"
