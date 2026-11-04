@@ -46,7 +46,7 @@ alias t2="tree -L 2"
 alias t3="tree -L 3"
 alias t='rhost'
 alias te="me wg0"
-alias var="tg-setlocal"
+alias var="tg-setvar -l"
 alias ve="me tun0"
 alias we="me wg0"
 alias wesng="/opt/wesng/wes.py -c --definitions /opt/wesng/definitions.zip systeminfo.txt"
@@ -384,29 +384,23 @@ export BASE=
 EOF
 }
 
-tg-setlocal(){
+tg-setvar(){
+    local file="$TG_CONF"
+    if [[ "$1" == "-l" ]]; then
+        file="./.env"
+        shift
+    fi
     if [[ $# < 2 ]]; then
-        echo "Usage: tg-setlocal VAR VALUE"
-        cat ./.env
+        echo "Usage: tg-setvar [-l] VAR VALUE"
+        [[ -f "$TG_CONF" ]] && cat "$TG_CONF"
+        [[ -f ./.env ]] && cat ./.env
         return
     fi
     local var="$1"
     local value="$2"
     export $var="$value"
-    sed -i "/$var=/d" ./.env
-    echo "export $var=$value" >> ./.env
-}
-
-tg-setvar(){
-    if [[ $# < 2 ]]; then
-        echo "Usage: tg-setvar VAR VALUE"
-        cat $TG_CONF
-        return
-    fi
-    local var="$1"
-    local value="$2"
-    sed -i "/$var=/d" $TG_CONF
-    echo "export $var=$value" >> $TG_CONF
+    sed -i "/$var=/d" "$file"
+    echo "export $var=$value" >> "$file"
 }
 
 
