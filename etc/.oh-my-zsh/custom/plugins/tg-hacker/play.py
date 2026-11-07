@@ -192,6 +192,7 @@ def load_vars():
         "fqdn",
         "un",
         "pw",
+        "ticket",
     )
     vars = {}
     for name in names:

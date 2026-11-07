@@ -99,7 +99,6 @@ hosts(){
             ;;
         clean)
             sudo sed -i '/ff02::2[[:space:]]\+ip6-allrouters/q' /etc/hosts
-            echo >> /etc/hosts
             ;;
         del)
             HOST="$1"
@@ -107,9 +106,9 @@ hosts(){
             ;;
         *)
             echo "Usage: hosts add|del [IP] [HOST]\n"
-            cat /etc/hosts
             ;;
     esac
+    cat /etc/hosts
 }
 
 #
@@ -256,6 +255,8 @@ tools() {
 
 vpn() {
     local vpn_file header
+
+    find ~ -type f -name '*.ovpn' -exec mv {} ~/.ovpn 2>/dev/null \;
 
     if [[ $# -eq 0 ]]; then
         if pgrep -x openvpn >/dev/null; then
