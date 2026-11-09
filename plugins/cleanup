@@ -17,3 +17,5 @@ echo "Clearing shell history..."
 
 echo "Clearing user caches..."
 rm -rf ~/.cache/* ~/.cache/.[!.]* 2>/dev/null || true
+
+sudo fstrim -av
