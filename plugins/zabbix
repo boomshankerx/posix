@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-export ZABBIX_DB_PASSWORD=$(cat ~/zabbixdb)
-
-if [ -z "$ZABBIX_DB_PASSWORD" ]; then
-  echo "ZABBIX_DB_PASSWORD is not set"
-  exit 1
-fi
 
 (
   cd /tmp
@@ -16,17 +10,17 @@ fi
 sudo apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-nginx-conf zabbix-sql-scripts zabbix-agent2
 sudo apt install -y zabbix-agent2-plugin-mongodb zabbix-agent2-plugin-mssql zabbix-agent2-plugin-postgresql
 
+# Install and configure PostgreSQL for Zabbix database
 sudo apt install -y postgresql
 sudo systemctl status postgresql
 
-sudo -u postgres createuser zabbix
-sudo -u postgres psql -c "ALTER USER zabbix WITH PASSWORD '$ZABBIX_DB_PASSWORD';"
+sudo -u postgres createuser --pwprompt zabbix
 sudo -u postgres createdb -O zabbix zabbix
 
 zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
 
-sudo sed -i "s/# DBPassword=/DBPassword=$ZABBIX_DB_PASSWORD/" /etc/zabbix/zabbix_server.conf
-
-echo "Zabbix installation completed. Run the following commands to start and enable the services:"
+# Configure Zabbix server to use the PostgreSQL database
+echo "Edit /etc/zabbix/zabbix_server.conf to set the DBPassword if not already set"
+echo "After editing the configuration, restart and enable the services:"
 echo "sudo systemctl restart zabbix-server zabbix-agent2 nginx php8.4-fpm"
 echo "sudo systemctl enable zabbix-server zabbix-agent2 nginx php8.4-fpm"
