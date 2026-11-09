@@ -16,6 +16,9 @@ fi
 sudo apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-nginx-conf zabbix-sql-scripts zabbix-agent2
 sudo apt install -y zabbix-agent2-plugin-mongodb zabbix-agent2-plugin-mssql zabbix-agent2-plugin-postgresql
 
+sudo apt install -y postgresql
+sudo systemctl status postgresql
+
 sudo -u postgres createuser zabbix
 sudo -u postgres psql -c "ALTER USER zabbix WITH PASSWORD '$ZABBIX_DB_PASSWORD';"
 sudo -u postgres createdb -O zabbix zabbix
