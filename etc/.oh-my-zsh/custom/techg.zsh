@@ -49,17 +49,20 @@ alias heg='hermes gateway'
 alias bind9-reload="docker exec -it bind9 rndc reload"
 
 # DEBIAN
+alias aar='sudo apt autoremove -y'
 alias ag='sudo apt'
 alias ai='sudo apt install -y'
 alias au='sudo apt update'
 alias auf='sudo apt update && sudo apt upgrade -y && sudo apt full-upgrade -y'
-alias aar='sudo apt autoremove -y'
 alias auu='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
-alias uuu='auf && aar'
+alias jc='journalctl'
+alias jce='sudo journalctl -e'
+alias jcf='sudo journalctl -ef'
 alias sc='sudo systemctl'
 alias scr='sudo systemctl daemon-reload'
 alias scu='systemctl --user'
 alias scur='systemctl --user daemon-reload'
+alias uuu='auf && aar'
 
 # DOCKER
 alias dc='docker compose'
